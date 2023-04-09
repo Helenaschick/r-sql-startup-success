@@ -1,5 +1,5 @@
 ---
-title: "Startup Success"
+title: "Startup Success Prediction"
 subtitle: "Programming Languages - Project by Helena Schick"
 date: "`r Sys.Date()`"
 output:
@@ -8,38 +8,168 @@ output:
     toc_depth: 3
     number_sections: true
 ---
+# Plan
+## Identify Use Case
+Using business model canvas
+1. Customer Segments:
+Who are the potential customers for the startup?
+What are their needs and pain points?
+How can the startup provide value to these customers?
+2. Value Proposition:
+What is the unique value that the startup offers to its customers?
+How does the startup differentiate itself from competitors?
+How can the startup communicate its value proposition to customers?
+3. Channels:
+What channels will the startup use to reach its target customers?
+How will the startup acquire and retain customers?
+What marketing and sales strategies will the startup use?
+4. Customer Relationships:
+How will the startup build and maintain relationships with its customers?
+What customer service and support options will the startup provide?
+What methods will the startup use to gather customer feedback?
+5. Revenue Streams:
+What are the potential revenue streams for the startup?
+How will the startup price its products or services?
+What monetization strategies will the startup use?
+6. Key Activities:
+What are the core activities required to operate the startup?
+How will the startup prioritize and allocate resources?
+What processes will the startup use to streamline operations?
+7. Key Resources:
+What resources does the startup require to operate?
+How will the startup acquire and manage these resources?
+What partnerships or collaborations are necessary for the startup to succeed?
+8. Key Partnerships:
+What external partnerships or collaborations are necessary for the startup to succeed?
+How will the startup build and maintain these partnerships?
+What value do these partnerships bring to the startup?
+9. Cost Structure:
+What are the costs associated with operating the startup?
+How will the startup manage and minimize these costs?
+What cost-cutting strategies will the startup use?
 
-# Set up of R
+## Frame Problem
+Provide a statement of what is to be learned and how decisions should be made.
+We are investigating...
+Because we want to find out...
+In order to decide...
+
+We want the model to...
+Our ideal outcome is...
+In order to...
+
+## Identify Variables
+For structured data problems, we need to identify potentially relevant variables.
+Response variable and explanatory variables
+Domain experts and literature research
+
+## Define Metrics
+Write down your metrics for success and failure with the data science project.
+Our success metrics are..
+Our key results for the success metrics are...
+Our project is deemed a failure, if...
+
+If we didn't use ML, we would...
+If we could obtain perfect information, we would be willing to spend...
+
+Strategy Mapping: Internal process, Customer perspective, Financial perspective in business model canvas
+# Data
+
+## Data Ingestion
+### Prepare Environment
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Install libraries
+```{r libraries}
+library(tidyverse)
+library(conflicted)
+library(dplyr)
+```
 
+### Import Data 
 ```{r}
-library()
+path <- "/Users/helena.schick/Documents/GitHub/r-sql-startup-success/startup data.csv"
+
+df <- read_csv(path)
 ```
 
-```{r}
+### Data Structure
 
-# install.packages("RSQLite")
+### Data Corrections
 
-library(DBI)
+### Variable List
 
-# Connection to database SQlite
-con <- dbConnect(RSQLite::SQLite(), ":memory:")
+## Data Splitting
 
-# Write data "gapminder" into database
-dbWriteTable(con, "gapminder", gapminder)
+### Train and Test Split
 
-# List tables
-dbListTables(con)
-```
+### Data Exploration Set
 
-# Data Exploration
+## Analyze Data
 
-```{sql connection=con}
-SELECT country
-FROM gapminder;
-```
+### Categorical Features
+
+### Numerical Features
+
+### Relationships
+
+## Define Schema
+Usually it is a good idea to define some sort of schema that describes the expected properties of the data.
+check_class()
+Check Variable Class
+check_cols()
+Check if all Columns are Present
+check_missing()
+Check for Missing Values
+check_new_values()
+Check for New Values
+check_range()
+Check Range Consistency
+
+or TFX
+
+## Anomaly Detection
+
+### Missing Values
+
+### Outlier Detection
+
+## Feature Engineering
+Feature engineering is the process of using domain knowledge to extract meaningful features (attributes) from raw data. The goal of this process is to create new features which improve the predictions from our model.
+
+### Pipelines
+
+### Feature Transformation
+
+#### Fix Missing Values
+
+#### Fix Outliers
+
+#### Feature Scaling
+Standardization
+
+#### Encoding
+
+### Feature Extraction
+
+### Custom Feature Operations
+
+### Final Data Pipeline
+
+# Model
+## Select Algorithm
+
+## Model Training & Tuning
+
+## Evaluate Model
+
+# Deployment 
+## Validate Model
+
+## Deploy Model
+
+## Serve Model
+
+## Monitor Model
