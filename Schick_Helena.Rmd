@@ -8,6 +8,7 @@ output:
     toc_depth: 3
     number_sections: true
 ---
+
 # Plan
 ## Identify Use Case
 Using business model canvas
@@ -73,6 +74,7 @@ If we didn't use ML, we would...
 If we could obtain perfect information, we would be willing to spend...
 
 Strategy Mapping: Internal process, Customer perspective, Financial perspective in business model canvas
+
 # Data
 
 ## Data Ingestion
@@ -97,18 +99,101 @@ df <- read_csv(path)
 
 ### Data Structure
 
+```{r}
+glimpse(df)
+```
+```{r}
+library(visdat)
+
+vis_dat(df)
+```
+
 ### Data Corrections
+```{r}
+# convert all character variables to factors 
+df <- 
+  df %>% 
+  mutate(across(where(is.character), as.factor))
+```
 
 ### Variable List
+
+```{r}
+# define outcome variable as y_label
+y_label <– df$status
+
+# select feature names
+features <- 
+  df %>%
+  select(-all_of(y_label)) %>%
+  names()
+
+# create feature data for data splitting
+X <- 
+  df %>%
+  select(all_of(features))
+
+# list of numeric feature names
+feat_num <- 
+  X %>% 
+  select(where(is.numeric)) %>% 
+  names()
+
+# list of categorical feature names
+feat_cat <- 
+  X %>% 
+  select(!where(is.numeric)) %>% 
+  names()
+
+# create response for data splitting
+y <- 
+  df %>% 
+  select(all_of(y_label))
+```
 
 ## Data Splitting
 
 ### Train and Test Split
 
+```{r}
+library(rsample)
+
+# Fix the random numbers by setting the seed 
+# This enables the analysis to be reproducible 
+set.seed(42)
+
+# Put 3/4 of the data into the training set 
+data_split <- initial_split(df, 
+                           prop = 3/4, 
+                           strata = y_label, 
+                           breaks = 4)
+
+# Create dataframes for the two sets:
+train_data <- training(data_split) 
+test_data <- testing(data_split)
+```
+
+```{r}
+library(tidymodels)
+
+set.seed(42)
+
+cv_folds <- 
+  vfold_cv(train_data,
+           v=5,
+           strata = y_label,
+           breaks = 4)
+````
+
+
 ### Data Exploration Set
 
-## Analyze Data
+```{r}
+df_train <- train_data 
+```
 
+## Analyze Data
+SQL and R
 ### Categorical Features
 
 ### Numerical Features
@@ -160,12 +245,30 @@ Standardization
 
 # Model
 ## Select Algorithm
+Supervised Learning
+Classification
+kNN
+Naive Bayes
+SVM 
+Decision Tree
+Logistic Regression
 
 ## Model Training & Tuning
+### Feature Selection
+
+### Training & Hyperparameter Tuning
+
+### Evaluation
+Evaluate best model on wrongest predictions
 
 ## Evaluate Model
+Evaluate the final model on test data
 
-# Deployment 
+# Deployment
+RStudio's Model Management: https://solutions.posit.co/gallery/model-management/vetiver/
+
+WebAPI with Plumber: https://www.rplumber.io/articles/introduction.html
+
 ## Validate Model
 
 ## Deploy Model
