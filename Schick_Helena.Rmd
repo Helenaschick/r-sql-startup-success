@@ -1,0 +1,45 @@
+---
+title: "Startup Success"
+subtitle: "Programming Languages - Project by Helena Schick"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+---
+
+# Set up of R
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install libraries
+
+```{r}
+library()
+```
+
+```{r}
+
+# install.packages("RSQLite")
+
+library(DBI)
+
+# Connection to database SQlite
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+# Write data "gapminder" into database
+dbWriteTable(con, "gapminder", gapminder)
+
+# List tables
+dbListTables(con)
+```
+
+# Data Exploration
+
+```{sql connection=con}
+SELECT country
+FROM gapminder;
+```
