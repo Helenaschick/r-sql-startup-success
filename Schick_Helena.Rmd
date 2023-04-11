@@ -13,9 +13,9 @@ output:
 ## Identify Use Case
 Using business model canvas
 1. Customer Segments:
-Who are the potential customers for the startup?
+Who are the potential customers?
 What are their needs and pain points?
-How can the startup provide value to these customers?
+How can we provide value to these customers?
 2. Value Proposition:
 What is the unique value that the startup offers to its customers?
 How does the startup differentiate itself from competitors?
@@ -88,6 +88,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(conflicted)
 library(dplyr)
+library(visdat)
+library(rsample)
+library(tidymodels)
+library(skimr)
+library(purrr)
+library(GGally)
 ```
 
 ### Import Data 
@@ -103,8 +109,6 @@ df <- read_csv(path)
 glimpse(df)
 ```
 ```{r}
-library(visdat)
-
 vis_dat(df)
 ```
 
@@ -116,11 +120,17 @@ df <-
   mutate(across(where(is.character), as.factor))
 ```
 
+```{r}
+# remove unnecessary variables
+df <- 
+  dplyr::select(df, -`Unnamed: 0`, -`Unnamed: 6`, -state_code.1, -object_id)
+```
+
 ### Variable List
 
 ```{r}
 # define outcome variable as y_label
-y_label <– df$status
+y_label <- 'status'
 
 # select feature names
 features <- 
@@ -156,8 +166,6 @@ y <-
 ### Train and Test Split
 
 ```{r}
-library(rsample)
-
 # Fix the random numbers by setting the seed 
 # This enables the analysis to be reproducible 
 set.seed(42)
@@ -174,8 +182,6 @@ test_data <- testing(data_split)
 ```
 
 ```{r}
-library(tidymodels)
-
 set.seed(42)
 
 cv_folds <- 
@@ -183,7 +189,7 @@ cv_folds <-
            v=5,
            strata = y_label,
            breaks = 4)
-````
+```
 
 
 ### Data Exploration Set
@@ -194,11 +200,62 @@ df_train <- train_data
 
 ## Analyze Data
 SQL and R
+
+```{r}
+skim(df_train)
+```
+
 ### Categorical Features
 
+```{r}
+for (i in feat_cat){
+  
+  p <- ggplot(df_train, aes_string(x=i)) +
+  geom_bar()
+  
+  plot(p)
+  }
+```
+```{r}
+df_train %>% 
+  split(feat_cat) %>% 
+  map(summary)
+```
+
 ### Numerical Features
+```{r}
+df_train %>% 
+  select(all_of(feat_num)) %>% 
+  ggscatmat(alpha = 0.2)
+```
 
 ### Relationships
+
+```{r}
+#df_train %>%  
+#  ggpairs()
+```
+
+```{r}
+df_train %>% 
+  select(where(is.numeric)) %>% # only select numerical data
+  vis_cor(cor_method = "spearman", na_action = "pairwise.complete.obs")
+```
+
+```{r}
+# calculate all correlations
+#cor_res <- 
+#  df_train %>%
+#  select(where(is.numeric)) %>% 
+#  correlate(method = "spearman", use = "pairwise.complete.obs") 
+
+# show correlations
+#cor_res %>% 
+#  select(term, y_label) %>% 
+#  filter(!is.na(y_label)) %>% # focus on dependent variable 
+#  arrange(y_label) %>% # sort values
+#  fashion() # print tidy correlations
+```
 
 ## Define Schema
 Usually it is a good idea to define some sort of schema that describes the expected properties of the data.
