@@ -201,9 +201,6 @@ df_train <- train_data
 ## Analyze Data
 SQL and R
 
-```{r}
-skim(df_train)
-```
 Connection to SQL
 ```{r}
 library(DBI)
@@ -231,11 +228,73 @@ SELECT *
 FROM df_train
 WHERE status = 'acquired';
 ```
+```{sql connection=con}
+SELECT name, category_code, state_code, funding_total_usd, age_first_funding_year, funding_rounds, avg_participants
+FROM df_train
+WHERE status = "acquired"
+ORDER BY funding_total_usd DESC
+LIMIT 5;
+```
 
 ```{sql connection=con}
-SELECT *
+SELECT category_code, state_code, funding_total_usd
 FROM df_train
-WHERE status = 'acquired';
+WHERE status = "acquired"
+ORDER BY funding_total_usd DESC;
+```
+
+```{sql connection=con}
+SELECT category_code, COUNT(status = "acquired") as count
+FROM df_train
+GROUP BY category_code
+ORDER BY count DESC;
+```
+
+```{sql connection=con}
+SELECT state_code, COUNT(status = "acquired") as count
+FROM df_train
+GROUP BY category_code
+ORDER BY count DESC;
+```
+
+```{sql connection=con}
+SELECT state_code, category_code, COUNT(status = "acquired") as count, AVG(funding_total_usd)
+FROM df_train
+WHERE age_first_funding_year < 2
+GROUP BY state_code
+ORDER BY AVG(funding_total_usd) DESC;
+```
+
+```{sql connection=con}
+SELECT state_code, category_code, COUNT(status = "acquired") as count, AVG(funding_total_usd)
+FROM df_train
+WHERE age_first_funding_year < 2
+GROUP BY state_code
+ORDER BY count DESC;
+```
+
+```{sql connection=con}
+SELECT state_code, category_code, COUNT(status = "acquired") as count , AVG(funding_total_usd)
+FROM df_train
+WHERE age_first_funding_year > 2
+GROUP BY state_code
+ORDER BY COUNT(status = "acquired") DESC;
+```
+
+```{sql connection=con}
+SELECT state_code, category_code, COUNT(status = "acquired") as count , AVG(funding_total_usd)
+FROM df_train
+WHERE founded_at > "01/01/2007"
+GROUP BY state_code
+ORDER BY COUNT(status = "acquired") DESC;
+```
+
+```{sql connection=con}
+SELECT state_code, category_code, COUNT(status = "acquired") as count , AVG(funding_total_usd)
+FROM df_train
+WHERE founded_at < "01/01/2007"
+GROUP BY state_code
+ORDER BY COUNT(status = "acquired") DESC;
 ```
 
 ### Categorical Features
@@ -250,17 +309,12 @@ for (i in feat_cat){
   }
 ```
 
-```{r}
-df_train %>% 
-  split(feat_cat) %>% 
-  map(summary)
-```
-
-```{sql}
-
-```
-
 ### Numerical Features
+
+```{r}
+skim(df_train)
+```
+
 ```{r}
 df_train %>% 
   select(all_of(feat_num)) %>% 
