@@ -204,6 +204,39 @@ SQL and R
 ```{r}
 skim(df_train)
 ```
+Connection to SQL
+```{r}
+library(DBI)
+library(gapminder)
+
+# Connection to database SQlite
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+# Write data "df_train" into database
+dbWriteTable(con, "df_train", df_train)
+
+# List tables
+dbListTables(con)
+```
+
+```{sql connection=con}
+SELECT *
+FROM df_train
+LIMIT 5;
+```
+
+Obtain all distinct observations with the status "acquired".
+```{sql connection=con}
+SELECT *
+FROM df_train
+WHERE status = 'acquired';
+```
+
+```{sql connection=con}
+SELECT *
+FROM df_train
+WHERE status = 'acquired';
+```
 
 ### Categorical Features
 
@@ -216,10 +249,15 @@ for (i in feat_cat){
   plot(p)
   }
 ```
+
 ```{r}
 df_train %>% 
   split(feat_cat) %>% 
   map(summary)
+```
+
+```{sql}
+
 ```
 
 ### Numerical Features
