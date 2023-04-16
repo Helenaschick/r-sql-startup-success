@@ -11,69 +11,60 @@ output:
 
 # Plan
 ## Identify Use Case
-Using business model canvas
+The objective of this project is to predict the success of startups. A startup is a new company founded by an entrepreneur with the intent to grow beyond the solo founder according to [wikipedia](https://en.wikipedia.org/wiki/Startup_company). 
+Startups play major role in the economy, as they foster innovation and create employment as they grow. Yet, they face high uncertainty and need to find investors to continue their ideas and expand their potential. This project focuses on the investors to find companies with great potential to invest in and thus being one step ahead of the competition.
+A business model canvas is used to describe the use case in more detail.
+
 1. Customer Segments:
-Who are the potential customers?
-What are their needs and pain points?
-How can we provide value to these customers?
+The costumers of this use case are investors that want to investigate the startup landscape quickly and want to make the best possible investment. 
+The investors' biggest pain is the uncertainty of the investment in a startup. Even with a well-developed business plan and promising market research, there is no guarantee that the startup will be successful. Furthermore, startups are inherently risky ventures. They often have limited operating history and may face significant challenges in scaling up their operations, acquiring customers, and generating revenue. Moreover, investing in a startup requires a significant time commitment. Investors need to research potential opportunities, evaluate business plans, and actively monitor their investments. 
+Their gains include high returns in the case that the startup will be successful. Especially early-stage investors have the opportunity to purchase equity at a low valuation, which can result in a significant return on investment if the company is acquired or goes public. In addition, investing in startups can help diversify an investor's portfolio. Startups can provide exposure to new market segments that may be difficult to access through traditional investments. Furthermore, some investors may be motivated by the social impact that startups can have. By investing in innovative companies that are addressing social or environmental challenges, investors can support positive change while also generating financial returns.
+
 2. Value Proposition:
-What is the unique value that the startup offers to its customers?
-How does the startup differentiate itself from competitors?
-How can the startup communicate its value proposition to customers?
+This projects addresses all of these pain points by providing detailed analysis of many variables former startups to transfer these learnings to new investments. It highlights the most important features of a startup to become successful and predicts whether a startup which is currently operating turns into a success or a failure. The success of a company is defined as the event that gives the company's founders a large sum of money through the process of M&A (Merger and Acquisition) or an IPO (Initial Public Offering). A company would be considered as failed if it had to be shut down.
+This minimizes the uncertainty and risk of the investment. As this is provided in one platform, the time commitment and intense research is reduced tremendously. The data can always be extended through more startup data provided by the customers. This has the advantage that possible changes in the successful features are encountered and the use case always provides the latest and most valuable information.
+
 3. Channels:
-What channels will the startup use to reach its target customers?
-How will the startup acquire and retain customers?
-What marketing and sales strategies will the startup use?
+Specific investors will be contacted directly to learn about this startup success prediction and how to purchase it. In addition, the use case will be advertised on business platforms and online newspapers.
+
 4. Customer Relationships:
-How will the startup build and maintain relationships with its customers?
-What customer service and support options will the startup provide?
-What methods will the startup use to gather customer feedback?
+A close customer collaboration will be created, that the investors have the information about startup success prediction and also share information about their past investments that the data is always improving and up to date.
+
 5. Revenue Streams:
-What are the potential revenue streams for the startup?
-How will the startup price its products or services?
-What monetization strategies will the startup use?
+The startup success prediction can be purchased as a yearly abonnement by investors. They can get a reduction of the fee in exchange for startup investment data that can be incorporated in the analysis and prediction.
+
 6. Key Activities:
-What are the core activities required to operate the startup?
-How will the startup prioritize and allocate resources?
-What processes will the startup use to streamline operations?
+The most important activity is always having a well optimized classification model for the startup success prediction. Another key activity is the data analysis that is used as a base for the prediction model. The third activity is to create a good user experience to visualize the key learnings and recommendations.
+
 7. Key Resources:
-What resources does the startup require to operate?
-How will the startup acquire and manage these resources?
-What partnerships or collaborations are necessary for the startup to succeed?
+The project is conducted by Helena Schick.
+Jan Kirenz can be consulted for advice.
+
 8. Key Partnerships:
-What external partnerships or collaborations are necessary for the startup to succeed?
-How will the startup build and maintain these partnerships?
-What value do these partnerships bring to the startup?
+The key partnerships are with the customers as well, as they provide data to improve the model.
+
 9. Cost Structure:
-What are the costs associated with operating the startup?
-How will the startup manage and minimize these costs?
-What cost-cutting strategies will the startup use?
+There are currently no costs, as this is done volunatarily on behalf of the module "Programming Languages for Data Science".
 
 ## Frame Problem
-Provide a statement of what is to be learned and how decisions should be made.
-We are investigating...
-Because we want to find out...
-In order to decide...
+We are investigating the characteristics of startups
+Because we want to find out, if a startup will be successful
+In order to decide to invest in it or not.
 
-We want the model to...
-Our ideal outcome is...
-In order to...
+We want the model to classify the status of a startup
+Our ideal outcome is "acquired", which means that the startup was successful
+In order to reduce the uncertainty in startup investments.
 
 ## Identify Variables
 For structured data problems, we need to identify potentially relevant variables.
-Response variable and explanatory variables
-Domain experts and literature research
+The response variable is the categorical status (acquired or closed - if a startup is ‘acquired’ by some other organization, means the startup succeeded) and there are many explanatory variables, which include the category, location, funding rounds and amount.
+The [data set](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction?resource=download&select=startup+data.csv) is from kaggle and contains data about startups since the late 1990s in the United States of America.
 
 ## Define Metrics
-Write down your metrics for success and failure with the data science project.
-Our success metrics are..
-Our key results for the success metrics are...
-Our project is deemed a failure, if...
 
-If we didn't use ML, we would...
-If we could obtain perfect information, we would be willing to spend...
-
-Strategy Mapping: Internal process, Customer perspective, Financial perspective in business model canvas
+Our success metrics are accuracy (percentage of startups that the model correctly predicts as successful or unsuccessful) and precision (indicates that the model is making fewer false positive predictions).
+Our key results for the success metrics are an accuracy and precision of more than 90%.
+Our project is deemed a failure, if the accuracy and precision are lower than 90%.
 
 # Data
 
