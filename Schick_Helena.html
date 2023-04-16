@@ -541,6 +541,9 @@ precision are lower than 90%.</p>
 <div id="prepare-environment" class="section level3" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> Prepare
 Environment</h3>
+<p>At first, R is set up.</p>
+<p>Then the necessary libraries for the entire notebook are activated
+and have been installed before.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.0     ✔ readr     2.1.4
@@ -572,6 +575,8 @@ library(GGally)</code></pre>
 </div>
 <div id="import-data" class="section level3" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> Import Data</h3>
+<p>Currently csv upload, could chnage this to upload from a
+database.</p>
 <pre class="r"><code>path &lt;- &quot;/Users/helena.schick/Documents/GitHub/r-sql-startup-success/startup data.csv&quot;
 
 df &lt;- read_csv(path)</code></pre>
@@ -586,6 +591,8 @@ df &lt;- read_csv(path)</code></pre>
 </div>
 <div id="data-structure" class="section level3" number="2.1.3">
 <h3><span class="header-section-number">2.1.3</span> Data Structure</h3>
+<p>Now, we’re having a first look at the data, including the column
+names, data types and their content.</p>
 <pre class="r"><code>glimpse(df)</code></pre>
 <pre><code>## Rows: 923
 ## Columns: 49

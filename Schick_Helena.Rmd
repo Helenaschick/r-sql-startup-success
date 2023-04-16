@@ -71,10 +71,12 @@ Our project is deemed a failure, if the accuracy and precision are lower than 90
 ## Data Ingestion
 ### Prepare Environment
 
+At first, R is set up.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Then the necessary libraries for the entire notebook are activated and have been installed before.
 ```{r libraries}
 library(tidyverse)
 library(conflicted)
@@ -88,6 +90,8 @@ library(GGally)
 ```
 
 ### Import Data 
+Currently csv upload, could chnage this to upload from a database.
+
 ```{r}
 path <- "/Users/helena.schick/Documents/GitHub/r-sql-startup-success/startup data.csv"
 
@@ -96,9 +100,12 @@ df <- read_csv(path)
 
 ### Data Structure
 
+Now, we're having a first look at the data, including the column names, data types and their content.
 ```{r}
 glimpse(df)
 ```
+
+
 ```{r}
 vis_dat(df)
 ```
