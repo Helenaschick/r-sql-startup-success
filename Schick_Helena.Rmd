@@ -104,13 +104,62 @@ Now, we're having a first look at the data, including the column names, data typ
 ```{r}
 glimpse(df)
 ```
+The column `Unnamed: 0` seems to be some kind of id, but has no further value and will be deleted. Labels and avg_participants cannot be understood without further context. `Unnamed: 6` is a combination of the zip code and city and thus redundant and will be deleted. The redundancy also accounts for state_code.1 and object_id.
+For categories and states there are each a categorical variable and several one hot encoded ones. All are kept at this point, because the categorical is better for visualizations and data understanding, but the one hot encoded ones are needed for the classification model.
+The variables are described in more detail:
+| Variable | Description | Data Type |
+| ------ | --: | ----------|
+| state_code |  Abbreviation of US state of startup's location | character |
+| latitude | Geographic North-South location of startup's location | double |
+| longitude | Geographic East-West location of startup's location | double |
+| zip_code | Zip code of the city of startup's location | double |
+| id | Unique identification of startup | string |
+| city | Name of city of startup's location | string |
+| name | Name of startup | string |
+| founded_at | Founding date of startup (MM/DD/YYYY) | date |
+| closed_at | Closing date of startup (MM/DD/YYYY) | date |
+| first_funding_at | Date of first funding received of startup (MM/DD/YYYY) | date |
+| last_funding_at | Date of last funding received of startup (MM/DD/YYYY) | date |
+| age_first_milestone_year | Age of startup when achieving first milestone | double |
+| age_last_milestone_year | Age of startup when achieving last milestone | double |
+| relationships | Amount of relationships of startup with investors, mentors,... | double |
+| funding_rounds | Amount of funding rounds | double |
+| funding_total_usd | Total amount of funding received in USD | double |
+| milestones | Amount of milestones achieved | double |
+| is_CA | Startup's location is in CA (1 = true, 0 = false) | double |
+| is_NY | Startup's location is in NY (1 = true, 0 = false) | double |
+| is_MA | Startup's location is in MA (1 = true, 0 = false) | double |
+| is_TX | Startup's location is in TX (1 = true, 0 = false) | double |
+| is_otherstate | Startup's location is in another state than CA, NY, MA or TX (1 = true, 0 = false) | double |
+| category_code | Business category of startup | string |
+| is_software | Startup's category is software (1 = true, 0 = false) | double |
+| is_web | Startup's category is web (1 = true, 0 = false) | double |
+| is_mobile | Startup's category is mobile (1 = true, 0 = false) | double |
+| is_enterprise | Startup's category is enterprise (1 = true, 0 = false) | double |
+| is_advertising | Startup's category is advertising (1 = true, 0 = false) | double |
+| is_gamesvideo | Startup's category is gamesvideo (1 = true, 0 = false) | double |
+| is_biotech | Startup's category is biotech (1 = true, 0 = false) | double |
+| is_ecommerce | Startup's category is ecommerce (1 = true, 0 = false) | double |
+| is_consulting | Startup's category is consulting (1 = true, 0 = false) | double |
+| is_othercategory | Startup's category is another category than the previously mentioned (1 = true, 0 = false) | double |
+| has_VC | Startup is financed through Venture Capital (1 = true, 0 = false) | double |
+| has_angel | Startup is financed through an angel investor (1 = true, 0 = false) | double |
+| has_roundA | Startup has succeeded in first major funding round (1 = true, 0 = false) | double |
+| has_roundB | Startup has succeeded in second major funding round (1 = true, 0 = false) | double |
+| has_roundC | Startup has succeeded in third major funding round (1 = true, 0 = false) | double |
+| has_roundD | Startup has succeeded in fourth major funding round (1 = true, 0 = false) | double |
+| is_top500 | Startup is listed in the Top500 startups (1 = true, 0 = false) | double |
+| status | Success variable of startup (acquired = successful, closed = unsuccessful) | string |
 
-
+To understand the ratio of numerical to categorical variables and view the amount of null values in the dataframe, we visualize it.
 ```{r}
 vis_dat(df)
 ```
+The majority of variables are numeric. There are many null values in the columns Unnamed:6, which will be deleted anyways, as well as closed_at, because this only applies, if the startup has failed, and age_first_milestone and age_last_milestone. We are keeping these two variables to get some insights about those startups that have them available.
 
 ### Data Corrections
+
+At first, all variables of the data type character are turned into factors. This has the advantages of memory efficiency, ordering, handling of missing values, visualization and improved functionality.
 ```{r}
 # convert all character variables to factors 
 df <- 
@@ -118,14 +167,29 @@ df <-
   mutate(across(where(is.character), as.factor))
 ```
 
+Secondly, the variables taht represent dates are turned into the data type date.
+```{r}
+# convert all date variables to actual dates 
+df$founded_at <- 
+  as.Date(df$founded_at, format = "%m/%d/%Y")
+df$closed_at <- 
+  as.Date(df$closed_at, format = "%m/%d/%Y")
+df$first_funding_at <- 
+  as.Date(df$first_funding_at, format = "%m/%d/%Y")
+df$last_funding_at <- 
+  as.Date(df$last_funding_at, format = "%m/%d/%Y")
+```
+
+In the end, unnecessary varibales are removed.
 ```{r}
 # remove unnecessary variables
 df <- 
-  dplyr::select(df, -`Unnamed: 0`, -`Unnamed: 6`, -state_code.1, -object_id)
+  dplyr::select(df, -`Unnamed: 0`, -`Unnamed: 6`, -state_code.1, -object_id, -labels, -avg_participants)
 ```
 
 ### Variable List
 
+For easier usage in data splitting, several variable lists are created.
 ```{r}
 # define outcome variable as y_label
 y_label <- 'status'
@@ -227,7 +291,7 @@ FROM df_train
 WHERE status = 'acquired';
 ```
 ```{sql connection=con}
-SELECT name, category_code, state_code, funding_total_usd, age_first_funding_year, funding_rounds, avg_participants
+SELECT name, category_code, state_code, funding_total_usd, age_first_funding_year, funding_rounds
 FROM df_train
 WHERE status = "acquired"
 ORDER BY funding_total_usd DESC
