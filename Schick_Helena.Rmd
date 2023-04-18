@@ -269,7 +269,11 @@ df_train <- train_data
 
 ## Analyze Data
 
-Data analysis is done through R and SQL. To use SQL in RStudio a connection is created and the following code cells start with {sql connection=...} instead of {r}.
+Data analysis is done through R and SQL. 
+
+### SQL Analysis
+
+To use SQL in RStudio a connection is created and the following code cells start with {sql connection=...} instead of {r}.
 ```{r}
 # Connection to database SQlite
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -458,15 +462,25 @@ The average milestone duration is almost double, with roughly 2 years between mi
 
 ### Categorical Features
 
+For every categorical feature the count of each category is created and the 10 most frequent ones are presented.
 ```{r}
+n <- 10  # Number of most frequent levels to show
 for (i in feat_cat){
   
-  p <- ggplot(df_train, aes_string(x=i)) +
-  geom_bar()
+  counts <- df_train %>% count(!!sym(i)) %>% arrange(desc(n)) %>% head(n)
+  
+  p <- ggplot(counts, aes_string(x=i, y="n")) +
+    geom_bar(stat="identity")
   
   plot(p)
-  }
+}
 ```
+The most common states are California by far, followed by New York and Massachusetts. This is also represented in the zip codes, as the most frequent ones start with 9 which indicates CA. And the most common cities are San Francisco and New York. It will be interesting to look at visualization of this geographcal data later.
+There are one duplicate id and name that have to be deleted.
+The founding dates are quite evenly spread out between 1999 and 2009. The closing dates of failed stratups are high in 2012 and 2013 and the first one closed already in 2009.
+The first funding rounds took place in 2005 to 2008 and the last funding rounds in 2006 until 2012.MostLast funding rounds were in 2008.
+The most common categories of startups are web and software.
+
 
 ### Numerical Features
 
@@ -524,6 +538,8 @@ Check Range Consistency
 or TFX
 
 ## Anomaly Detection
+
+delete duplicate id and name
 
 ### Missing Values
 
