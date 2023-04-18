@@ -1168,559 +1168,50 @@ LIMIT 5;</code></pre>
 </tbody>
 </table>
 </div>
-<p>Obtain all distinct observations with the status “acquired”.</p>
-<pre class="sql"><code>SELECT *
+<p>Count all distinct observations with the status “acquired”.</p>
+<pre class="sql"><code>SELECT DISTINCT COUNT(*)
 FROM df_train
 WHERE status = &#39;acquired&#39;;</code></pre>
 <div class="knitsql-table">
 <table>
-<caption>Displaying records 1 - 10</caption>
-<colgroup>
-<col width="2%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="3%" />
-<col width="2%" />
-<col width="1%" />
-<col width="3%" />
-<col width="2%" />
-<col width="4%" />
-<col width="4%" />
-<col width="4%" />
-<col width="4%" />
-<col width="2%" />
-<col width="2%" />
-<col width="3%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="3%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="3%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-</colgroup>
+<caption>1 records</caption>
 <thead>
 <tr class="header">
-<th align="left">state_code</th>
-<th align="right">latitude</th>
-<th align="right">longitude</th>
-<th align="left">zip_code</th>
-<th align="left">id</th>
-<th align="left">city</th>
-<th align="left">name</th>
-<th align="right">founded_at</th>
-<th align="right">closed_at</th>
-<th align="right">first_funding_at</th>
-<th align="right">last_funding_at</th>
-<th align="right">age_first_funding_year</th>
-<th align="right">age_last_funding_year</th>
-<th align="right">age_first_milestone_year</th>
-<th align="right">age_last_milestone_year</th>
-<th align="right">relationships</th>
-<th align="right">funding_rounds</th>
-<th align="right">funding_total_usd</th>
-<th align="right">milestones</th>
-<th align="right">is_CA</th>
-<th align="right">is_NY</th>
-<th align="right">is_MA</th>
-<th align="right">is_TX</th>
-<th align="right">is_otherstate</th>
-<th align="left">category_code</th>
-<th align="right">is_software</th>
-<th align="right">is_web</th>
-<th align="right">is_mobile</th>
-<th align="right">is_enterprise</th>
-<th align="right">is_advertising</th>
-<th align="right">is_gamesvideo</th>
-<th align="right">is_ecommerce</th>
-<th align="right">is_biotech</th>
-<th align="right">is_consulting</th>
-<th align="right">is_othercategory</th>
-<th align="right">has_VC</th>
-<th align="right">has_angel</th>
-<th align="right">has_roundA</th>
-<th align="right">has_roundB</th>
-<th align="right">has_roundC</th>
-<th align="right">has_roundD</th>
-<th align="right">is_top500</th>
-<th align="left">status</th>
+<th align="right">COUNT(*)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">CA</td>
-<td align="right">42.35888</td>
-<td align="right">-71.05682</td>
-<td align="left">92101</td>
-<td align="left">c:6669</td>
-<td align="left">San Diego</td>
-<td align="left">Bandsintown</td>
-<td align="right">13514</td>
-<td align="right">NA</td>
-<td align="right">14335</td>
-<td align="right">14610</td>
-<td align="right">2.2493</td>
-<td align="right">3.0027</td>
-<td align="right">4.6685</td>
-<td align="right">6.7041</td>
-<td align="right">3</td>
-<td align="right">3</td>
-<td align="right">375000</td>
-<td align="right">3</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">music</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="even">
-<td align="left">CA</td>
-<td align="right">37.23892</td>
-<td align="right">-121.97372</td>
-<td align="left">95032</td>
-<td align="left">c:16283</td>
-<td align="left">Los Gatos</td>
-<td align="left">TriCipher</td>
-<td align="right">10957</td>
-<td align="right">NA</td>
-<td align="right">12828</td>
-<td align="right">14606</td>
-<td align="right">5.1260</td>
-<td align="right">9.9973</td>
-<td align="right">7.0055</td>
-<td align="right">7.0055</td>
-<td align="right">9</td>
-<td align="right">4</td>
-<td align="right">40100000</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">enterprise</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="odd">
-<td align="left">CA</td>
-<td align="right">32.90105</td>
-<td align="right">-117.19266</td>
-<td align="left">92121</td>
-<td align="left">c:65620</td>
-<td align="left">San Diego</td>
-<td align="left">Plixi</td>
-<td align="right">14321</td>
-<td align="right">NA</td>
-<td align="right">14698</td>
-<td align="right">14698</td>
-<td align="right">1.0329</td>
-<td align="right">1.0329</td>
-<td align="right">1.4575</td>
-<td align="right">2.2055</td>
-<td align="right">5</td>
-<td align="right">1</td>
-<td align="right">2600000</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">web</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="even">
-<td align="left">CA</td>
-<td align="right">38.05711</td>
-<td align="right">-122.51374</td>
-<td align="left">94901</td>
-<td align="left">c:5192</td>
-<td align="left">San Rafael</td>
-<td align="left">ClairMail</td>
-<td align="right">12418</td>
-<td align="right">NA</td>
-<td align="right">13019</td>
-<td align="right">14886</td>
-<td align="right">1.6466</td>
-<td align="right">6.7616</td>
-<td align="right">5.6055</td>
-<td align="right">7.3616</td>
-<td align="right">25</td>
-<td align="right">3</td>
-<td align="right">34100000</td>
-<td align="right">3</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">finance</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="odd">
-<td align="left">NY</td>
-<td align="right">40.70276</td>
-<td align="right">-73.98667</td>
-<td align="left">11201</td>
-<td align="left">c:1491</td>
-<td align="left">Brooklyn</td>
-<td align="left">drop.io</td>
-<td align="right">13843</td>
-<td align="right">NA</td>
-<td align="right">13850</td>
-<td align="right">14732</td>
-<td align="right">0.0192</td>
-<td align="right">2.4356</td>
-<td align="right">0.7945</td>
-<td align="right">4.3781</td>
-<td align="right">15</td>
-<td align="right">3</td>
-<td align="right">9950000</td>
-<td align="right">3</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">education</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="even">
-<td align="left">CO</td>
-<td align="right">39.74627</td>
-<td align="right">-104.99116</td>
-<td align="left">80202</td>
-<td align="left">c:15645</td>
-<td align="left">Denver</td>
-<td align="left">Stratavia</td>
-<td align="right">11323</td>
-<td align="right">NA</td>
-<td align="right">13026</td>
-<td align="right">14607</td>
-<td align="right">4.6658</td>
-<td align="right">8.9973</td>
-<td align="right">8.8384</td>
-<td align="right">8.8384</td>
-<td align="right">12</td>
-<td align="right">5</td>
-<td align="right">10700000</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">software</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="odd">
-<td align="left">CA</td>
-<td align="right">37.59034</td>
-<td align="right">-122.34171</td>
-<td align="left">94010</td>
-<td align="left">c:107</td>
-<td align="left">Burlingame</td>
-<td align="left">MeeVee</td>
-<td align="right">11139</td>
-<td align="right">NA</td>
-<td align="right">12815</td>
-<td align="right">13757</td>
-<td align="right">4.5918</td>
-<td align="right">7.1726</td>
-<td align="right">-0.4986</td>
-<td align="right">12.6795</td>
-<td align="right">7</td>
-<td align="right">4</td>
-<td align="right">25000000</td>
-<td align="right">3</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">games_video</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="even">
-<td align="left">TX</td>
-<td align="right">30.23504</td>
-<td align="right">-97.80013</td>
-<td align="left">78735</td>
-<td align="left">c:22291</td>
-<td align="left">Austin</td>
-<td align="left">Metreos Corporation</td>
-<td align="right">11323</td>
-<td align="right">NA</td>
-<td align="right">12131</td>
-<td align="right">12705</td>
-<td align="right">2.2137</td>
-<td align="right">3.7863</td>
-<td align="right">4.0877</td>
-<td align="right">9.4986</td>
-<td align="right">8</td>
-<td align="right">2</td>
-<td align="right">4355000</td>
-<td align="right">3</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="left">software</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="odd">
-<td align="left">IL</td>
-<td align="right">41.87555</td>
-<td align="right">-87.62442</td>
-<td align="left">60601</td>
-<td align="left">c:45525</td>
-<td align="left">Chicago</td>
-<td align="left">BridgePort Networks</td>
-<td align="right">11688</td>
-<td align="right">NA</td>
-<td align="right">13455</td>
-<td align="right">13455</td>
-<td align="right">4.8411</td>
-<td align="right">4.8411</td>
-<td align="right">1.0000</td>
-<td align="right">1.0000</td>
-<td align="right">3</td>
-<td align="right">1</td>
-<td align="right">13000000</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">software</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
-</tr>
-<tr class="even">
-<td align="left">CA</td>
-<td align="right">37.42968</td>
-<td align="right">-122.10855</td>
-<td align="left">94303</td>
-<td align="left">c:3193</td>
-<td align="left">Palo Alto</td>
-<td align="left">Scalent Systems</td>
-<td align="right">12053</td>
-<td align="right">NA</td>
-<td align="right">13535</td>
-<td align="right">13535</td>
-<td align="right">4.0603</td>
-<td align="right">4.0603</td>
-<td align="right">3.0027</td>
-<td align="right">3.0027</td>
-<td align="right">7</td>
-<td align="right">1</td>
-<td align="right">15000000</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">public_relations</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">acquired</td>
+<td align="right">447</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>There are 447 startups in the training data that are successful.</p>
+<p>Count all distinct observations with the status “closed”.</p>
+<pre class="sql"><code>SELECT DISTINCT COUNT(*)
+FROM df_train
+WHERE status = &#39;closed&#39;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">244</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>There are 244 startups in the training data that are not successful.
+Neither of these too small to worry about an uneven distribution for the
+model performance later on.</p>
+<p>Which successful startups receive the most funding? Also providing
+more information about these companies.</p>
 <pre class="sql"><code>SELECT name, category_code, state_code, funding_total_usd, age_first_funding_year, funding_rounds
 FROM df_train
 WHERE status = &quot;acquired&quot;
@@ -1791,74 +1282,34 @@ LIMIT 5;</code></pre>
 </tbody>
 </table>
 </div>
-<pre class="sql"><code>SELECT category_code, state_code, funding_total_usd
+<p>The startups that received the most funding are Clearwire, Pearl
+Therapeutics and Luminus Devices.</p>
+<p>In which state and category is the most funding raised?</p>
+<pre class="sql"><code>SELECT category_code, state_code, SUM(funding_total_usd)
 FROM df_train
 WHERE status = &quot;acquired&quot;
-ORDER BY funding_total_usd DESC;</code></pre>
+ORDER BY SUM(funding_total_usd) DESC;</code></pre>
 <div class="knitsql-table">
 <table>
-<caption>Displaying records 1 - 10</caption>
+<caption>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">category_code</th>
 <th align="left">state_code</th>
-<th align="right">funding_total_usd</th>
+<th align="right">SUM(funding_total_usd)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">mobile</td>
-<td align="left">WA</td>
-<td align="right">5700000000</td>
-</tr>
-<tr class="even">
-<td align="left">biotech</td>
+<td align="left">music</td>
 <td align="left">CA</td>
-<td align="right">232000100</td>
-</tr>
-<tr class="odd">
-<td align="left">other</td>
-<td align="left">MA</td>
-<td align="right">135826373</td>
-</tr>
-<tr class="even">
-<td align="left">web</td>
-<td align="left">NY</td>
-<td align="right">125250000</td>
-</tr>
-<tr class="odd">
-<td align="left">mobile</td>
-<td align="left">WA</td>
-<td align="right">122500000</td>
-</tr>
-<tr class="even">
-<td align="left">biotech</td>
-<td align="left">CA</td>
-<td align="right">122000000</td>
-</tr>
-<tr class="odd">
-<td align="left">mobile</td>
-<td align="left">MA</td>
-<td align="right">121500000</td>
-</tr>
-<tr class="even">
-<td align="left">cleantech</td>
-<td align="left">CA</td>
-<td align="right">108900000</td>
-</tr>
-<tr class="odd">
-<td align="left">web</td>
-<td align="left">MD</td>
-<td align="right">100000000</td>
-</tr>
-<tr class="even">
-<td align="left">enterprise</td>
-<td align="left">NY</td>
-<td align="right">90000000</td>
+<td align="right">15279949206</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>Most funding is raised in the music business in California.</p>
+<p>In which categories are most successful startups founded?</p>
 <pre class="sql"><code>SELECT category_code, COUNT(status = &quot;acquired&quot;) as count
 FROM df_train
 GROUP BY category_code
@@ -1916,6 +1367,10 @@ ORDER BY count DESC;</code></pre>
 </tbody>
 </table>
 </div>
+<p>Most successful startups are in the software and web business. There
+are only very few successful startups in the categories sports,
+hospitality, health and automotive.</p>
+<p>In which states are most successful startups founded?</p>
 <pre class="sql"><code>SELECT state_code, COUNT(status = &quot;acquired&quot;) as count
 FROM df_train
 GROUP BY category_code
@@ -1973,346 +1428,366 @@ ORDER BY count DESC;</code></pre>
 </tbody>
 </table>
 </div>
-<pre class="sql"><code>SELECT state_code, category_code, COUNT(status = &quot;acquired&quot;) as count, AVG(funding_total_usd)
+<p>Most successful startups are founded in Colorado and California.</p>
+<p>How many successful vs. unsuccessful startups have Round A
+funding?</p>
+<pre class="sql"><code>SELECT COUNT(*)
 FROM df_train
-WHERE age_first_funding_year &lt; 2
-GROUP BY state_code
-ORDER BY AVG(funding_total_usd) DESC;</code></pre>
+WHERE has_roundA = 1 AND status = &quot;acquired&quot;;</code></pre>
 <div class="knitsql-table">
 <table>
-<caption>Displaying records 1 - 10</caption>
+<caption>1 records</caption>
 <thead>
 <tr class="header">
-<th align="left">state_code</th>
-<th align="left">category_code</th>
-<th align="right">count</th>
-<th align="right">AVG(funding_total_usd)</th>
+<th align="right">COUNT(*)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">NJ</td>
-<td align="left">ecommerce</td>
-<td align="right">2</td>
-<td align="right">42000000</td>
+<td align="right">256</td>
 </tr>
-<tr class="even">
-<td align="left">GA</td>
-<td align="left">enterprise</td>
-<td align="right">1</td>
-<td align="right">33000000</td>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundA = 1 AND status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
 </tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td align="left">CT</td>
-<td align="left">network_hosting</td>
-<td align="right">2</td>
-<td align="right">28150000</td>
+<td align="right">97</td>
 </tr>
-<tr class="even">
-<td align="left">VA</td>
-<td align="left">software</td>
-<td align="right">4</td>
-<td align="right">26380000</td>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundA = 1 AND status = &quot;acquired&quot; and age_first_funding_year &lt; 2;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
 </tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td align="left">MA</td>
-<td align="left">software</td>
+<td align="right">202</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundA = 1 AND status = &quot;closed&quot; and age_first_funding_year &lt; 2;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">66</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>256 startups that have a Round A funding are successful, 97 are not.
+Looking at young startups, who received their first funding before
+turning two years old, 202 received Round A funding, but 66 failed. This
+shows that most startups are younger than two years when receiving their
+Round A funding, but it’s hard to predict whether they will succeed.</p>
+<p>Now looking at the same comparison for Round B funding.</p>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundB = 1 AND status = &quot;acquired&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">213</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundB = 1 AND status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">62</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>213 startups who receive Round B funding succeed and 62 fail. As
+these numbers are not tremendously lower than the round A funding, this
+indicates that many startups who received a Round A funding, also get
+Round B funding. The ratio of succeeding startups has risen a lot from
+Round A to Round B, so the investment is already more certain.</p>
+<p>Having a closer look at the next funding round, Round C.</p>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundc = 1 AND status = &quot;acquired&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">135</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundC = 1 AND status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="right">33</td>
-<td align="right">23264926</td>
-</tr>
-<tr class="even">
-<td align="left">CA</td>
-<td align="left">web</td>
-<td align="right">221</td>
-<td align="right">17679210</td>
-</tr>
-<tr class="odd">
-<td align="left">DC</td>
-<td align="left">advertising</td>
-<td align="right">1</td>
-<td align="right">15564591</td>
-</tr>
-<tr class="even">
-<td align="left">NC</td>
-<td align="left">software</td>
-<td align="right">3</td>
-<td align="right">13617398</td>
-</tr>
-<tr class="odd">
-<td align="left">NY</td>
-<td align="left">education</td>
-<td align="right">59</td>
-<td align="right">13298657</td>
-</tr>
-<tr class="even">
-<td align="left">NH</td>
-<td align="left">mobile</td>
-<td align="right">2</td>
-<td align="right">12212500</td>
 </tr>
 </tbody>
 </table>
 </div>
-<pre class="sql"><code>SELECT state_code, category_code, COUNT(status = &quot;acquired&quot;) as count, AVG(funding_total_usd)
+<p>These number got quite lower, as only 135 of startups in Round C
+funding succeed and 33 fail.</p>
+<p>And having a closer look at the last funding round, Round D.</p>
+<pre class="sql"><code>SELECT COUNT(*)
 FROM df_train
-WHERE age_first_funding_year &lt; 2
-GROUP BY state_code
-ORDER BY count DESC;</code></pre>
+WHERE has_roundD = 1 AND status = &quot;acquired&quot;;</code></pre>
 <div class="knitsql-table">
 <table>
-<caption>Displaying records 1 - 10</caption>
+<caption>1 records</caption>
 <thead>
 <tr class="header">
-<th align="left">state_code</th>
-<th align="left">category_code</th>
-<th align="right">count</th>
-<th align="right">AVG(funding_total_usd)</th>
+<th align="right">COUNT(*)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">CA</td>
-<td align="left">web</td>
-<td align="right">221</td>
-<td align="right">17679210</td>
+<td align="right">54</td>
 </tr>
-<tr class="even">
-<td align="left">NY</td>
-<td align="left">education</td>
-<td align="right">59</td>
-<td align="right">13298657</td>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_roundD = 1 AND status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
 </tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td align="left">MA</td>
-<td align="left">software</td>
-<td align="right">33</td>
-<td align="right">23264926</td>
-</tr>
-<tr class="even">
-<td align="left">TX</td>
-<td align="left">web</td>
-<td align="right">16</td>
-<td align="right">8681250</td>
-</tr>
-<tr class="odd">
-<td align="left">WA</td>
-<td align="left">software</td>
-<td align="right">15</td>
-<td align="right">10152858</td>
-</tr>
-<tr class="even">
-<td align="left">IL</td>
-<td align="left">software</td>
 <td align="right">9</td>
-<td align="right">11577468</td>
-</tr>
-<tr class="odd">
-<td align="left">PA</td>
-<td align="left">semiconductor</td>
-<td align="right">7</td>
-<td align="right">6182143</td>
-</tr>
-<tr class="even">
-<td align="left">CO</td>
-<td align="left">network_hosting</td>
-<td align="right">7</td>
-<td align="right">11300855</td>
-</tr>
-<tr class="odd">
-<td align="left">VA</td>
-<td align="left">software</td>
-<td align="right">4</td>
-<td align="right">26380000</td>
-</tr>
-<tr class="even">
-<td align="left">OH</td>
-<td align="left">web</td>
-<td align="right">4</td>
-<td align="right">243750</td>
 </tr>
 </tbody>
 </table>
 </div>
-<pre class="sql"><code>SELECT state_code, category_code, COUNT(status = &quot;acquired&quot;) as count , AVG(funding_total_usd)
+<p>Comparably few startups make it to Round D, only 54 succeed and 9
+fail.</p>
+<p>Other investment options are also considered. First having a look at
+the success of startups that have venture capital.</p>
+<pre class="sql"><code>SELECT COUNT(*)
 FROM df_train
-WHERE age_first_funding_year &gt; 2
-GROUP BY state_code
-ORDER BY COUNT(status = &quot;acquired&quot;) DESC;</code></pre>
+WHERE has_vc = 1 AND status = &quot;acquired&quot;;</code></pre>
 <div class="knitsql-table">
 <table>
-<caption>Displaying records 1 - 10</caption>
+<caption>1 records</caption>
 <thead>
 <tr class="header">
-<th align="left">state_code</th>
-<th align="left">category_code</th>
-<th align="right">count</th>
-<th align="right">AVG(funding_total_usd)</th>
+<th align="right">COUNT(*)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">CA</td>
-<td align="left">music</td>
-<td align="right">144</td>
-<td align="right">25053496</td>
-</tr>
-<tr class="even">
-<td align="left">MA</td>
-<td align="left">software</td>
-<td align="right">30</td>
-<td align="right">23488066</td>
-</tr>
-<tr class="odd">
-<td align="left">WA</td>
-<td align="left">public_relations</td>
-<td align="right">19</td>
-<td align="right">318204270</td>
-</tr>
-<tr class="even">
-<td align="left">NY</td>
-<td align="left">music</td>
-<td align="right">17</td>
-<td align="right">14964582</td>
-</tr>
-<tr class="odd">
-<td align="left">TX</td>
-<td align="left">software</td>
-<td align="right">13</td>
-<td align="right">24021154</td>
-</tr>
-<tr class="even">
-<td align="left">CO</td>
-<td align="left">software</td>
-<td align="right">9</td>
-<td align="right">77094444</td>
-</tr>
-<tr class="odd">
-<td align="left">GA</td>
-<td align="left">mobile</td>
-<td align="right">7</td>
-<td align="right">24483712</td>
-</tr>
-<tr class="even">
-<td align="left">MD</td>
-<td align="left">web</td>
-<td align="right">5</td>
-<td align="right">28471493</td>
-</tr>
-<tr class="odd">
-<td align="left">IL</td>
-<td align="left">software</td>
-<td align="right">5</td>
-<td align="right">16593306</td>
-</tr>
-<tr class="even">
-<td align="left">VA</td>
-<td align="left">software</td>
-<td align="right">4</td>
-<td align="right">9050000</td>
+<td align="right">139</td>
 </tr>
 </tbody>
 </table>
 </div>
-<pre class="sql"><code>SELECT state_code, category_code, COUNT(status = &quot;acquired&quot;) as count , AVG(funding_total_usd)
+<pre class="sql"><code>SELECT COUNT(*)
 FROM df_train
-WHERE founded_at &gt; &quot;01/01/2007&quot;
-GROUP BY state_code
-ORDER BY COUNT(status = &quot;acquired&quot;) DESC;</code></pre>
+WHERE has_vc = 1 AND status = &quot;closed&quot;;</code></pre>
 <div class="knitsql-table">
 <table>
-<caption>0 records</caption>
+<caption>1 records</caption>
 <thead>
 <tr class="header">
-<th align="left">state_code</th>
-<th align="left">category_code</th>
-<th align="left">count</th>
-<th align="left">AVG(funding_total_usd)</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-</div>
-<pre class="sql"><code>SELECT state_code, category_code, COUNT(status = &quot;acquired&quot;) as count , AVG(funding_total_usd)
-FROM df_train
-WHERE founded_at &lt; &quot;01/01/2007&quot;
-GROUP BY state_code
-ORDER BY COUNT(status = &quot;acquired&quot;) DESC;</code></pre>
-<div class="knitsql-table">
-<table>
-<caption>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="left">state_code</th>
-<th align="left">category_code</th>
-<th align="right">count</th>
-<th align="right">AVG(funding_total_usd)</th>
+<th align="right">COUNT(*)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">CA</td>
-<td align="left">music</td>
-<td align="right">365</td>
-<td align="right">20588517</td>
+<td align="right">85</td>
 </tr>
-<tr class="even">
-<td align="left">NY</td>
-<td align="left">education</td>
+</tbody>
+</table>
+</div>
+<p>139 startups that have venture capital succeed and 85 fail. This
+ratio is worse than in funding rounds.</p>
+<p>How about business angel investments?</p>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_angel = 1 AND status = &quot;acquired&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">93</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT COUNT(*)
+FROM df_train
+WHERE has_angel = 1 AND status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="right">77</td>
-<td align="right">13496346</td>
-</tr>
-<tr class="odd">
-<td align="left">MA</td>
-<td align="left">software</td>
-<td align="right">63</td>
-<td align="right">23371183</td>
-</tr>
-<tr class="even">
-<td align="left">WA</td>
-<td align="left">public_relations</td>
-<td align="right">34</td>
-<td align="right">182299236</td>
-</tr>
-<tr class="odd">
-<td align="left">TX</td>
-<td align="left">software</td>
-<td align="right">30</td>
-<td align="right">15932500</td>
-</tr>
-<tr class="even">
-<td align="left">CO</td>
-<td align="left">software</td>
-<td align="right">16</td>
-<td align="right">48309749</td>
-</tr>
-<tr class="odd">
-<td align="left">IL</td>
-<td align="left">software</td>
-<td align="right">14</td>
-<td align="right">13368838</td>
-</tr>
-<tr class="even">
-<td align="left">PA</td>
-<td align="left">ecommerce</td>
-<td align="right">10</td>
-<td align="right">15678346</td>
-</tr>
-<tr class="odd">
-<td align="left">VA</td>
-<td align="left">software</td>
-<td align="right">8</td>
-<td align="right">17715000</td>
-</tr>
-<tr class="even">
-<td align="left">GA</td>
-<td align="left">enterprise</td>
-<td align="right">8</td>
-<td align="right">25548248</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>The ratio of failing to succeeding startups, who have a business
+angel investment, is the worst in comparison to other invetsment
+options, 77 fail and 93 succeed.</p>
+<p>How many funding rounds to successful vs. failed startups have?</p>
+<pre class="sql"><code>SELECT AVG(funding_rounds)
+FROM df_train
+WHERE status = &quot;acquired&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">AVG(funding_rounds)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2.525727</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT AVG(funding_rounds)
+FROM df_train
+WHERE status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">AVG(funding_rounds)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.942623</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Successful startups have more funding_rounds than failed ones, which
+makes total sense, because most startups go through all funding rounds
+before being acquired.</p>
+<p>How does the duration between achieving major milestones differ
+between successful vs. failed startups?</p>
+<pre class="sql"><code>SELECT AVG(age_last_milestone_year - age_first_milestone_year) as avg_milestoneduration
+FROM df_train
+WHERE status = &quot;acquired&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">avg_milestoneduration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.939018</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT AVG(age_last_milestone_year - age_first_milestone_year) as avg_milestoneduration
+FROM df_train
+WHERE status = &quot;closed&quot;;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">avg_milestoneduration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.084851</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The average milestone duration is almost double, with roughly 2 years
+between milestones, for successful startups versus failed ones.</p>
 <div id="categorical-features" class="section level3" number="2.3.1">
 <h3><span class="header-section-number">2.3.1</span> Categorical
 Features</h3>

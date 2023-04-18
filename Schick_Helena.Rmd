@@ -288,12 +288,23 @@ FROM df_train
 LIMIT 5;
 ```
 
-Obtain all distinct observations with the status "acquired".
+Count all distinct observations with the status "acquired".
 ```{sql connection=con}
-SELECT *
+SELECT DISTINCT COUNT(*)
 FROM df_train
 WHERE status = 'acquired';
 ```
+There are 447 startups in the training data that are successful.
+
+Count all distinct observations with the status "closed".
+```{sql connection=con}
+SELECT DISTINCT COUNT(*)
+FROM df_train
+WHERE status = 'closed';
+```
+There are 244 startups in the training data that are not successful. Neither of these too small to worry about an uneven distribution for the model performance later on.
+
+Which successful startups receive the most funding? Also providing more information about these companies.
 ```{sql connection=con}
 SELECT name, category_code, state_code, funding_total_usd, age_first_funding_year, funding_rounds
 FROM df_train
@@ -301,67 +312,149 @@ WHERE status = "acquired"
 ORDER BY funding_total_usd DESC
 LIMIT 5;
 ```
+The startups that received the most funding are Clearwire, Pearl Therapeutics and Luminus Devices.
 
+In which state and category is the most funding raised?
 ```{sql connection=con}
-SELECT category_code, state_code, funding_total_usd
+SELECT category_code, state_code, SUM(funding_total_usd)
 FROM df_train
 WHERE status = "acquired"
-ORDER BY funding_total_usd DESC;
+ORDER BY SUM(funding_total_usd) DESC;
 ```
+Most funding is raised in the music business in California.
 
+In which categories are most successful startups founded?
 ```{sql connection=con}
 SELECT category_code, COUNT(status = "acquired") as count
 FROM df_train
 GROUP BY category_code
 ORDER BY count DESC;
 ```
+Most successful startups are in the software and web business. There are only very few successful startups in the categories sports, hospitality, health and automotive.
 
+In which states are most successful startups founded?
 ```{sql connection=con}
 SELECT state_code, COUNT(status = "acquired") as count
 FROM df_train
 GROUP BY category_code
 ORDER BY count DESC;
 ```
+Most successful startups are founded in Colorado and California.
 
+How many successful vs. unsuccessful startups have Round A funding?
 ```{sql connection=con}
-SELECT state_code, category_code, COUNT(status = "acquired") as count, AVG(funding_total_usd)
+SELECT COUNT(*)
 FROM df_train
-WHERE age_first_funding_year < 2
-GROUP BY state_code
-ORDER BY AVG(funding_total_usd) DESC;
+WHERE has_roundA = 1 AND status = "acquired";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundA = 1 AND status = "closed";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundA = 1 AND status = "acquired" and age_first_funding_year < 2;
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundA = 1 AND status = "closed" and age_first_funding_year < 2;
+```
+256 startups that have a Round A funding are successful, 97 are not. Looking at young startups, who received their first funding before turning two years old, 202 received Round A funding, but 66 failed. This shows that most startups are younger than two years when receiving their Round A funding, but it's hard to predict whether they will succeed.
+
+Now looking at the same comparison for Round B funding.
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundB = 1 AND status = "acquired";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundB = 1 AND status = "closed";
+```
+213 startups who receive Round B funding succeed and 62 fail. As these numbers are not tremendously lower than the round A funding, this indicates that many startups who received a Round A funding, also get Round B funding. The ratio of succeeding startups has risen a lot from Round A to Round B, so the investment is already more certain.
+
+Having a closer look at the next funding round, Round C.
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundc = 1 AND status = "acquired";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundC = 1 AND status = "closed";
+```
+These number got quite lower, as only 135 of startups in Round C funding succeed and 33 fail.
+
+And having a closer look at the last funding round, Round D.
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundD = 1 AND status = "acquired";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_roundD = 1 AND status = "closed";
+```
+Comparably few startups make it to Round D, only 54 succeed and 9 fail.
+
+Other investment options are also considered. First having a look at the success of startups that have venture capital.
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_vc = 1 AND status = "acquired";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_vc = 1 AND status = "closed";
+```
+139 startups that have venture capital succeed and 85 fail. This ratio is worse than in funding rounds.
+
+How about business angel investments?
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_angel = 1 AND status = "acquired";
+```
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE has_angel = 1 AND status = "closed";
+```
+The ratio of failing to succeeding startups, who have a business angel investment, is the worst in comparison to other invetsment options, 77 fail and 93 succeed.
+
+How many funding rounds to successful vs. failed startups have?
+```{sql connection=con}
+SELECT AVG(funding_rounds)
+FROM df_train
+WHERE status = "acquired";
+```
+```{sql connection=con}
+SELECT AVG(funding_rounds)
+FROM df_train
+WHERE status = "closed";
+```
+Successful startups have more funding_rounds than failed ones, which makes total sense, because most startups go through all funding rounds before being acquired.
+
+How does the duration between achieving major milestones differ between successful vs. failed startups?
+```{sql connection=con}
+SELECT AVG(age_last_milestone_year - age_first_milestone_year) as avg_milestoneduration
+FROM df_train
+WHERE status = "acquired";
 ```
 
 ```{sql connection=con}
-SELECT state_code, category_code, COUNT(status = "acquired") as count, AVG(funding_total_usd)
+SELECT AVG(age_last_milestone_year - age_first_milestone_year) as avg_milestoneduration
 FROM df_train
-WHERE age_first_funding_year < 2
-GROUP BY state_code
-ORDER BY count DESC;
+WHERE status = "closed";
 ```
-
-```{sql connection=con}
-SELECT state_code, category_code, COUNT(status = "acquired") as count , AVG(funding_total_usd)
-FROM df_train
-WHERE age_first_funding_year > 2
-GROUP BY state_code
-ORDER BY COUNT(status = "acquired") DESC;
-```
-
-```{sql connection=con}
-SELECT state_code, category_code, COUNT(status = "acquired") as count , AVG(funding_total_usd)
-FROM df_train
-WHERE founded_at > "01/01/2007"
-GROUP BY state_code
-ORDER BY COUNT(status = "acquired") DESC;
-```
-
-```{sql connection=con}
-SELECT state_code, category_code, COUNT(status = "acquired") as count , AVG(funding_total_usd)
-FROM df_train
-WHERE founded_at < "01/01/2007"
-GROUP BY state_code
-ORDER BY COUNT(status = "acquired") DESC;
-```
+The average milestone duration is almost double, with roughly 2 years between milestones, for successful startups versus failed ones. 
 
 ### Categorical Features
 
