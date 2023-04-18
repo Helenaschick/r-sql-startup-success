@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2023-04-17" />
+<meta name="date" content="2023-04-18" />
 
 <title>Startup Success Prediction</title>
 
@@ -352,7 +352,7 @@ display: none;
 <h1 class="title toc-ignore">Startup Success Prediction</h1>
 <h3 class="subtitle">Programming Languages - Project by Helena
 Schick</h3>
-<h4 class="date">2023-04-17</h4>
+<h4 class="date">2023-04-18</h4>
 
 </div>
 
@@ -572,6 +572,7 @@ library(GGally)</code></pre>
 <pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
 ##   method from   
 ##   +.gg   ggplot2</code></pre>
+<pre class="r"><code>library(DBI)</code></pre>
 </div>
 <div id="import-data" class="section level3" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> Import Data</h3>
@@ -781,6 +782,9 @@ y &lt;-
 <div id="train-and-test-split" class="section level3" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> Train and Test
 Split</h3>
+<p>The dataframe is split into a training and test set. The training set
+will be used to train the model and the the test set is used to verify
+how well the model performs with newly added data.</p>
 <pre class="r"><code># Fix the random numbers by setting the seed 
 # This enables the analysis to be reproducible 
 set.seed(42)
@@ -802,6 +806,9 @@ data_split &lt;- initial_split(df,
 <pre class="r"><code># Create dataframes for the two sets:
 train_data &lt;- training(data_split) 
 test_data &lt;- testing(data_split)</code></pre>
+<p>From the training data another split is performed to create
+validation data. This is used to verify the model before adding new data
+to avoid overfitting of the model to the training data.</p>
 <pre class="r"><code>set.seed(42)
 
 cv_folds &lt;- 
@@ -813,17 +820,17 @@ cv_folds &lt;-
 <div id="data-exploration-set" class="section level3" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> Data Exploration
 Set</h3>
+<p>A copy of the training data is created for the data exploration to
+not alter the actual training data.</p>
 <pre class="r"><code>df_train &lt;- train_data </code></pre>
 </div>
 </div>
 <div id="analyze-data" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Analyze Data</h2>
-<p>SQL and R</p>
-<p>Connection to SQL</p>
-<pre class="r"><code>library(DBI)
-library(gapminder)
-
-# Connection to database SQlite
+<p>Data analysis is done through R and SQL. To use SQL in RStudio a
+connection is created and the following code cells start with {sql
+connection=…} instead of {r}.</p>
+<pre class="r"><code># Connection to database SQlite
 con &lt;- dbConnect(RSQLite::SQLite(), &quot;:memory:&quot;)
 
 # Write data &quot;df_train&quot; into database
@@ -832,6 +839,8 @@ dbWriteTable(con, &quot;df_train&quot;, df_train)
 # List tables
 dbListTables(con)</code></pre>
 <pre><code>## [1] &quot;df_train&quot;</code></pre>
+<p>At first, we want to get an overview of the training data and have a
+look at the first 5 rows.</p>
 <pre class="sql"><code>SELECT *
 FROM df_train
 LIMIT 5;</code></pre>

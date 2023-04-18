@@ -11,6 +11,7 @@ output:
 
 # Plan
 ## Identify Use Case
+
 The objective of this project is to predict the success of startups. A startup is a new company founded by an entrepreneur with the intent to grow beyond the solo founder according to [wikipedia](https://en.wikipedia.org/wiki/Startup_company). 
 Startups play major role in the economy, as they foster innovation and create employment as they grow. Yet, they face high uncertainty and need to find investors to continue their ideas and expand their potential. This project focuses on the investors to find companies with great potential to invest in and thus being one step ahead of the competition.
 A business model canvas is used to describe the use case in more detail.
@@ -47,6 +48,7 @@ The key partnerships are with the customers as well, as they provide data to imp
 There are currently no costs, as this is done volunatarily on behalf of the module "Programming Languages for Data Science".
 
 ## Frame Problem
+
 We are investigating the characteristics of startups
 Because we want to find out, if a startup will be successful
 In order to decide to invest in it or not.
@@ -56,6 +58,7 @@ Our ideal outcome is "acquired", which means that the startup was successful
 In order to reduce the uncertainty in startup investments.
 
 ## Identify Variables
+
 For structured data problems, we need to identify potentially relevant variables.
 The response variable is the categorical status (acquired or closed - if a startup is ‘acquired’ by some other organization, means the startup succeeded) and there are many explanatory variables, which include the category, location, funding rounds and amount.
 The [data set](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction?resource=download&select=startup+data.csv) is from kaggle and contains data about startups since the late 1990s in the United States of America.
@@ -87,9 +90,11 @@ library(tidymodels)
 library(skimr)
 library(purrr)
 library(GGally)
+library(DBI)
 ```
 
 ### Import Data 
+
 Currently csv upload, could chnage this to upload from a database.
 
 ```{r}
@@ -227,6 +232,7 @@ y <-
 
 ### Train and Test Split
 
+The dataframe is split into a training and test set. The training set will be used to train the model and the the test set is used to verify how well the model performs with newly added data.
 ```{r}
 # Fix the random numbers by setting the seed 
 # This enables the analysis to be reproducible 
@@ -242,7 +248,7 @@ data_split <- initial_split(df,
 train_data <- training(data_split) 
 test_data <- testing(data_split)
 ```
-
+From the training data another split is performed to create validation data. This is used to verify the model before adding new data to avoid overfitting of the model to the training data.  
 ```{r}
 set.seed(42)
 
@@ -256,18 +262,15 @@ cv_folds <-
 
 ### Data Exploration Set
 
+A copy of the training data is created for the data exploration to not alter the actual training data.
 ```{r}
 df_train <- train_data 
 ```
 
 ## Analyze Data
-SQL and R
 
-Connection to SQL
+Data analysis is done through R and SQL. To use SQL in RStudio a connection is created and the following code cells start with {sql connection=...} instead of {r}.
 ```{r}
-library(DBI)
-library(gapminder)
-
 # Connection to database SQlite
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
 
@@ -278,6 +281,7 @@ dbWriteTable(con, "df_train", df_train)
 dbListTables(con)
 ```
 
+At first, we want to get an overview of the training data and have a look at the first 5 rows.
 ```{sql connection=con}
 SELECT *
 FROM df_train
