@@ -91,6 +91,8 @@ library(skimr)
 library(purrr)
 library(GGally)
 library(DBI)
+library(maps)
+library(mapproj)
 ```
 
 ### Import Data 
@@ -484,58 +486,148 @@ The most common categories of startups are web and software.
 
 ### Numerical Features
 
+After analyzing single categorical features, the same is done for numerical features. At first the scales of each feature are analyzed, including the quartiles, mean and median. Using skim, this also includes a rough histogram.
 ```{r}
 skim(df_train)
 ```
+Describe skim results.
 
 ```{r}
-df_train %>% 
-  select(all_of(feat_num)) %>% 
-  ggscatmat(alpha = 0.2)
+# Removing one hot encoded features
+df_numeric <- df_train %>% 
+  select(all_of(feat_num))
+df_numeric <- df_numeric %>%
+  select(-is_CA, -is_NY, -is_MA, -is_TX, -is_otherstate, -is_software, -is_web, -is_mobile, -is_enterprise, -is_advertising, -is_gamesvideo, -is_ecommerce, -	is_biotech, -is_consulting, -is_enterprise, -is_othercategory, -has_VC, -has_angel, -has_roundA, -has_roundB, -has_roundC, -has_roundD, -is_top500)
+
+# Create histograms using ggplot2
+hist_list <- lapply(names(df_numeric), function(col) {
+  ggplot(df_numeric, aes(x = .data[[col]])) +
+  geom_histogram(bins = 10) +
+  ggtitle(paste0(col))
+})
+
+# Arrange histograms in a grid
+library(patchwork)
+hist_list[[1]] + hist_list[[2]] + hist_list[[3]] + plot_layout(ncol = 3)
+hist_list[[4]] + hist_list[[5]] + hist_list[[6]] + plot_layout(ncol = 3)
+hist_list[[7]] + hist_list[[8]] + hist_list[[9]] + plot_layout(ncol = 3)
 ```
+Describe more learnings about numeric features from histograms.
+
 
 ### Relationships
 
+correlation
 ```{r}
-#df_train %>%  
-#  ggpairs()
-```
-
-```{r}
-df_train %>% 
-  select(where(is.numeric)) %>% # only select numerical data
+df_numeric %>% 
   vis_cor(cor_method = "spearman", na_action = "pairwise.complete.obs")
 ```
+Describe correlations
 
+If not linear chekcing other relations
 ```{r}
-# calculate all correlations
-#cor_res <- 
-#  df_train %>%
-#  select(where(is.numeric)) %>% 
-#  correlate(method = "spearman", use = "pairwise.complete.obs") 
+df_numeric %>% 
+  ggscatmat()
+```
+Desribe rerelations
 
-# show correlations
-#cor_res %>% 
-#  select(term, y_label) %>% 
-#  filter(!is.na(y_label)) %>% # focus on dependent variable 
-#  arrange(y_label) %>% # sort values
-#  fashion() # print tidy correlations
+Comparison Relationship by status
+```{r}
+df_train %>%
+  ggplot(aes(x = status, y = relationships)) +
+  geom_boxplot() +
+  labs(title = "Relationships, if successful or not") +
+  theme_bw(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+Description of results
+
+Further Viz
+```{r}
+df_train %>%
+  ggplot(aes(x = relationships, y = funding_rounds, group = status, color = status)) +
+  geom_point() +
+  theme_classic(base_size = 12) +
+  ggtitle("??") +
+  theme(legend.title = element_blank())
+```
+Description
+
+Map of locations acquired vs. closed
+```{r}
+world_map <- map_data("world")
+
+ggplot(df_train, aes(x = longitude, y = latitude, color = status)) +
+  geom_point() +
+  geom_path(data = world_map, aes(x = long, y = lat, group = group), color = "gray50") +
+  labs(x = "Longitude", y = "Latitude", title = "Startup Locations")
+```
+Heatmap acquired nach age_first_funding_year
+```{r}
+world_map <- map_data("world")
+
+df_ac <- df_train %>% 
+  dplyr::filter(status == "acquired")
+
+ggplot(df_ac, aes(x = longitude, y = latitude, color = age_first_funding_year)) +
+  geom_point() +
+  geom_path(data = world_map, aes(x = long, y = lat, group = group), color = "gray50") +
+  labs(x = "Longitude", y = "Latitude", title = "Startup Locations")
 ```
 
 ## Define Schema
 Usually it is a good idea to define some sort of schema that describes the expected properties of the data.
 check_class()
 Check Variable Class
+```{r}
+recipe(train_data, status ~ .) %>%
+  check_class(everything()) %>%
+  prep(train_data, strings_as_factors = FALSE) %>%
+  bake(test_data)
+```
+
 check_cols()
 Check if all Columns are Present
+```{r}
+#needs to be adjusted to this df
+biomass_rec <- recipe(HHV ~ ., data = biomass) %>%
+  step_rm(sample, dataset) %>%
+  check_cols(contains("gen")) %>%
+  step_center(all_numeric_predictors())
+if (FALSE) {
+bake(biomass_rec, biomass[, c("carbon", "HHV")])
+}
+```
+
 check_missing()
 Check for Missing Values
+```{r}
+is.na(df_train) %>% colSums()
+````
+
 check_new_values()
 Check for New Values
+```{r}
+recipe(df_train) %>%
+  check_new_values(status) %>%
+  prep() %>%
+  bake(new_data = df_train)
+```
 check_range()
 Check Range Consistency
+```{r}
+#slack_df <- df_train(relationships = 0:100)
+#slack_new_data <- df_train(relationships = -10:110)
 
-or TFX
+# this will fail the check both ends
+#if (FALSE) {
+#recipe(slack_df) %>%
+#  check_range(relationships) %>%
+#  prep() %>%
+#  bake(slack_new_data)
+#}
+```
+
 
 ## Anomaly Detection
 
