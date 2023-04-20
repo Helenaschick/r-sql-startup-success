@@ -590,28 +590,28 @@ check_cols()
 Check if all Columns are Present
 ```{r}
 #needs to be adjusted to this df
-biomass_rec <- recipe(HHV ~ ., data = biomass) %>%
-  step_rm(sample, dataset) %>%
-  check_cols(contains("gen")) %>%
-  step_center(all_numeric_predictors())
-if (FALSE) {
-bake(biomass_rec, biomass[, c("carbon", "HHV")])
-}
+#biomass_rec <- recipe(HHV ~ ., data = biomass) %>%
+#  step_rm(sample, dataset) %>%
+#  check_cols(contains("gen")) %>%
+#  step_center(all_numeric_predictors())
+#if (FALSE) {
+#bake(biomass_rec, biomass[, c("carbon", "HHV")])
+#}
 ```
 
 check_missing()
 Check for Missing Values
 ```{r}
 is.na(df_train) %>% colSums()
-````
+```
 
 check_new_values()
 Check for New Values
 ```{r}
-recipe(df_train) %>%
-  check_new_values(status) %>%
-  prep() %>%
-  bake(new_data = df_train)
+#recipe(df_train) %>%
+#  check_new_values(status) %>%
+#  prep() %>%
+#  bake(new_data = df_train)
 ```
 check_range()
 Check Range Consistency

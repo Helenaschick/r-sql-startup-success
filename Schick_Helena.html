@@ -2582,13 +2582,13 @@ Variable Class</p>
 ## #   is_software &lt;dbl&gt;, is_web &lt;dbl&gt;, is_mobile &lt;dbl&gt;, is_enterprise &lt;dbl&gt;, …</code></pre>
 <p>check_cols() Check if all Columns are Present</p>
 <pre class="r"><code>#needs to be adjusted to this df
-biomass_rec &lt;- recipe(HHV ~ ., data = biomass) %&gt;%
-  step_rm(sample, dataset) %&gt;%
-  check_cols(contains(&quot;gen&quot;)) %&gt;%
-  step_center(all_numeric_predictors())
-if (FALSE) {
-bake(biomass_rec, biomass[, c(&quot;carbon&quot;, &quot;HHV&quot;)])
-}</code></pre>
+#biomass_rec &lt;- recipe(HHV ~ ., data = biomass) %&gt;%
+#  step_rm(sample, dataset) %&gt;%
+#  check_cols(contains(&quot;gen&quot;)) %&gt;%
+#  step_center(all_numeric_predictors())
+#if (FALSE) {
+#bake(biomass_rec, biomass[, c(&quot;carbon&quot;, &quot;HHV&quot;)])
+#}</code></pre>
 <p>check_missing() Check for Missing Values</p>
 <pre class="r"><code>is.na(df_train) %&gt;% colSums()</code></pre>
 <pre><code>##               state_code                 latitude                longitude 
@@ -2622,30 +2622,10 @@ bake(biomass_rec, biomass[, c(&quot;carbon&quot;, &quot;HHV&quot;)])
 ##                   status 
 ##                        0</code></pre>
 <p>check_new_values() Check for New Values</p>
-<pre class="r"><code>recipe(df_train) %&gt;%
-  check_new_values(status) %&gt;%
-  prep() %&gt;%
-  bake(new_data = df_train)</code></pre>
-<pre><code>## # A tibble: 691 × 43
-##    state_code latitude longitude zip_c…¹ id    city  name  founded_at closed_at
-##    &lt;fct&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;date&gt;     &lt;date&gt;   
-##  1 CA             42.4     -71.1 92101   c:66… San … Band… 2007-01-01 NA       
-##  2 CA             37.2    -122.  95032   c:16… Los … TriC… 2000-01-01 NA       
-##  3 CA             32.9    -117.  92121   c:65… San … Plixi 2009-03-18 NA       
-##  4 CA             38.1    -123.  94901   c:51… San … Clai… 2004-01-01 NA       
-##  5 NY             40.7     -74.0 11201   c:14… Broo… drop… 2007-11-26 NA       
-##  6 CO             39.7    -105.  80202   c:15… Denv… Stra… 2001-01-01 NA       
-##  7 CA             37.6    -122.  94010   c:107 Burl… MeeV… 2000-07-01 NA       
-##  8 TX             30.2     -97.8 78735   c:22… Aust… Metr… 2001-01-01 NA       
-##  9 IL             41.9     -87.6 60601   c:45… Chic… Brid… 2002-01-01 NA       
-## 10 CA             37.4    -122.  94303   c:31… Palo… Scal… 2003-01-01 NA       
-## # … with 681 more rows, 34 more variables: first_funding_at &lt;date&gt;,
-## #   last_funding_at &lt;date&gt;, age_first_funding_year &lt;dbl&gt;,
-## #   age_last_funding_year &lt;dbl&gt;, age_first_milestone_year &lt;dbl&gt;,
-## #   age_last_milestone_year &lt;dbl&gt;, relationships &lt;dbl&gt;, funding_rounds &lt;dbl&gt;,
-## #   funding_total_usd &lt;dbl&gt;, milestones &lt;dbl&gt;, is_CA &lt;dbl&gt;, is_NY &lt;dbl&gt;,
-## #   is_MA &lt;dbl&gt;, is_TX &lt;dbl&gt;, is_otherstate &lt;dbl&gt;, category_code &lt;fct&gt;,
-## #   is_software &lt;dbl&gt;, is_web &lt;dbl&gt;, is_mobile &lt;dbl&gt;, is_enterprise &lt;dbl&gt;, …</code></pre>
+<pre class="r"><code>#recipe(df_train) %&gt;%
+#  check_new_values(status) %&gt;%
+#  prep() %&gt;%
+#  bake(new_data = df_train)</code></pre>
 <p>check_range() Check Range Consistency</p>
 <pre class="r"><code>#slack_df &lt;- df_train(relationships = 0:100)
 #slack_new_data &lt;- df_train(relationships = -10:110)
