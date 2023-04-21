@@ -576,66 +576,48 @@ ggplot(df_ac, aes(x = longitude, y = latitude, color = age_first_funding_year)) 
 ```
 
 ## Define Schema
-Usually it is a good idea to define some sort of schema that describes the expected properties of the data.
-check_class()
-Check Variable Class
+
+As a single dataframe is used for this data science lifecycle, the need for a schema is low. As the quality of the data seems quite high and the dataframe is well structures, no schema is defined for this project.
+
+## Anomaly Detection & Fixing
+
+An anomaly that was identified in the data analysis is that there is one duplicate startup by name and id. This should be removed.
+
 ```{r}
-recipe(train_data, status ~ .) %>%
-  check_class(everything()) %>%
-  prep(train_data, strings_as_factors = FALSE) %>%
-  bake(test_data)
+# remove duplicate rows
+train_data <- distinct(train_data)
 ```
-
-check_cols()
-Check if all Columns are Present
-```{r}
-#needs to be adjusted to this df
-#biomass_rec <- recipe(HHV ~ ., data = biomass) %>%
-#  step_rm(sample, dataset) %>%
-#  check_cols(contains("gen")) %>%
-#  step_center(all_numeric_predictors())
-#if (FALSE) {
-#bake(biomass_rec, biomass[, c("carbon", "HHV")])
-#}
-```
-
-check_missing()
-Check for Missing Values
-```{r}
-is.na(df_train) %>% colSums()
-```
-
-check_new_values()
-Check for New Values
-```{r}
-#recipe(df_train) %>%
-#  check_new_values(status) %>%
-#  prep() %>%
-#  bake(new_data = df_train)
-```
-check_range()
-Check Range Consistency
-```{r}
-#slack_df <- df_train(relationships = 0:100)
-#slack_new_data <- df_train(relationships = -10:110)
-
-# this will fail the check both ends
-#if (FALSE) {
-#recipe(slack_df) %>%
-#  check_range(relationships) %>%
-#  prep() %>%
-#  bake(slack_new_data)
-#}
-```
-
-
-## Anomaly Detection
-
-delete duplicate id and name
+Other anomalies are missing values and outliers, which are handled now.
 
 ### Missing Values
 
+At first, we need to find out how many missing values there are in which column to decide how to handle them.
+```{r}
+is.na(train_data) %>% 
+    colSums()
+```
+There are 442 missing values in closed_at, probably because all successful startups haven't closed, thus they don't have a closing date. This feature is too tightly related to the prediction and thus needs to be removed for the model.
+There are 112 missing values each for age_first_milestone_year and age_last_milestone year. As there are only a couple hundred startups in the dataframe, the ratio of missing values is to high to simply delete these rows. Instead, the missing values will be replaced by the median. Having this many values replaced, the feature importance for the model will decrease.
+
+```{r}
+# remove closed_at
+train_data <- 
+  dplyr::select(train_data, -closed_at)
+test_data <- 
+  dplyr::select(test_data, -closed_at)
+```
+
+```{r}
+# replace missing values by median
+train_data %>% 
+   mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .))
+```
+
 ### Outlier Detection
+```{r}
+# boxplots
+```
+
 
 ## Feature Engineering
 Feature engineering is the process of using domain knowledge to extract meaningful features (attributes) from raw data. The goal of this process is to create new features which improve the predictions from our model.
@@ -643,10 +625,6 @@ Feature engineering is the process of using domain knowledge to extract meaningf
 ### Pipelines
 
 ### Feature Transformation
-
-#### Fix Missing Values
-
-#### Fix Outliers
 
 #### Feature Scaling
 Standardization

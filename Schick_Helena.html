@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2023-04-20" />
+<meta name="date" content="2023-04-21" />
 
 <title>Startup Success Prediction</title>
 
@@ -352,7 +352,7 @@ display: none;
 <h1 class="title toc-ignore">Startup Success Prediction</h1>
 <h3 class="subtitle">Programming Languages - Project by Helena
 Schick</h3>
-<h4 class="date">2023-04-20</h4>
+<h4 class="date">2023-04-21</h4>
 
 </div>
 
@@ -388,7 +388,7 @@ Schick</h3>
 <li><a href="#relationships" id="toc-relationships"><span class="toc-section-number">2.3.4</span> Relationships</a></li>
 </ul></li>
 <li><a href="#define-schema" id="toc-define-schema"><span class="toc-section-number">2.4</span> Define Schema</a></li>
-<li><a href="#anomaly-detection" id="toc-anomaly-detection"><span class="toc-section-number">2.5</span> Anomaly Detection</a>
+<li><a href="#anomaly-detection-fixing" id="toc-anomaly-detection-fixing"><span class="toc-section-number">2.5</span> Anomaly Detection &amp; Fixing</a>
 <ul>
 <li><a href="#missing-values" id="toc-missing-values"><span class="toc-section-number">2.5.1</span> Missing Values</a></li>
 <li><a href="#outlier-detection" id="toc-outlier-detection"><span class="toc-section-number">2.5.2</span> Outlier Detection</a></li>
@@ -2553,44 +2553,26 @@ ggplot(df_ac, aes(x = longitude, y = latitude, color = age_first_funding_year)) 
 </div>
 <div id="define-schema" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Define Schema</h2>
-<p>Usually it is a good idea to define some sort of schema that
-describes the expected properties of the data. check_class() Check
-Variable Class</p>
-<pre class="r"><code>recipe(train_data, status ~ .) %&gt;%
-  check_class(everything()) %&gt;%
-  prep(train_data, strings_as_factors = FALSE) %&gt;%
-  bake(test_data)</code></pre>
-<pre><code>## # A tibble: 232 × 43
-##    state_code latitude longitude zip_c…¹ id    city  name  founded_at closed_at 
-##    &lt;fct&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;date&gt;     &lt;date&gt;    
-##  1 CA             37.3    -122.  95014   c:42… Cupe… Soli… 2002-01-01 NA        
-##  2 CA             37.4    -122.  94043   c:22… Moun… Mati… 2002-01-01 2009-02-15
-##  3 CA             37.4    -122.  94041   c:16… Moun… Ring… 2005-01-01 NA        
-##  4 MA             42.7     -73.2 1267    c:10… Will… Vood… 2002-01-01 NA        
-##  5 CA             37.4    -122.  94306   c:498 Palo… Doos… 2005-06-01 NA        
-##  6 CA             37.4    -122.  94025   c:39… Menl… Zong  2000-11-15 NA        
-##  7 CA             37.4    -122.  94022   c:16… Los … QSec… 2003-01-01 2012-09-22
-##  8 NY             40.7     -74.0 10004   c:50… New … Sing… 2010-01-01 NA        
-##  9 TX             30.3     -97.7 78701   c:36… Aust… Reta… 2007-05-01 NA        
-## 10 CA             33.7    -118.  92705   c:35… Sant… Moph… 2005-05-24 NA        
-## # … with 222 more rows, 34 more variables: first_funding_at &lt;date&gt;,
-## #   last_funding_at &lt;date&gt;, age_first_funding_year &lt;dbl&gt;,
-## #   age_last_funding_year &lt;dbl&gt;, age_first_milestone_year &lt;dbl&gt;,
-## #   age_last_milestone_year &lt;dbl&gt;, relationships &lt;dbl&gt;, funding_rounds &lt;dbl&gt;,
-## #   funding_total_usd &lt;dbl&gt;, milestones &lt;dbl&gt;, is_CA &lt;dbl&gt;, is_NY &lt;dbl&gt;,
-## #   is_MA &lt;dbl&gt;, is_TX &lt;dbl&gt;, is_otherstate &lt;dbl&gt;, category_code &lt;fct&gt;,
-## #   is_software &lt;dbl&gt;, is_web &lt;dbl&gt;, is_mobile &lt;dbl&gt;, is_enterprise &lt;dbl&gt;, …</code></pre>
-<p>check_cols() Check if all Columns are Present</p>
-<pre class="r"><code>#needs to be adjusted to this df
-#biomass_rec &lt;- recipe(HHV ~ ., data = biomass) %&gt;%
-#  step_rm(sample, dataset) %&gt;%
-#  check_cols(contains(&quot;gen&quot;)) %&gt;%
-#  step_center(all_numeric_predictors())
-#if (FALSE) {
-#bake(biomass_rec, biomass[, c(&quot;carbon&quot;, &quot;HHV&quot;)])
-#}</code></pre>
-<p>check_missing() Check for Missing Values</p>
-<pre class="r"><code>is.na(df_train) %&gt;% colSums()</code></pre>
+<p>As a single dataframe is used for this data science lifecycle, the
+need for a schema is low. As the quality of the data seems quite high
+and the dataframe is well structures, no schema is defined for this
+project.</p>
+</div>
+<div id="anomaly-detection-fixing" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Anomaly Detection
+&amp; Fixing</h2>
+<p>An anomaly that was identified in the data analysis is that there is
+one duplicate startup by name and id. This should be removed.</p>
+<pre class="r"><code># remove duplicate rows
+train_data &lt;- distinct(train_data)</code></pre>
+<p>Other anomalies are missing values and outliers, which are handled
+now.</p>
+<div id="missing-values" class="section level3" number="2.5.1">
+<h3><span class="header-section-number">2.5.1</span> Missing Values</h3>
+<p>At first, we need to find out how many missing values there are in
+which column to decide how to handle them.</p>
+<pre class="r"><code>is.na(train_data) %&gt;% 
+    colSums()</code></pre>
 <pre><code>##               state_code                 latitude                longitude 
 ##                        0                        0                        0 
 ##                 zip_code                       id                     city 
@@ -2621,33 +2603,48 @@ Variable Class</p>
 ##                        0                        0                        0 
 ##                   status 
 ##                        0</code></pre>
-<p>check_new_values() Check for New Values</p>
-<pre class="r"><code>#recipe(df_train) %&gt;%
-#  check_new_values(status) %&gt;%
-#  prep() %&gt;%
-#  bake(new_data = df_train)</code></pre>
-<p>check_range() Check Range Consistency</p>
-<pre class="r"><code>#slack_df &lt;- df_train(relationships = 0:100)
-#slack_new_data &lt;- df_train(relationships = -10:110)
-
-# this will fail the check both ends
-#if (FALSE) {
-#recipe(slack_df) %&gt;%
-#  check_range(relationships) %&gt;%
-#  prep() %&gt;%
-#  bake(slack_new_data)
-#}</code></pre>
-</div>
-<div id="anomaly-detection" class="section level2" number="2.5">
-<h2><span class="header-section-number">2.5</span> Anomaly
-Detection</h2>
-<p>delete duplicate id and name</p>
-<div id="missing-values" class="section level3" number="2.5.1">
-<h3><span class="header-section-number">2.5.1</span> Missing Values</h3>
+<p>There are 442 missing values in closed_at, probably because all
+successful startups haven’t closed, thus they don’t have a closing date.
+This feature is too tightly related to the prediction and thus needs to
+be removed for the model. There are 112 missing values each for
+age_first_milestone_year and age_last_milestone year. As there are only
+a couple hundred startups in the dataframe, the ratio of missing values
+is to high to simply delete these rows. Instead, the missing values will
+be replaced by the median. Having this many values replaced, the feature
+importance for the model will decrease.</p>
+<pre class="r"><code># remove closed_at
+train_data &lt;- 
+  dplyr::select(train_data, -closed_at)
+test_data &lt;- 
+  dplyr::select(test_data, -closed_at)</code></pre>
+<pre class="r"><code># replace missing values by median
+train_data %&gt;% 
+   mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .))</code></pre>
+<pre><code>## # A tibble: 691 × 42
+##    state_code latitude longi…¹ zip_c…²    id  city  name found…³ first…⁴ last_…⁵
+##         &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1          3     42.4   -71.1     251   812   173    77   13514   14335   14610
+##  2          3     37.2  -122.      337   171   109   815   10957   12828   14606
+##  3          3     32.9  -117.      252   808   173   613   14321   14698   14698
+##  4          3     38.1  -123.      328   699   178   147   12418   13019   14886
+##  5         24     40.7   -74.0      26   115    33   220   13843   13850   14732
+##  6          4     39.7  -105.      196   136    59   764   11323   13026   14607
+##  7          3     37.6  -122.      269    21    35   474   11139   12815   13757
+##  8         30     30.2   -97.8     188   302    14   484   11323   12131   12705
+##  9         10     41.9   -87.6     156   636    49   113   11688   13455   13455
+## 10          3     37.4  -122.      308   457   144   682   12053   13535   13535
+## # … with 681 more rows, 32 more variables: age_first_funding_year &lt;dbl&gt;,
+## #   age_last_funding_year &lt;dbl&gt;, age_first_milestone_year &lt;dbl&gt;,
+## #   age_last_milestone_year &lt;dbl&gt;, relationships &lt;dbl&gt;, funding_rounds &lt;dbl&gt;,
+## #   funding_total_usd &lt;dbl&gt;, milestones &lt;dbl&gt;, is_CA &lt;dbl&gt;, is_NY &lt;dbl&gt;,
+## #   is_MA &lt;dbl&gt;, is_TX &lt;dbl&gt;, is_otherstate &lt;dbl&gt;, category_code &lt;int&gt;,
+## #   is_software &lt;dbl&gt;, is_web &lt;dbl&gt;, is_mobile &lt;dbl&gt;, is_enterprise &lt;dbl&gt;,
+## #   is_advertising &lt;dbl&gt;, is_gamesvideo &lt;dbl&gt;, is_ecommerce &lt;dbl&gt;, …</code></pre>
 </div>
 <div id="outlier-detection" class="section level3" number="2.5.2">
 <h3><span class="header-section-number">2.5.2</span> Outlier
 Detection</h3>
+<pre class="r"><code># boxplots</code></pre>
 </div>
 </div>
 <div id="feature-engineering" class="section level2" number="2.6">
@@ -2663,20 +2660,13 @@ model.</p>
 <div id="feature-transformation" class="section level3" number="2.6.2">
 <h3><span class="header-section-number">2.6.2</span> Feature
 Transformation</h3>
-<div id="fix-missing-values" class="section level4" number="2.6.2.1">
-<h4><span class="header-section-number">2.6.2.1</span> Fix Missing
-Values</h4>
-</div>
-<div id="fix-outliers" class="section level4" number="2.6.2.2">
-<h4><span class="header-section-number">2.6.2.2</span> Fix Outliers</h4>
-</div>
-<div id="feature-scaling" class="section level4" number="2.6.2.3">
-<h4><span class="header-section-number">2.6.2.3</span> Feature
+<div id="feature-scaling" class="section level4" number="2.6.2.1">
+<h4><span class="header-section-number">2.6.2.1</span> Feature
 Scaling</h4>
 <p>Standardization</p>
 </div>
-<div id="encoding" class="section level4" number="2.6.2.4">
-<h4><span class="header-section-number">2.6.2.4</span> Encoding</h4>
+<div id="encoding" class="section level4" number="2.6.2.2">
+<h4><span class="header-section-number">2.6.2.2</span> Encoding</h4>
 </div>
 </div>
 <div id="feature-extraction" class="section level3" number="2.6.3">
