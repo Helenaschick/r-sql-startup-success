@@ -788,15 +788,22 @@ At first, we need to decide which features we want to include in our model.
 As identified in the correlation matrix, there is a strong positive linear correlation between the first and last funding and milestone age of startups. These highly correlated features are removed and this is included in the recipe of Feature Engineering already.
 
 ```{r}
+# create recipe
 df_rec <-
   recipe(status ~ ., data = train_data) %>%
+  step_date(all_date_cols(), as.numeric) %>% #check this line to turn dates into numeric
   step_impute_median(all_numeric(), -all_outcomes()) %>%
   step_impute_mode(all_nominal_predictors()) %>%
-  step_normalize(all_numeric(), -all_outcomes()) %>% #standarize numeric features
+  step_normalize(all_numeric(), -all_outcomes()) %>% #standardize numeric features
   step_dummy(all_nominal_predictors()) %>% #one hot encoding of categorical features
   step_corr(all_predictors(), threshold = 0.7, method = "spearman") #remove highly correlated
 ```
 
+```{r}
+# bake recipe
+train_data <- prep(df_rec) %>% 
+  bake(train_data)
+```
 ### Training & Hyperparameter Tuning
 
 In the first phase of the model process, the initial models are generated and their performance is compared during model evaluation.
