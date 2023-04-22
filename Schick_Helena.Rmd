@@ -70,7 +70,6 @@ Our key results for the success metrics are an accuracy and precision of more th
 Our project is deemed a failure, if the accuracy and precision are lower than 90%.
 
 # Data
-
 ## Data Ingestion
 ### Prepare Environment
 
@@ -115,7 +114,7 @@ The column `Unnamed: 0` seems to be some kind of id, but has no further value an
 For categories and states there are each a categorical variable and several one hot encoded ones. All are kept at this point, because the categorical is better for visualizations and data understanding, but the one hot encoded ones are needed for the classification model.
 The variables are described in more detail:
 | Variable | Description | Data Type |
-| ------ | --: | ----------|
+| ----- | ----- | -----|
 | state_code |  Abbreviation of US state of startup's location | character |
 | latitude | Geographic North-South location of startup's location | double |
 | longitude | Geographic East-West location of startup's location | double |
@@ -271,7 +270,34 @@ df_train <- train_data
 
 ## Analyze Data
 
-Data analysis is done through R and SQL. 
+Data analysis is done through R and SQL. It gives insights in the distribution of each feature, as well as patterns and correlations. At first the scales of each feature are analyzed, including the quartiles, mean and median. Using skim, this also includes a rough histogram.
+
+```{r}
+skim(df_train)
+```
+**Dates:**
+
+The founded_at ranges between 1984 and 2013. Its median is in 2006, that's why founding dates in the 20th might be outliers.
+Closed_at is very right skewed with the median in 2012 and maximum in 2013, but the earliest closing in 2001.
+The first_funding_at seems be be quite evenly distributed, the same applies to last_founding_at.
+
+**Categorical features:**
+
+There are startups in 31 states, but CA is most common. Dividing the location up into zip codes, there are 319 different ones in 184 cities.
+The name and id are almost unique, having one duplicate, which needs to be removed.
+The startup are in 35 different categories and 2 statuses.
+
+**Numerical features:**
+
+The latitude ranges between 25.75° and 59.33°, where most startups are located at around 37°, because the second and quartile as well as the mean are around that value. The longitude ranges from -122.72° to 18.05° and is left skewed, because the first and second quartile are at around -122°. The bigger values might include some outliers. The latitude and longitude will be visualized on a map, because it is hard to imagine their distribution by looking at values.
+The age_first_funding_year has a mean of 2.17 years and a median of 1.34 years, which indicated a right skewed distribution. The maximum of over 20 years seems to be an outlier. A similar distribution applies to age_last_funding_year, with a maximum of over 20 years. Both have negative minimums, which doesn't make sense as the funding would have taken place before the founding. These outliers need to be investigated.
+Age_first_milestone_year and age_last_milestone_year have a similar ditribution as the first and last funding ages. They also have negative minimums, which doesn't make sense as the milestone would have taken place before the founding. These outliers need to be investigated.
+Most startups have between 5 and 10 relationships, the minimum is 0 and the maximum 57.
+All startups in this dataframe have been through at least 1 funding round and in average through 2. The maximum of 10 funding rounds seems to be an outlier, as usually there are only the 4 funding rounds A to D. This needs to be investigated.
+Funding_total_usd is left skewed, as the mean is almost 3 times higher than the mean. Outliers on the upper end need to be investigated.
+Most startups have between 0 and 3 milestones, the maximum is 8.
+53% of the startups are located in CA, 11% in NY, 9% in MA and 4% in Texas. Also 17% of the startups are in software and 16% in web. It doesn't make sense to further consider these one hot encoded variables in the numeric feature analysis.
+This also applies to the funding variables, but 32% of the startups have Venture Capital and 25% a business angel. 51% succeed in Round A funding, only 40% in Round B, 24% in Round C and only 9% in Round D. 81% made it to the Top500 though.
 
 ### SQL Analysis
 
@@ -486,11 +512,7 @@ The most common categories of startups are web and software.
 
 ### Numerical Features
 
-After analyzing single categorical features, the same is done for numerical features. At first the scales of each feature are analyzed, including the quartiles, mean and median. Using skim, this also includes a rough histogram.
-```{r}
-skim(df_train)
-```
-Describe skim results.
+After analyzing single categorical features, the same is done for numerical features. 
 
 ```{r}
 # Removing one hot encoded features
@@ -614,8 +636,83 @@ train_data %>%
 ```
 
 ### Outlier Detection
+
+In the data analysis, a few possible outliers have been called out and are investigated now.
+age_first_funding_year and age_last_funding_year and age_first_milestone_year and age_last_milestone_date have negative minima --> how many? delete?
+founded_at in 20th century
+
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE longitude > 0;
+```
+
+```{sql connection=con}
+SELECT name, age_first_funding_year, age_last_funding_year
+FROM df_train
+WHERE age_first_funding_year < 0 OR age_last_funding_year < 0;
+```
+
+```{sql connection=con}
+SELECT name, age_first_funding_year, age_last_funding_year
+FROM df_train
+WHERE age_first_funding_year > 5 OR age_last_funding_year > 5;
+```
+No outliers, many that have a their first or last funding after 5 years.
+
+```{sql connection=con}
+SELECT name, age_first_milestone_year, age_last_milestone_year
+FROM df_train
+WHERE age_first_milestone_year < 0 OR age_last_milestone_year < 0;
+```
+
 ```{r}
-# boxplots
+# boxplot relationships
+df_train %>%
+  ggplot(aes(y = relationships)) +
+  geom_boxplot()
+```
+
+```{r}
+# boxplot funding_total_usd
+df_train %>%
+  ggplot(aes(y = funding_total_usd)) +
+  geom_boxplot()
+```
+
+```{r}
+# boxplot funding_rounds
+df_train %>%
+  ggplot(aes(y = funding_rounds)) +
+  geom_boxplot()
+```
+
+```{r}
+# histogram founded_at
+df_train %>%
+  ggplot(aes(x = founded_at)) +
+  geom_histogram()
+```
+
+```{r}
+# histogram first_funding_at
+df_train %>%
+  ggplot(aes(x = first_funding_at)) +
+  geom_histogram()
+```
+
+```{r}
+# histogram last_funding_at
+df_train %>%
+  ggplot(aes(x = last_funding_at)) +
+  geom_histogram()
+```
+
+```{r}
+# histogram closed_at
+df_train %>%
+  ggplot(aes(x = closed_at)) +
+  geom_histogram()
 ```
 
 
