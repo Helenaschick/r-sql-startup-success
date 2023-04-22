@@ -534,26 +534,33 @@ hist_list[[1]] + hist_list[[2]] + hist_list[[3]] + plot_layout(ncol = 3)
 hist_list[[4]] + hist_list[[5]] + hist_list[[6]] + plot_layout(ncol = 3)
 hist_list[[7]] + hist_list[[8]] + hist_list[[9]] + plot_layout(ncol = 3)
 ```
-Describe more learnings about numeric features from histograms.
-
+The histogram for longitude verifies that the maximum value is an outlier.There are two local maxima, one around -120° and another one at around -80°, these are the West and East Coast of the United States. The latitude of most startups is between 35° an 40°, the North and South of the United States.
+For age_first_funding_year, age_last_funding_year, age_first_milestone_year and age_last_milestone_year, the assumption of outlier below 0 and higher than 10 is confirmed as well.
+The distributions of relationships and funding_rounds look as I imagined them. 
+The maximum of funding_total_usd is an even more significant outlier than expected, as the hitsogram only has one visible bin on the very left. This needs to be removed.
 
 ### Relationships
 
-correlation
+The fist realtionship analyized is between the numerical features. Correlation is a positive or negative linear relationship between two variables. +1 and -1 indicate the highest possible linear correlation and 0 indicated no correlation. As our label is categorical, it is not posisbel to identify correlations to it with this method. But if the correlations between features in the model is too high, this might lead to overfitting. This method helps to identify those and evaluate which to include in the mdoel in the feature engineering chapter.
 ```{r}
 df_numeric %>% 
   vis_cor(cor_method = "spearman", na_action = "pairwise.complete.obs")
 ```
-Describe correlations
+There is a strong positive correlation (dark brown) between age_first_funding_year and age_last_funding_year as well as age_first_milestone_year and age_last_milestone_year.
+Another strong positive correlation exists between funding_total_usd and age_last_funding_year. Also milestones and relationships are positively correlated.
+There are no strong negative correlation, the strongest is between milestones and age_first_funding_year.
 
-If not linear chekcing other relations
+To make these results more presice, now the numbers of correlation are displayed. In addition we have a look at the graphs of the relationships to identify any non-lineat relationships as well.
 ```{r}
 df_numeric %>% 
-  ggscatmat()
+  ggscatmat() +
+  theme(axis.text.x = element_text(angle = 90, vjust = -1))
 ```
-Desribe rerelations
+There are no non-linear relationshsips identified.
+The strong positive correlation between the funding and milestone age variables is visible in the scatterplots and verified through correlations > 0.5.
 
-Comparison Relationship by status
+At this, point further correlations between categorical and numerical features area visualized.
+Do successful startups have more or less relationships?
 ```{r}
 df_train %>%
   ggplot(aes(x = status, y = relationships)) +
@@ -562,20 +569,20 @@ df_train %>%
   theme_bw(base_size = 12) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
-Description of results
+Successful startups have more relationships than failes ones. Only 25% of the successful startups have less than 7 relations, whereas 75% of failes startups do have that amount.
 
-Further Viz
+Expanding on this. How is the amount of funding_rounds related to the status and relationships?
 ```{r}
 df_train %>%
   ggplot(aes(x = relationships, y = funding_rounds, group = status, color = status)) +
   geom_point() +
   theme_classic(base_size = 12) +
-  ggtitle("??") +
+  ggtitle("Correlation of status, relationships and funding_rounds") +
   theme(legend.title = element_blank())
 ```
-Description
+Acquired startups have more relationships and go through more funding rounds.
 
-Map of locations acquired vs. closed
+As discusessed ealsier, it is easier to visualize longitude and latititude than talking about their values. On the map the locations of startups are visualized and by color their are distiguished by status.
 ```{r}
 world_map <- map_data("world")
 
@@ -584,18 +591,19 @@ ggplot(df_train, aes(x = longitude, y = latitude, color = status)) +
   geom_path(data = world_map, aes(x = long, y = lat, group = group), color = "gray50") +
   labs(x = "Longitude", y = "Latitude", title = "Startup Locations")
 ```
-Heatmap acquired nach age_first_funding_year
+There are a few startups located in Europe, but most are located in the US.
+Many acquired startups are rather on the East of the US.
+
+Do successful startups have their first funding round earlier or later?
 ```{r}
-world_map <- map_data("world")
-
-df_ac <- df_train %>% 
-  dplyr::filter(status == "acquired")
-
-ggplot(df_ac, aes(x = longitude, y = latitude, color = age_first_funding_year)) +
-  geom_point() +
-  geom_path(data = world_map, aes(x = long, y = lat, group = group), color = "gray50") +
-  labs(x = "Longitude", y = "Latitude", title = "Startup Locations")
+df_train %>%
+  ggplot(aes(x = status, y = age_first_funding_year)) +
+  geom_boxplot() +
+  labs(title = "Age first funding, if successful or not") +
+  theme_bw(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
+The first funding round happen around the same time for most startups, whether successful or not.
 
 ## Define Schema
 
@@ -638,83 +646,98 @@ train_data %>%
 ### Outlier Detection
 
 In the data analysis, a few possible outliers have been called out and are investigated now.
-age_first_funding_year and age_last_funding_year and age_first_milestone_year and age_last_milestone_date have negative minima --> how many? delete?
-founded_at in 20th century
 
+A longitude of higher than 50 and thus being located in Europe was indentified as an outlier. How many startups are located there?
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
-WHERE longitude > 0;
+WHERE longitude > -50;
 ```
+There are 4 startups in Europe in the dataframe. This is very small amount, but as this dataframe will be expanded in the future through information of our customers, all locations are included from the beginning.
 
+Another outlier are the negative first and last funding age. How many of those are there in the dataframe?
 ```{sql connection=con}
 SELECT name, age_first_funding_year, age_last_funding_year
 FROM df_train
 WHERE age_first_funding_year < 0 OR age_last_funding_year < 0;
 ```
+There are 35 startups with either a negative first or last funding age. These are too many to remove them. If this projected was extended, the root cause for a negative funding age should be identified. 
+Another realization from this analysis is that all startups that have a negative last funding age also have a negative first funding age.
 
+The first and last funding age were rather left skewed, thus teh higher values are evaluated to be outliers now.
 ```{sql connection=con}
 SELECT name, age_first_funding_year, age_last_funding_year
 FROM df_train
 WHERE age_first_funding_year > 5 OR age_last_funding_year > 5;
 ```
-No outliers, many that have a their first or last funding after 5 years.
+The higher first and last funding age is no outlier, one third of the startups have either their first or last funding after 5 years.
 
+Another outlier are the negative first and last milestone age. How many of those are there in the dataframe?
 ```{sql connection=con}
 SELECT name, age_first_milestone_year, age_last_milestone_year
 FROM df_train
 WHERE age_first_milestone_year < 0 OR age_last_milestone_year < 0;
 ```
+Just as negative first and last funding age, there are 35 startups that either have a negative first or last milestone age.
+Are those the same startups?
 
+```{sql connection=con}
+SELECT COUNT(*)
+FROM df_train
+WHERE age_first_milestone_year < 0 OR age_last_milestone_year < 0 OR age_first_funding_year < 0 OR age_last_funding_year < 0;
+```
+The startups having negative milestone and funding ages differ mostly. If it were the same, the count would be 35.
+
+The variable relationships is left skewed. How many relationships are considered as an outlier?
 ```{r}
 # boxplot relationships
 df_train %>%
   ggplot(aes(y = relationships)) +
   geom_boxplot()
 ```
+Startups having more than 20 relationships are outliers. As this seems to be a reasonable amount anyways, all startups are kept and none removed.
 
+The maximum fundinng_total_usd is tremendously higher than all other funding amounts. Should this be removed?
 ```{r}
 # boxplot funding_total_usd
 df_train %>%
   ggplot(aes(y = funding_total_usd)) +
   geom_boxplot()
 ```
+The other outliers are way lower than the maximum funding_total_usd, that is why this startup has to be removed from the dataframe.
 
+```{r}
+# remove maximum fundinf_total_usd
+df_train <- subset(df_train, funding_total_usd != 5700000000)
+```
+
+Fudnign rounds above 4 seem unreasonable and are thus investigated.
 ```{r}
 # boxplot funding_rounds
 df_train %>%
   ggplot(aes(y = funding_rounds)) +
   geom_boxplot()
 ```
+There are only 3 startups with more than 6 funding rounds. These outliers are removed.
 
+```{r}
+# remove funding_rounds > 6
+df_train <- subset(df_train, funding_rounds < 6)
+```
+
+The earliest founding date in the 1980s is very early in comparison to the rather right skewed values. Does it make sense to remove this?
 ```{r}
 # histogram founded_at
 df_train %>%
   ggplot(aes(x = founded_at)) +
   geom_histogram()
 ```
+There is a huge gap between the earliest founded_at and the next in the lat 1990s. Thus, the startups founded in the 1980s are removed.
 
 ```{r}
-# histogram first_funding_at
-df_train %>%
-  ggplot(aes(x = first_funding_at)) +
-  geom_histogram()
+# remove earliest founded_at
+df_train <- subset(df_train, founded_at > "1995-01-01")
 ```
-
-```{r}
-# histogram last_funding_at
-df_train %>%
-  ggplot(aes(x = last_funding_at)) +
-  geom_histogram()
-```
-
-```{r}
-# histogram closed_at
-df_train %>%
-  ggplot(aes(x = closed_at)) +
-  geom_histogram()
-```
-
 
 ## Feature Engineering
 Feature engineering is the process of using domain knowledge to extract meaningful features (attributes) from raw data. The goal of this process is to create new features which improve the predictions from our model.
