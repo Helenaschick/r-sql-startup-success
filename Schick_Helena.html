@@ -393,15 +393,7 @@ Schick</h3>
 <li><a href="#missing-values" id="toc-missing-values"><span class="toc-section-number">2.5.1</span> Missing Values</a></li>
 <li><a href="#outlier-detection" id="toc-outlier-detection"><span class="toc-section-number">2.5.2</span> Outlier Detection</a></li>
 </ul></li>
-<li><a href="#feature-engineering" id="toc-feature-engineering"><span class="toc-section-number">2.6</span> Feature Engineering</a>
-<ul>
-<li><a href="#pipelines" id="toc-pipelines"><span class="toc-section-number">2.6.1</span> Pipelines</a></li>
-<li><a href="#feature-transformation" id="toc-feature-transformation"><span class="toc-section-number">2.6.2</span> Feature Transformation</a></li>
-<li><a href="#feature-extraction" id="toc-feature-extraction"><span class="toc-section-number">2.6.3</span> Feature Extraction</a></li>
-<li><a href="#custom-feature-operations" id="toc-custom-feature-operations"><span class="toc-section-number">2.6.4</span> Custom Feature
-Operations</a></li>
-<li><a href="#final-data-pipeline" id="toc-final-data-pipeline"><span class="toc-section-number">2.6.5</span> Final Data Pipeline</a></li>
-</ul></li>
+<li><a href="#feature-engineering" id="toc-feature-engineering"><span class="toc-section-number">2.6</span> Feature Engineering</a></li>
 </ul></li>
 <li><a href="#model" id="toc-model"><span class="toc-section-number">3</span> Model</a>
 <ul>
@@ -3042,36 +3034,27 @@ df_train &lt;- subset(df_train, founded_at &gt; &quot;1995-01-01&quot;)</code></
 <h2><span class="header-section-number">2.6</span> Feature
 Engineering</h2>
 <p>Feature engineering is the process of using domain knowledge to
-extract meaningful features (attributes) from raw data. The goal of this
-process is to create new features which improve the predictions from our
-model.</p>
-<div id="pipelines" class="section level3" number="2.6.1">
-<h3><span class="header-section-number">2.6.1</span> Pipelines</h3>
-</div>
-<div id="feature-transformation" class="section level3" number="2.6.2">
-<h3><span class="header-section-number">2.6.2</span> Feature
-Transformation</h3>
-<div id="feature-scaling" class="section level4" number="2.6.2.1">
-<h4><span class="header-section-number">2.6.2.1</span> Feature
-Scaling</h4>
-<p>Standardization</p>
-</div>
-<div id="encoding" class="section level4" number="2.6.2.2">
-<h4><span class="header-section-number">2.6.2.2</span> Encoding</h4>
-</div>
-</div>
-<div id="feature-extraction" class="section level3" number="2.6.3">
-<h3><span class="header-section-number">2.6.3</span> Feature
-Extraction</h3>
-</div>
-<div id="custom-feature-operations" class="section level3" number="2.6.4">
-<h3><span class="header-section-number">2.6.4</span> Custom Feature
-Operations</h3>
-</div>
-<div id="final-data-pipeline" class="section level3" number="2.6.5">
-<h3><span class="header-section-number">2.6.5</span> Final Data
-Pipeline</h3>
-</div>
+extract meaningful features from the data. The goal of this process is
+to keep those features that improve the predictions from our model. For
+thi a pipeline is created that included the standardization of numeric
+features and one hot encoding of catgeorical features. As the categories
+and states are already one hot encoded, their categorical featured need
+to be removed. As the anomalies, like outliers, missing values or wrong
+data types, have already been fixed, no further feature transformations
+are needed in this step.</p>
+<pre class="r"><code># remove category and stat categorical feature
+train_data &lt;- train_data %&gt;%
+  select(-state_code, -category_code)
+
+test_data &lt;- test_data %&gt;%
+  select(-state_code, -category_code)</code></pre>
+<pre class="r"><code>df_rec &lt;-
+  recipe(status ~ ., data = train_data) %&gt;%
+  step_impute_median(all_numeric(), -all_outcomes()) %&gt;%
+  step_impute_mode(all_nominal_predictors()) %&gt;%
+  step_normalize(all_numeric(), -all_outcomes()) %&gt;% 
+  step_dummy(all_nominal_predictors()) %&gt;%
+  step_corr(all_predictors(), threshold = 0.7, method = &quot;spearman&quot;) </code></pre>
 </div>
 </div>
 <div id="model" class="section level1" number="3">

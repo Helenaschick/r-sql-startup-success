@@ -10,6 +10,7 @@ output:
 ---
 
 # Plan
+
 ## Identify Use Case
 
 The objective of this project is to predict the success of startups. A startup is a new company founded by an entrepreneur with the intent to grow beyond the solo founder according to [wikipedia](https://en.wikipedia.org/wiki/Startup_company). 
@@ -70,7 +71,9 @@ Our key results for the success metrics are an accuracy and precision of more th
 Our project is deemed a failure, if the accuracy and precision are lower than 90%.
 
 # Data
+
 ## Data Ingestion
+
 ### Prepare Environment
 
 At first, R is set up.
@@ -740,24 +743,30 @@ df_train <- subset(df_train, founded_at > "1995-01-01")
 ```
 
 ## Feature Engineering
-Feature engineering is the process of using domain knowledge to extract meaningful features (attributes) from raw data. The goal of this process is to create new features which improve the predictions from our model.
+Feature engineering is the process of using domain knowledge to extract meaningful features from the data. The goal of this process is to keep those features that improve the predictions from our model.
+For thi a pipeline is created that included the standardization of numeric features and one hot encoding of catgeorical features. As the categories and states are already one hot encoded, their categorical featured need to be removed.
+As the anomalies, like outliers, missing values or wrong data types, have already been fixed, no further feature transformations are needed in this step.
+```{r}
+# remove category and stat categorical feature
+train_data <- train_data %>%
+  select(-state_code, -category_code)
 
-### Pipelines
+test_data <- test_data %>%
+  select(-state_code, -category_code)
+```
 
-### Feature Transformation
-
-#### Feature Scaling
-Standardization
-
-#### Encoding
-
-### Feature Extraction
-
-### Custom Feature Operations
-
-### Final Data Pipeline
+```{r}
+df_rec <-
+  recipe(status ~ ., data = train_data) %>%
+  step_impute_median(all_numeric(), -all_outcomes()) %>%
+  step_impute_mode(all_nominal_predictors()) %>%
+  step_normalize(all_numeric(), -all_outcomes()) %>% 
+  step_dummy(all_nominal_predictors()) %>%
+  step_corr(all_predictors(), threshold = 0.7, method = "spearman") 
+````
 
 # Model
+
 ## Select Algorithm
 Supervised Learning
 Classification
@@ -768,6 +777,7 @@ Decision Tree
 Logistic Regression
 
 ## Model Training & Tuning
+
 ### Feature Selection
 
 ### Training & Hyperparameter Tuning
