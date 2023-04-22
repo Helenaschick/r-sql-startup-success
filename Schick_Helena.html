@@ -567,7 +567,9 @@ library(GGally)</code></pre>
 ##   +.gg   ggplot2</code></pre>
 <pre class="r"><code>library(DBI)
 library(maps)
-library(mapproj)</code></pre>
+library(mapproj)
+library(caret)</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
 </div>
 <div id="import-data" class="section level3" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> Import Data</h3>
@@ -3059,21 +3061,89 @@ test_data &lt;- test_data %&gt;%
 </div>
 <div id="model" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Model</h1>
+<p>This chapter describes the creation of a model to predict the success
+of a startup. Several classification algorithms are optimized and
+compared to select the best performing model.</p>
 <div id="select-algorithm" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Select Algorithm</h2>
-<p>Supervised Learning Classification kNN Naive Bayes SVM Decision Tree
-Logistic Regression</p>
+<p>As the data is pre-categorized, having status as the to be predicted
+label, supervised learning in form of classification is used. As the
+data is not too complex, neural networks are not needed. Instead, three
+common classification algorithms are compared: - Logistic Regression:
+Predicts a dependent variable by analyzing the relationship between one
+or more existing independent variables. - Decision Trees: Uses tree-like
+model of decisions and their possible consequences. - K-Nearest
+Neighbors: Finds the distances between a query and all the examples in
+the data, selecting the specified number examples (K) closest to the
+query, then votes for the most frequent label.</p>
 </div>
 <div id="model-training-tuning" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Model Training &amp;
 Tuning</h2>
+<p>Models for all three algorithms are created and optimized in this
+chapter.</p>
 <div id="feature-selection" class="section level3" number="3.2.1">
 <h3><span class="header-section-number">3.2.1</span> Feature
 Selection</h3>
+<p>At first, we need to decide which features we want to include in our
+model. As identified in the correlation matrix, there is a strong
+positive linear correlation between the first and last funding and
+milestone age of startups. These highly correlated features are removed
+and this is included in the recipe of Feature Engineering already.</p>
+<pre class="r"><code>df_rec &lt;-
+  recipe(status ~ ., data = train_data) %&gt;%
+  step_impute_median(all_numeric(), -all_outcomes()) %&gt;%
+  step_impute_mode(all_nominal_predictors()) %&gt;%
+  step_normalize(all_numeric(), -all_outcomes()) %&gt;% #standarize numeric features
+  step_dummy(all_nominal_predictors()) %&gt;% #one hot encoding of categorical features
+  step_corr(all_predictors(), threshold = 0.7, method = &quot;spearman&quot;) #remove highly correlated</code></pre>
 </div>
 <div id="training-hyperparameter-tuning" class="section level3" number="3.2.2">
 <h3><span class="header-section-number">3.2.2</span> Training &amp;
 Hyperparameter Tuning</h3>
+<p>In the first phase of the model process, the initial models are
+generated and their performance is compared during model evaluation.</p>
+<pre class="r"><code># Logistic Regression
+# Specify the logistic regression model
+glm_spec &lt;- 
+  logistic_reg() %&gt;% 
+  set_engine(&quot;glm&quot;)
+
+# workflow pipeline
+glm_wflow &lt;-
+ workflow() %&gt;%
+ add_recipe(df_rec) %&gt;% 
+ add_model(glm_spec)
+
+# fit model with crossvalidation
+glm_res &lt;- 
+  glm_wflow %&gt;% 
+  fit_resamples(
+    resamples = cv_folds,
+    control = control_resamples(save_pred = TRUE)
+  )</code></pre>
+<pre><code>## x Fold1: preprocessor 1/1:
+##   Error in `step_corr()`:
+##   Caused by error in `prep()`:
+##   ! All columns selected for the step should be double, or integer.</code></pre>
+<pre><code>## x Fold2: preprocessor 1/1:
+##   Error in `step_corr()`:
+##   Caused by error in `prep()`:
+##   ! All columns selected for the step should be double, or integer.</code></pre>
+<pre><code>## x Fold3: preprocessor 1/1:
+##   Error in `step_corr()`:
+##   Caused by error in `prep()`:
+##   ! All columns selected for the step should be double, or integer.</code></pre>
+<pre><code>## x Fold4: preprocessor 1/1:
+##   Error in `step_corr()`:
+##   Caused by error in `prep()`:
+##   ! All columns selected for the step should be double, or integer.</code></pre>
+<pre><code>## x Fold5: preprocessor 1/1:
+##   Error in `step_corr()`:
+##   Caused by error in `prep()`:
+##   ! All columns selected for the step should be double, or integer.</code></pre>
+<pre><code>## Warning: All models failed. Run `show_notes(.Last.tune.result)` for more
+## information.</code></pre>
 </div>
 <div id="evaluation" class="section level3" number="3.2.3">
 <h3><span class="header-section-number">3.2.3</span> Evaluation</h3>

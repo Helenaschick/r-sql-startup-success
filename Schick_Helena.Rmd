@@ -95,6 +95,7 @@ library(GGally)
 library(DBI)
 library(maps)
 library(mapproj)
+library(caret)
 ```
 
 ### Import Data 
@@ -763,29 +764,71 @@ df_rec <-
   step_normalize(all_numeric(), -all_outcomes()) %>% 
   step_dummy(all_nominal_predictors()) %>%
   step_corr(all_predictors(), threshold = 0.7, method = "spearman") 
-````
+```
 
 # Model
 
+This chapter describes the creation of a model to predict the success of a startup. Several classification algorithms are optimized and compared to select the best performing model.
+
 ## Select Algorithm
-Supervised Learning
-Classification
-kNN
-Naive Bayes
-SVM 
-Decision Tree
-Logistic Regression
+
+As the data is pre-categorized, having status as the to be predicted label, supervised learning in form of classification is used.
+As the data is not too complex, neural networks are not needed. Instead, three common classification algorithms are compared:
+- Logistic Regression: Predicts a dependent variable by analyzing the relationship between one or more existing independent variables.
+- Decision Trees: Uses tree-like model of decisions and their possible consequences.
+- K-Nearest Neighbors: Finds the distances between a query and all the examples in the data, selecting the specified number examples (K) closest to the query, then votes for the most frequent label.
 
 ## Model Training & Tuning
 
+Models for all three algorithms are created and optimized in this chapter.
+
 ### Feature Selection
+
+At first, we need to decide which features we want to include in our model.
+As identified in the correlation matrix, there is a strong positive linear correlation between the first and last funding and milestone age of startups. These highly correlated features are removed and this is included in the recipe of Feature Engineering already.
+
+```{r}
+df_rec <-
+  recipe(status ~ ., data = train_data) %>%
+  step_impute_median(all_numeric(), -all_outcomes()) %>%
+  step_impute_mode(all_nominal_predictors()) %>%
+  step_normalize(all_numeric(), -all_outcomes()) %>% #standarize numeric features
+  step_dummy(all_nominal_predictors()) %>% #one hot encoding of categorical features
+  step_corr(all_predictors(), threshold = 0.7, method = "spearman") #remove highly correlated
+```
 
 ### Training & Hyperparameter Tuning
 
+In the first phase of the model process, the initial models are generated and their performance is compared during model evaluation.
+
+```{r}
+# Logistic Regression
+# Specify the logistic regression model
+glm_spec <- 
+  logistic_reg() %>% 
+  set_engine("glm")
+
+# workflow pipeline
+glm_wflow <-
+ workflow() %>%
+ add_recipe(df_rec) %>% 
+ add_model(glm_spec)
+
+# fit model with crossvalidation
+glm_res <- 
+  glm_wflow %>% 
+  fit_resamples(
+    resamples = cv_folds,
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+
 ### Evaluation
+
 Evaluate best model on wrongest predictions
 
 ## Evaluate Model
+
 Evaluate the final model on test data
 
 # Deployment
