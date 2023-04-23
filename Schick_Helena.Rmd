@@ -810,10 +810,9 @@ This chapter describes the creation of a model to predict the success of a start
 ## Select Algorithm
 
 As the data is pre-categorized, having status as the to be predicted label, supervised learning in form of classification is used.
-As the data is not too complex, neural networks are not needed. Instead, three common classification algorithms are compared:
+As the data is not too complex, neural networks are not needed. Instead, two common classification algorithms are compared:
 - Logistic Regression: Predicts a dependent variable by analyzing the relationship between one or more existing independent variables.
-- Decision Trees: Uses tree-like model of decisions and their possible consequences.
-- K-Nearest Neighbors: Finds the distances between a query and all the examples in the data, selecting the specified number examples (K) closest to the query, then votes for the most frequent label.
+- Decision Trees: Uses tree-like model of decisions and their possible consequences. examples (K) closest to the query, then votes for the most frequent label.
 
 ## Model Training & Tuning
 
@@ -906,30 +905,6 @@ xgb_res <-
     ) 
 ```
 
-```{r}
-# k-Nearest Neighbor
-# model
-knn_spec <- 
-  nearest_neighbor(neighbors = 4) %>% # we can adjust the number of neighbors 
-  set_engine("kknn") %>% 
-  set_mode("classification") 
-
-# workflow pipeline
-knn_wflow <-
- workflow() %>%
- add_recipe(df_rec) %>% 
- add_model(knn_spec)
-
-# fit model with crossvalidation
-knn_res <- 
-  knn_wflow %>% 
-  fit_resamples(
-    resamples = cv_folds, 
-    metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec),
-    control = control_resamples(save_pred = TRUE)
-    ) 
-```
-
 ### Evaluation
 
 Now the results of the models are compared and their performance evaluated to decide which model is the best for our startup success prediction use case.
@@ -952,6 +927,7 @@ log_pred <-
 ```
 
 A confusion matrix is created to compare the amounts of predictions.
+
 ```{r}
 log_pred %>%
   conf_mat(status, .pred_class) 
@@ -975,9 +951,6 @@ log_res %>%
 xgb_res %>% collect_metrics(summarize = TRUE)
 ```
 
-```{r}
-#knn_res %>% collect_metrics(summarize = TRUE)
-```
 
 ```{r}
 # compare models
@@ -991,15 +964,9 @@ xgb_metrics <-
   collect_metrics(summarise = TRUE) %>%
   mutate(model = "XGBoost")
 
-knn_metrics <- 
-  knn_res %>% 
-  collect_metrics(summarise = TRUE) %>%
-  mutate(model = "Knn")
-
 # create dataframe with all models
 model_compare <- bind_rows(log_metrics,
-                           xgb_metrics,
-                           knn_metrics) 
+                           xgb_metrics) 
 
 # change data structure
 model_comp <- 
@@ -1007,76 +974,73 @@ model_comp <-
   select(model, .metric, mean, std_err) %>% 
   pivot_wider(names_from = .metric, values_from = c(mean, std_err)) 
 
-# show mean F1-Score for every model
+# show mean accuracy for every model
 model_comp %>% 
-  arrange(mean_f_meas) %>% 
-  mutate(model = fct_reorder(model, mean_f_meas)) %>% # order results
-  ggplot(aes(model, mean_f_meas, fill=model)) +
+  arrange(mean_accuracy) %>% 
+  mutate(model = fct_reorder(model, mean_accuracy)) %>% # order results
+  ggplot(aes(model, mean_accuracy, fill=model)) +
   geom_col() +
   coord_flip() +
   scale_fill_brewer(palette = "Blues") +
    geom_text(
      size = 3,
-     aes(label = round(mean_f_meas, 2), y = mean_f_meas + 0.08),
+     aes(label = round(mean_accuracy, 2), y = mean_f_meas + 0.08),
      vjust = 1
   )
 
-# show mean area under the curve (auc) per model
+# show mean precision per model
 model_comp %>% 
-  arrange(mean_roc_auc) %>% 
-  mutate(model = fct_reorder(model, mean_roc_auc)) %>%
-  ggplot(aes(model, mean_roc_auc, fill=model)) +
+  arrange(mean_precision) %>% 
+  mutate(model = fct_reorder(model, mean_precision)) %>%
+  ggplot(aes(model, mean_precision, fill=model)) +
   geom_col() +
   coord_flip() +
   scale_fill_brewer(palette = "Blues") + 
      geom_text(
      size = 3,
-     aes(label = round(mean_roc_auc, 2), y = mean_roc_auc + 0.08),
+     aes(label = round(mean_precision, 2), y = mean_roc_auc + 0.08),
      vjust = 1
   )
 ```
 
 ```{r}
-model_comp %>% slice_max(mean_f_meas)
+model_comp %>% 
+  slice_max(mean_accuracy)
 ```
-
+```{r}
+model_comp %>% 
+  slice_max(mean_precision)
+```
 
 ## Evaluate Model
 
 Evaluate the final model on test data
 
 ```{r}
-#replace rf
-#last_fit_rf <- last_fit(rf_wflow, 
-#                        split = data_split,
-#                        metrics = metric_set(
-#                          recall, precision, f_meas, 
-#                          accuracy, kap,
-#                          roc_auc, sens, spec)
-#                        )
+last_fit_log <- last_fit(log_wflow, 
+                        split = data_split,
+                        metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec)
+                        )
 ```
 
 ```{r}
-#replace rf
-#last_fit_rf %>% 
-#  collect_metrics()
+last_fit_log %>% 
+  collect_metrics()
 ```
 
 ```{r}
-#replace rf
 # feature importance
-#last_fit_rf %>% 
-#  pluck(".workflow", 1) %>%   
-#  pull_workflow_fit() %>% 
-#  vip(num_features = 10)
+last_fit_log %>% 
+  pluck(".workflow", 1) %>%   
+  pull_workflow_fit() %>% 
+  vip(num_features = 10)
 ```
 
 ```{r}
-#replace rf
-#last_fit_rf %>%
-#  collect_predictions() %>% 
-#  conf_mat(price_category, .pred_class) %>% 
-#  autoplot(type = "heatmap")
+last_fit_log %>%
+  collect_predictions() %>% 
+  conf_mat(status, .pred_class) %>% 
+  autoplot(type = "heatmap")
 ```
 
 # Deployment
