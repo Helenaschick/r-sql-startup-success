@@ -121,7 +121,7 @@ The column `Unnamed: 0` seems to be some kind of id, but has no further value an
 For categories and states there are each a categorical variable and several one hot encoded ones. All are kept at this point, because the categorical is better for visualizations and data understanding, but the one hot encoded ones are needed for the classification model.
 The variables are described in more detail:
 | Variable | Description | Data Type |
-| ----- | ----- | -----|
+:----- | :----- | :-----:
 | state_code |  Abbreviation of US state of startup's location | character |
 | latitude | Geographic North-South location of startup's location | double |
 | longitude | Geographic East-West location of startup's location | double |
@@ -876,7 +876,7 @@ log_res <-
   log_wflow %>% 
   fit_resamples(
     resamples = cv_folds, 
-    metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec),
+    metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
     control = control_resamples(save_pred = TRUE)
     ) 
 ```
@@ -900,7 +900,7 @@ xgb_res <-
   xgb_wflow %>% 
   fit_resamples(
     resamples = cv_folds, 
-    metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec),
+    metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
     control = control_resamples(save_pred = TRUE)
     ) 
 ```
@@ -911,13 +911,20 @@ Now the results of the models are compared and their performance evaluated to de
 
 Average performance over all folds for logistic regression.
 ```{r}
-log_res %>%  collect_metrics(summarize = TRUE)
-````
+log_res %>% 
+  collect_metrics(summarize = TRUE)
+```
+We have a closer look at three metrics: Accuracy, precision and recall.
+The accuracy rates the overall correct classifications. Precision describes how much of the samples, which have been classified as positive are actual positive. And recall describes how much of the true positive samples has been classified as positive.
+
+The logistic regression model has an accuracy of 74%. 77% of the startups that it predicted to be successful, are actually successful and 89% of true positive samples habe been classified as positive.
 
 Performance for every single fold for logistic regression.
 ```{r}
-log_res %>%  collect_metrics(summarize = FALSE)
+log_res %>% 
+  collect_metrics(summarize = FALSE)
 ```
+The range for all metrics is not too big, bur rather similar for every model.
 
 Now, we obtain the actual model predictions to compare the amount of correct and false predictions.
 ```{r}
@@ -927,6 +934,34 @@ log_pred <-
 ```
 
 A confusion matrix is created to compare the amounts of predictions.
+How to read a classification matrix:
+
+<img src="https://miro.medium.com/v2/resize:fit:1218/format:webp/1*jMs1RmSwnYgR9CsBw-z1dw.png"> 
+
+For the StandardScaler Pipeline this means that in 5 cases label 0 was predicted correctly, 22 times as label 1 and 59 times as label 2. Lables 3 and 4 were not predicted correctly at all.
+
+From these numbers, various metrics can be calculated.
+
+Accuracy: The rate of overall correct classifications.
+
+$$
+ACC=\frac{TP+TN}{FP+FN+TP+TN}
+$$
+
+Precision: How much of the samples, which have been classified as positive are actual positive
+
+$$
+PRE=\frac{TP}{FP+TP}
+$$ 
+
+Recall: How much of the true positive samples has been classified as positive
+
+$$
+REC=\frac{TP}{FN+TP}
+$$
+
+
+For the prediction of startup success, we want the number of False Positives to be as little as possible, because these mean an investment gone wrong and lots of monex being lost for the investors and thus focus on precision.
 
 ```{r}
 log_pred %>%
@@ -938,20 +973,30 @@ log_pred %>%
   conf_mat(status, .pred_class) %>% 
   autoplot(type = "heatmap")
 ```
-The next step is a plot of the predicted probability distributions for the two classes.
+325 startups are True Positives, as they have been predicted to be acquired and have also been acquired in reality. On the other hand, 61 startups that closed have also been predicted to close, those are the True Negatives. There are 38 False Negatives, that have been acquired, but were predicted to close. The fourth kind are the False Positives, those have closed in reality, but were predicted to be acquired. There are 94 False Positives in this logistic regression and this is the number that should be as low as possible.
+
+Now, we will have a look at the metrics of the other algorithm - Gradient Bossted Trees.
 ```{r}
-log_res %>%
-  collect_predictions() %>% 
-  ggplot() +
-  geom_density(aes(x = .pred_acquired, fill = status), 
-               alpha = 0.5)
+xgb_res %>% 
+  collect_metrics(summarize = TRUE)
+```
+The Gradient Boosted Tree has an accuracy of 73%, recall of 88% and most importantly a precision of 75%.
+
+Looking in more detail at the correct and false predictions of the Gradient Boosted Trees.
+```{r}
+log_pred <- 
+  xgb_res %>%
+  collect_predictions()
 ```
 
 ```{r}
-xgb_res %>% collect_metrics(summarize = TRUE)
+log_pred %>%
+  conf_mat(status, .pred_class) %>% 
+  autoplot(type = "heatmap")
 ```
+There are 116 False Positives, so startups thatt have been predicted to be acquired, but actually closed.
 
-
+Instead of looking at the metrics one by one, we compare them now.
 ```{r}
 # compare models
 log_metrics <- 
@@ -984,7 +1029,7 @@ model_comp %>%
   scale_fill_brewer(palette = "Blues") +
    geom_text(
      size = 3,
-     aes(label = round(mean_accuracy, 2), y = mean_f_meas + 0.08),
+     aes(label = round(mean_accuracy, 2)),
      vjust = 1
   )
 
@@ -998,29 +1043,25 @@ model_comp %>%
   scale_fill_brewer(palette = "Blues") + 
      geom_text(
      size = 3,
-     aes(label = round(mean_precision, 2), y = mean_roc_auc + 0.08),
+     aes(label = round(mean_precision, 2)),
      vjust = 1
   )
 ```
-
-```{r}
-model_comp %>% 
-  slice_max(mean_accuracy)
-```
-```{r}
-model_comp %>% 
-  slice_max(mean_precision)
-```
+The accuracy and precision of the Logistic Regression are a little higher and thus, this is the model with the best performance. The objective for a good model, is supposed to be 80% for accuracy and precision and those are not quite reached, but at it is close.
 
 ## Evaluate Model
 
-Evaluate the final model on test data
+The best performing model - Logistic Regression - is now evaluated on test data.
 
 ```{r}
 last_fit_log <- last_fit(log_wflow, 
                         split = data_split,
-                        metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec)
+                        metrics = metric_set(yardstick::recall, yardstick::precision, accuracy)
                         )
+```
+
+```{r}
+str(data_split)
 ```
 
 ```{r}
