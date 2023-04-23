@@ -67,8 +67,8 @@ The [data set](https://www.kaggle.com/datasets/manishkc06/startup-success-predic
 ## Define Metrics
 
 Our success metrics are accuracy (percentage of startups that the model correctly predicts as successful or unsuccessful) and precision (indicates that the model is making fewer false positive predictions).
-Our key results for the success metrics are an accuracy and precision of more than 90%.
-Our project is deemed a failure, if the accuracy and precision are lower than 90%.
+Our key results for the success metrics are an accuracy and precision of more than 80%.
+Our project is deemed a failure, if the accuracy and precision are lower than 80%.
 
 # Data
 
@@ -255,17 +255,6 @@ data_split <- initial_split(df,
 # Create dataframes for the two sets:
 train_data <- training(data_split) 
 test_data <- testing(data_split)
-```
-
-From the training data another split is performed to create validation data. This is used to verify the model before adding new data to avoid overfitting of the model to the training data.  
-```{r}
-set.seed(42)
-
-cv_folds <- 
-  vfold_cv(train_data,
-           v=5,
-           strata = y_label,
-           breaks = 4)
 ```
 
 ### Data Exploration Set
@@ -715,7 +704,12 @@ df_train %>%
   ggplot(aes(y = relationships)) +
   geom_boxplot()
 ```
-Startups having more than 20 relationships are outliers. As this seems to be a reasonable amount anyways, all startups are kept and none removed.
+Startups having more than 20 relationships are outliers and are removed.
+
+```{r}
+# remove relationships > 20
+train_data <- subset(train_data, relationships < 20)
+```
 
 The maximum fundinng_total_usd is tremendously higher than all other funding amounts. Should this be removed?
 ```{r}
@@ -728,7 +722,7 @@ The other outliers are way lower than the maximum funding_total_usd, that is why
 
 ```{r}
 # remove maximum fundinf_total_usd
-df_train <- subset(df_train, funding_total_usd < 100000000)
+train_data <- subset(train_data, funding_total_usd < 100000000)
 ```
 
 Funding rounds above 4 seem unreasonable and are thus investigated.
@@ -742,7 +736,7 @@ There are only 3 startups with more than 6 funding rounds. These outliers are re
 
 ```{r}
 # remove funding_rounds > 6
-df_train <- subset(df_train, funding_rounds < 6)
+train_data <- subset(train_data, funding_rounds < 6)
 ```
 
 The earliest founding date in the 1980s is very early in comparison to the rather right skewed values. Does it make sense to remove this?
@@ -756,7 +750,7 @@ There is a huge gap between the earliest founded_at and the next in the lat 1990
 
 ```{r}
 # remove earliest founded_at
-df_train <- subset(df_train, founded_at > "1995-01-01")
+train_data <- subset(train_data, founded_at > "1995-01-01")
 ```
 
 ## Feature Engineering
@@ -834,8 +828,9 @@ As identified in the correlation matrix, there is a strong positive linear corre
 # create recipe
 df_rec <-
   recipe(status ~ ., data = train_data) %>%
-  step_normalize(all_numeric(), -all_outcomes()) %>% #standardize numeric features
+  step_naomit(everything(), skip = TRUE) %>% #removes rows with NaN values
   step_zv(all_numeric(), -all_outcomes()) %>% #remove all numeric that have zero variance
+  step_normalize(all_numeric(), -all_outcomes()) %>% #standardize numeric features
   step_corr(all_predictors(), threshold = 0.7, method = "spearman") #remove highly correlated
 ```
 
@@ -847,7 +842,10 @@ prepped_data <-
   juice() # extract only the preprocessed dataframe 
 ```
 
+From the training data another split is performed to create validation data. This is used to verify the model before adding new data to avoid overfitting of the model to the training data.
+
 ```{r}
+# crossvalidation
 set.seed(100)
 
 cv_folds <-
@@ -858,7 +856,7 @@ cv_folds <-
 
 ### Training & Hyperparameter Tuning
 
-In the first phase of the model process, the initial models are generated and their performance is compared during model evaluation.
+In the first phase of the model process, the initial models are generated and their performance is compared during model evaluation. Besides the model specification, workflows need to be created to combine the data preparation recipe with the model. As a third step, our validation set (cv_folds) is fitted to estimate the performance of our models afterwards.
 
 ```{r}
 # Logistic Regression
@@ -934,70 +932,37 @@ knn_res <-
 
 ### Evaluation
 
-Evaluate best model on wrongest predictions
+Now the results of the models are compared and their performance evaluated to decide which model is the best for our startup success prediction use case.
 
-
-```{r}
-# save model coefficients for a fitted model object from a workflow
-get_model <- function(x) {
-  pull_workflow_fit(x) %>% 
-    tidy()
-}
-
-# same as before with one exception
-log_res_2 <- 
-  log_wflow %>% 
-  fit_resamples(
-    resamples = cv_folds, 
-    metrics = metric_set(
-      yardstick::recall, yardstick::precision, f_meas, 
-      accuracy, kap,
-      roc_auc, sens, yardstick::spec),
-    control = control_resamples(
-      save_pred = TRUE,
-      extract = get_model) # use extract and our new function
-    ) 
-
-log_res_2
-```
-
-```{r}
-log_res_2$.extracts[[1]]
-```
-
-```{r}
-log_res_2$.extracts[[1]][[1]]
-```
-
-```{r}
-all_coef <- map_dfr(log_res_2$.extracts, ~ .x[[1]][[1]])
-```
-
+Average performance over all folds for logistic regression.
 ```{r}
 log_res %>%  collect_metrics(summarize = TRUE)
 ````
 
+Performance for every single fold for logistic regression.
 ```{r}
 log_res %>%  collect_metrics(summarize = FALSE)
 ```
 
+Now, we obtain the actual model predictions to compare the amount of correct and false predictions.
 ```{r}
 log_pred <- 
   log_res %>%
   collect_predictions()
 ```
 
+A confusion matrix is created to compare the amounts of predictions.
 ```{r}
 log_pred %>%
   conf_mat(status, .pred_class) 
 ```
-
+The confusion matrix can also be visualized to make reading it easier.
 ```{r}
 log_pred %>%
   conf_mat(status, .pred_class) %>% 
   autoplot(type = "heatmap")
 ```
-
+The next step is a plot of the predicted probability distributions for the two classes.
 ```{r}
 log_res %>%
   collect_predictions() %>% 
