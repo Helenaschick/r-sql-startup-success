@@ -96,6 +96,9 @@ library(DBI)
 library(maps)
 library(mapproj)
 library(caret)
+library(xgboost)
+library(kknn)
+library(vip)
 ```
 
 ### Import Data 
@@ -246,13 +249,14 @@ set.seed(42)
 # Put 3/4 of the data into the training set 
 data_split <- initial_split(df, 
                            prop = 3/4, 
-                           strata = y_label, 
+                           strata = status, 
                            breaks = 4)
 
 # Create dataframes for the two sets:
 train_data <- training(data_split) 
 test_data <- testing(data_split)
 ```
+
 From the training data another split is performed to create validation data. This is used to verify the model before adding new data to avoid overfitting of the model to the training data.  
 ```{r}
 set.seed(42)
@@ -263,7 +267,6 @@ cv_folds <-
            strata = y_label,
            breaks = 4)
 ```
-
 
 ### Data Exploration Set
 
@@ -567,7 +570,7 @@ At this, point further correlations between categorical and numerical features a
 Do successful startups have more or less relationships?
 ```{r}
 df_train %>%
-  ggplot(aes(x = status, y = relationships)) +
+  ggplot(aes(x = status, y = relationships, color = status)) +
   geom_boxplot() +
   labs(title = "Relationships, if successful or not") +
   theme_bw(base_size = 12) +
@@ -598,10 +601,23 @@ ggplot(df_train, aes(x = longitude, y = latitude, color = status)) +
 There are a few startups located in Europe, but most are located in the US.
 Many acquired startups are rather on the East of the US.
 
+Another map visualization.
+```{r}
+library(ggmap)
+
+qmplot(x = longitude, 
+       y = latitude, 
+       data = df_train, 
+       geom = "point", 
+       color = status,
+       alpha = 0.4) +
+  scale_alpha(guide = 'none') # don't show legend for alpha
+```
+
 Do successful startups have their first funding round earlier or later?
 ```{r}
 df_train %>%
-  ggplot(aes(x = status, y = age_first_funding_year)) +
+  ggplot(aes(x = status, y = age_first_funding_year, color = status)) +
   geom_boxplot() +
   labs(title = "Age first funding, if successful or not") +
   theme_bw(base_size = 12) +
@@ -712,10 +728,10 @@ The other outliers are way lower than the maximum funding_total_usd, that is why
 
 ```{r}
 # remove maximum fundinf_total_usd
-df_train <- subset(df_train, funding_total_usd != 5700000000)
+df_train <- subset(df_train, funding_total_usd < 100000000)
 ```
 
-Fudnign rounds above 4 seem unreasonable and are thus investigated.
+Funding rounds above 4 seem unreasonable and are thus investigated.
 ```{r}
 # boxplot funding_rounds
 df_train %>%
@@ -744,9 +760,11 @@ df_train <- subset(df_train, founded_at > "1995-01-01")
 ```
 
 ## Feature Engineering
+
 Feature engineering is the process of using domain knowledge to extract meaningful features from the data. The goal of this process is to keep those features that improve the predictions from our model.
-For thi a pipeline is created that included the standardization of numeric features and one hot encoding of catgeorical features. As the categories and states are already one hot encoded, their categorical featured need to be removed.
+For this a pipeline is created that included the standardization of numeric features and one hot encoding of catgeorical features. As the categories and states are already one hot encoded, their categorical featured need to be removed.
 As the anomalies, like outliers, missing values or wrong data types, have already been fixed, no further feature transformations are needed in this step.
+
 ```{r}
 # remove category and stat categorical feature
 train_data <- train_data %>%
@@ -757,13 +775,38 @@ test_data <- test_data %>%
 ```
 
 ```{r}
-df_rec <-
-  recipe(status ~ ., data = train_data) %>%
-  step_impute_median(all_numeric(), -all_outcomes()) %>%
-  step_impute_mode(all_nominal_predictors()) %>%
-  step_normalize(all_numeric(), -all_outcomes()) %>% 
-  step_dummy(all_nominal_predictors()) %>%
-  step_corr(all_predictors(), threshold = 0.7, method = "spearman") 
+# remove highly correlated location information, only keeping one hot encoded state
+train_data <- train_data %>%
+  select(-longitude, -latitude, -zip_code, -city)
+
+test_data <- test_data %>%
+  select(-longitude, -latitude, -zip_code, -city)
+```
+
+```{r}
+# convert all date variables to numeric (could not make it work in the recipe)
+train_data$founded_at <- 
+  as.numeric(train_data$founded_at)
+train_data$first_funding_at <- 
+  as.numeric(train_data$first_funding_at)
+train_data$last_funding_at <- 
+  as.numeric(train_data$last_funding_at)
+
+test_data$founded_at <- 
+  as.numeric(test_data$founded_at)
+test_data$first_funding_at <- 
+  as.numeric(test_data$first_funding_at)
+test_data$last_funding_at <- 
+  as.numeric(test_data$last_funding_at)
+```
+
+```{r}
+# remove name and id, as they are unique and thus do not serve the model
+train_data <- train_data %>%
+  select(-name, -id)
+
+test_data <- test_data %>%
+  select(-name, -id)
 ```
 
 # Model
@@ -791,52 +834,285 @@ As identified in the correlation matrix, there is a strong positive linear corre
 # create recipe
 df_rec <-
   recipe(status ~ ., data = train_data) %>%
-  step_date(all_date_cols(), as.numeric) %>% #check this line to turn dates into numeric
-  step_impute_median(all_numeric(), -all_outcomes()) %>%
-  step_impute_mode(all_nominal_predictors()) %>%
   step_normalize(all_numeric(), -all_outcomes()) %>% #standardize numeric features
-  step_dummy(all_nominal_predictors()) %>% #one hot encoding of categorical features
+  step_zv(all_numeric(), -all_outcomes()) %>% #remove all numeric that have zero variance
   step_corr(all_predictors(), threshold = 0.7, method = "spearman") #remove highly correlated
 ```
 
 ```{r}
 # bake recipe
-train_data <- prep(df_rec) %>% 
-  bake(train_data)
+prepped_data <- 
+  df_rec %>% # use the recipe object
+  prep() %>% # perform the recipe on training data
+  juice() # extract only the preprocessed dataframe 
 ```
+
+```{r}
+set.seed(100)
+
+cv_folds <-
+ vfold_cv(train_data, 
+          v = 5, 
+          strata = status) 
+```
+
 ### Training & Hyperparameter Tuning
 
 In the first phase of the model process, the initial models are generated and their performance is compared during model evaluation.
 
 ```{r}
 # Logistic Regression
-# Specify the logistic regression model
-glm_spec <- 
-  logistic_reg() %>% 
-  set_engine("glm")
+# model
+log_spec <- # your model specification
+  logistic_reg() %>%  # model type
+  set_engine(engine = "glm") %>%  # model engine
+  set_mode("classification") # model mode
 
 # workflow pipeline
-glm_wflow <-
- workflow() %>%
- add_recipe(df_rec) %>% 
- add_model(glm_spec)
+log_wflow <- # new workflow object
+ workflow() %>% # use workflow function
+ add_recipe(df_rec) %>%   # use the new recipe
+ add_model(log_spec)   # add your model spec
 
 # fit model with crossvalidation
-glm_res <- 
-  glm_wflow %>% 
+log_res <- 
+  log_wflow %>% 
   fit_resamples(
-    resamples = cv_folds,
+    resamples = cv_folds, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec),
     control = control_resamples(save_pred = TRUE)
-  )
+    ) 
+```
+
+```{r}
+# Decision Tree
+# model
+xgb_spec <- 
+  boost_tree() %>% 
+  set_engine("xgboost") %>% 
+  set_mode("classification") 
+
+# workflow pipeline
+xgb_wflow <-
+ workflow() %>%
+ add_recipe(df_rec) %>% 
+ add_model(xgb_spec)
+
+# fit model with crossvalidation
+xgb_res <- 
+  xgb_wflow %>% 
+  fit_resamples(
+    resamples = cv_folds, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec),
+    control = control_resamples(save_pred = TRUE)
+    ) 
+```
+
+```{r}
+# k-Nearest Neighbor
+# model
+knn_spec <- 
+  nearest_neighbor(neighbors = 4) %>% # we can adjust the number of neighbors 
+  set_engine("kknn") %>% 
+  set_mode("classification") 
+
+# workflow pipeline
+knn_wflow <-
+ workflow() %>%
+ add_recipe(df_rec) %>% 
+ add_model(knn_spec)
+
+# fit model with crossvalidation
+knn_res <- 
+  knn_wflow %>% 
+  fit_resamples(
+    resamples = cv_folds, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, f_meas, accuracy, kap, roc_auc, sens, yardstick::spec),
+    control = control_resamples(save_pred = TRUE)
+    ) 
 ```
 
 ### Evaluation
 
 Evaluate best model on wrongest predictions
 
+
+```{r}
+# save model coefficients for a fitted model object from a workflow
+get_model <- function(x) {
+  pull_workflow_fit(x) %>% 
+    tidy()
+}
+
+# same as before with one exception
+log_res_2 <- 
+  log_wflow %>% 
+  fit_resamples(
+    resamples = cv_folds, 
+    metrics = metric_set(
+      yardstick::recall, yardstick::precision, f_meas, 
+      accuracy, kap,
+      roc_auc, sens, yardstick::spec),
+    control = control_resamples(
+      save_pred = TRUE,
+      extract = get_model) # use extract and our new function
+    ) 
+
+log_res_2
+```
+
+```{r}
+log_res_2$.extracts[[1]]
+```
+
+```{r}
+log_res_2$.extracts[[1]][[1]]
+```
+
+```{r}
+all_coef <- map_dfr(log_res_2$.extracts, ~ .x[[1]][[1]])
+```
+
+```{r}
+log_res %>%  collect_metrics(summarize = TRUE)
+````
+
+```{r}
+log_res %>%  collect_metrics(summarize = FALSE)
+```
+
+```{r}
+log_pred <- 
+  log_res %>%
+  collect_predictions()
+```
+
+```{r}
+log_pred %>%
+  conf_mat(status, .pred_class) 
+```
+
+```{r}
+log_pred %>%
+  conf_mat(status, .pred_class) %>% 
+  autoplot(type = "heatmap")
+```
+
+```{r}
+log_res %>%
+  collect_predictions() %>% 
+  ggplot() +
+  geom_density(aes(x = .pred_acquired, fill = status), 
+               alpha = 0.5)
+```
+
+```{r}
+xgb_res %>% collect_metrics(summarize = TRUE)
+```
+
+```{r}
+#knn_res %>% collect_metrics(summarize = TRUE)
+```
+
+```{r}
+# compare models
+log_metrics <- 
+  log_res %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "Logistic Regression") # add the name of the model to every row
+
+xgb_metrics <- 
+  xgb_res %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "XGBoost")
+
+knn_metrics <- 
+  knn_res %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "Knn")
+
+# create dataframe with all models
+model_compare <- bind_rows(log_metrics,
+                           xgb_metrics,
+                           knn_metrics) 
+
+# change data structure
+model_comp <- 
+  model_compare %>% 
+  select(model, .metric, mean, std_err) %>% 
+  pivot_wider(names_from = .metric, values_from = c(mean, std_err)) 
+
+# show mean F1-Score for every model
+model_comp %>% 
+  arrange(mean_f_meas) %>% 
+  mutate(model = fct_reorder(model, mean_f_meas)) %>% # order results
+  ggplot(aes(model, mean_f_meas, fill=model)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "Blues") +
+   geom_text(
+     size = 3,
+     aes(label = round(mean_f_meas, 2), y = mean_f_meas + 0.08),
+     vjust = 1
+  )
+
+# show mean area under the curve (auc) per model
+model_comp %>% 
+  arrange(mean_roc_auc) %>% 
+  mutate(model = fct_reorder(model, mean_roc_auc)) %>%
+  ggplot(aes(model, mean_roc_auc, fill=model)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "Blues") + 
+     geom_text(
+     size = 3,
+     aes(label = round(mean_roc_auc, 2), y = mean_roc_auc + 0.08),
+     vjust = 1
+  )
+```
+
+```{r}
+model_comp %>% slice_max(mean_f_meas)
+```
+
+
 ## Evaluate Model
 
 Evaluate the final model on test data
+
+```{r}
+#replace rf
+#last_fit_rf <- last_fit(rf_wflow, 
+#                        split = data_split,
+#                        metrics = metric_set(
+#                          recall, precision, f_meas, 
+#                          accuracy, kap,
+#                          roc_auc, sens, spec)
+#                        )
+```
+
+```{r}
+#replace rf
+#last_fit_rf %>% 
+#  collect_metrics()
+```
+
+```{r}
+#replace rf
+# feature importance
+#last_fit_rf %>% 
+#  pluck(".workflow", 1) %>%   
+#  pull_workflow_fit() %>% 
+#  vip(num_features = 10)
+```
+
+```{r}
+#replace rf
+#last_fit_rf %>%
+#  collect_predictions() %>% 
+#  conf_mat(price_category, .pred_class) %>% 
+#  autoplot(type = "heatmap")
+```
 
 # Deployment
 RStudio's Model Management: https://solutions.posit.co/gallery/model-management/vetiver/
