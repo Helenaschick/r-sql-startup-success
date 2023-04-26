@@ -7,68 +7,128 @@ output:
     toc: true
     toc_depth: 3
     number_sections: true
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Plan
 
 ## Identify Use Case
 
-The objective of this project is to predict the success of startups. A startup is a new company founded by an entrepreneur with the intent to grow beyond the solo founder according to [wikipedia](https://en.wikipedia.org/wiki/Startup_company). 
-Startups play major role in the economy, as they foster innovation and create employment as they grow. Yet, they face high uncertainty and need to find investors to continue their ideas and expand their potential. This project focuses on the investors to find companies with great potential to invest in and thus being one step ahead of the competition.
-A business model canvas is used to describe the use case in more detail.
+The objective of this project is to predict the success of startups. A
+startup is a new company founded by an entrepreneur with the intent to
+grow beyond the solo founder according to
+[wikipedia](https://en.wikipedia.org/wiki/Startup_company). Startups
+play major role in the economy, as they foster innovation and create
+employment as they grow. Yet, they face high uncertainty and need to
+find investors to continue their ideas and expand their potential. This
+project focuses on the investors to find companies with great potential
+to invest in and thus being one step ahead of the competition. A
+business model canvas is used to describe the use case in more detail.
 
-1. Customer Segments:
-The costumers of this use case are investors that want to investigate the startup landscape quickly and want to make the best possible investment. 
-The investors' biggest pain is the uncertainty of the investment in a startup. Even with a well-developed business plan and promising market research, there is no guarantee that the startup will be successful. Furthermore, startups are inherently risky ventures. They often have limited operating history and may face significant challenges in scaling up their operations, acquiring customers, and generating revenue. Moreover, investing in a startup requires a significant time commitment. Investors need to research potential opportunities, evaluate business plans, and actively monitor their investments. 
-Their gains include high returns in the case that the startup will be successful. Especially early-stage investors have the opportunity to purchase equity at a low valuation, which can result in a significant return on investment if the company is acquired or goes public. In addition, investing in startups can help diversify an investor's portfolio. Startups can provide exposure to new market segments that may be difficult to access through traditional investments. Furthermore, some investors may be motivated by the social impact that startups can have. By investing in innovative companies that are addressing social or environmental challenges, investors can support positive change while also generating financial returns.
+1.  Customer Segments: The costumers of this use case are investors that
+    want to investigate the startup landscape quickly and want to make
+    the best possible investment. The investors' biggest pain is the
+    uncertainty of the investment in a startup. Even with a
+    well-developed business plan and promising market research, there is
+    no guarantee that the startup will be successful. Furthermore,
+    startups are inherently risky ventures. They often have limited
+    operating history and may face significant challenges in scaling up
+    their operations, acquiring customers, and generating revenue.
+    Moreover, investing in a startup requires a significant time
+    commitment. Investors need to research potential opportunities,
+    evaluate business plans, and actively monitor their investments.
+    Their gains include high returns in the case that the startup will
+    be successful. Especially early-stage investors have the opportunity
+    to purchase equity at a low valuation, which can result in a
+    significant return on investment if the company is acquired or goes
+    public. In addition, investing in startups can help diversify an
+    investor's portfolio. Startups can provide exposure to new market
+    segments that may be difficult to access through traditional
+    investments. Furthermore, some investors may be motivated by the
+    social impact that startups can have. By investing in innovative
+    companies that are addressing social or environmental challenges,
+    investors can support positive change while also generating
+    financial returns.
 
-2. Value Proposition:
-This projects addresses all of these pain points by providing detailed analysis of many variables former startups to transfer these learnings to new investments. It highlights the most important features of a startup to become successful and predicts whether a startup which is currently operating turns into a success or a failure. The success of a company is defined as the event that gives the company's founders a large sum of money through the process of M&A (Merger and Acquisition) or an IPO (Initial Public Offering). A company would be considered as failed if it had to be shut down.
-This minimizes the uncertainty and risk of the investment. As this is provided in one platform, the time commitment and intense research is reduced tremendously. The data can always be extended through more startup data provided by the customers. This has the advantage that possible changes in the successful features are encountered and the use case always provides the latest and most valuable information.
+2.  Value Proposition: This projects addresses all of these pain points
+    by providing detailed analysis of many variables former startups to
+    transfer these learnings to new investments. It highlights the most
+    important features of a startup to become successful and predicts
+    whether a startup which is currently operating turns into a success
+    or a failure. The success of a company is defined as the event that
+    gives the company's founders a large sum of money through the
+    process of M&A (Merger and Acquisition) or an IPO (Initial Public
+    Offering). A company would be considered as failed if it had to be
+    shut down. This minimizes the uncertainty and risk of the
+    investment. As this is provided in one platform, the time commitment
+    and intense research is reduced tremendously. The data can always be
+    extended through more startup data provided by the customers. This
+    has the advantage that possible changes in the successful features
+    are encountered and the use case always provides the latest and most
+    valuable information.
 
-3. Channels:
-Specific investors will be contacted directly to learn about this startup success prediction and how to purchase it. In addition, the use case will be advertised on business platforms and online newspapers.
+3.  Channels: Specific investors will be contacted directly to learn
+    about this startup success prediction and how to purchase it. In
+    addition, the use case will be advertised on business platforms and
+    online newspapers.
 
-4. Customer Relationships:
-A close customer collaboration will be created, that the investors have the information about startup success prediction and also share information about their past investments that the data is always improving and up to date.
+4.  Customer Relationships: A close customer collaboration will be
+    created, that the investors have the information about startup
+    success prediction and also share information about their past
+    investments that the data is always improving and up to date.
 
-5. Revenue Streams:
-The startup success prediction can be purchased as a yearly abonnement by investors. They can get a reduction of the fee in exchange for startup investment data that can be incorporated in the analysis and prediction.
+5.  Revenue Streams: The startup success prediction can be purchased as
+    a yearly abonnement by investors. They can get a reduction of the
+    fee in exchange for startup investment data that can be incorporated
+    in the analysis and prediction.
 
-6. Key Activities:
-The most important activity is always having a well optimized classification model for the startup success prediction. Another key activity is the data analysis that is used as a base for the prediction model. The third activity is to create a good user experience to visualize the key learnings and recommendations.
+6.  Key Activities: The most important activity is always having a well
+    optimized classification model for the startup success prediction.
+    Another key activity is the data analysis that is used as a base for
+    the prediction model. The third activity is to create a good user
+    experience to visualize the key learnings and recommendations.
 
-7. Key Resources:
-The project is conducted by Helena Schick.
-Jan Kirenz can be consulted for advice.
+7.  Key Resources: The project is conducted by Helena Schick. Jan Kirenz
+    can be consulted for advice.
 
-8. Key Partnerships:
-The key partnerships are with the customers as well, as they provide data to improve the model.
+8.  Key Partnerships: The key partnerships are with the customers as
+    well, as they provide data to improve the model.
 
-9. Cost Structure:
-There are currently no costs, as this is done volunatarily on behalf of the module "Programming Languages for Data Science".
+9.  Cost Structure: There are currently no costs, as this is done
+    volunatarily on behalf of the module "Programming Languages for Data
+    Science".
 
 ## Frame Problem
 
-We are investigating the characteristics of startups
-Because we want to find out, if a startup will be successful
-In order to decide to invest in it or not.
+We are investigating the characteristics of startups Because we want to
+find out, if a startup will be successful In order to decide to invest
+in it or not.
 
-We want the model to classify the status of a startup
-Our ideal outcome is "acquired", which means that the startup was successful
-In order to reduce the uncertainty in startup investments.
+We want the model to classify the status of a startup Our ideal outcome
+is "acquired", which means that the startup was successful In order to
+reduce the uncertainty in startup investments.
 
 ## Identify Variables
 
-For structured data problems, we need to identify potentially relevant variables.
-The response variable is the categorical status (acquired or closed - if a startup is ‘acquired’ by some other organization, means the startup succeeded) and there are many explanatory variables, which include the category, location, funding rounds and amount.
-The [data set](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction?resource=download&select=startup+data.csv) is from kaggle and contains data about startups since the late 1990s in the United States of America.
+For structured data problems, we need to identify potentially relevant
+variables. The response variable is the categorical status (acquired or
+closed - if a startup is 'acquired' by some other organization, means
+the startup succeeded) and there are many explanatory variables, which
+include the category, location, funding rounds and amount. The [data
+set](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction?resource=download&select=startup+data.csv)
+is from kaggle and contains data about startups since the late 1990s in
+the United States of America.
 
 ## Define Metrics
 
-Our success metrics are accuracy (percentage of startups that the model correctly predicts as successful or unsuccessful) and precision (indicates that the model is making fewer false positive predictions).
-Our key results for the success metrics are an accuracy and precision of more than 80%.
-Our project is deemed a failure, if the accuracy and precision are lower than 80%.
+Our success metrics are accuracy (percentage of startups that the model
+correctly predicts as successful or unsuccessful) and precision
+(indicates that the model is making fewer false positive predictions).
+Our key results for the success metrics are an accuracy and precision of
+more than 80%. Our project is deemed a failure, if the accuracy and
+precision are lower than 80%.
 
 # Data
 
@@ -77,11 +137,14 @@ Our project is deemed a failure, if the accuracy and precision are lower than 80
 ### Prepare Environment
 
 At first, R is set up.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Then the necessary libraries for the entire notebook are activated and have been installed before.
+Then the necessary libraries for the entire notebook are activated and
+have been installed before.
+
 ```{r libraries}
 library(tidyverse)
 library(conflicted)
@@ -102,7 +165,7 @@ library(vip)
 library(tidy.outliers)
 ```
 
-### Import Data 
+### Import Data
 
 Currently csv upload, could chnage this to upload from a database.
 
@@ -114,66 +177,94 @@ df <- read_csv(path)
 
 ### Data Structure
 
-Now, we're having a first look at the data, including the column names, data types and their content.
+Now, we're having a first look at the data, including the column names,
+data types and their content.
+
 ```{r}
 glimpse(df)
 ```
-The column `Unnamed: 0` seems to be some kind of id, but has no further value and will be deleted. Labels and avg_participants cannot be understood without further context. `Unnamed: 6` is a combination of the zip code and city and thus redundant and will be deleted. The redundancy also accounts for state_code.1 and object_id.
-For categories and states there are each a categorical variable and several one hot encoded ones. All are kept at this point, because the categorical is better for visualizations and data understanding, but the one hot encoded ones are needed for the classification model.
-The variables are described in more detail:
-| Variable | Description | Data Type |
-:----- | :----- | :-----:
-| state_code |  Abbreviation of US state of startup's location | character |
-| latitude | Geographic North-South location of startup's location | double |
-| longitude | Geographic East-West location of startup's location | double |
-| zip_code | Zip code of the city of startup's location | double |
-| id | Unique identification of startup | string |
-| city | Name of city of startup's location | string |
-| name | Name of startup | string |
-| founded_at | Founding date of startup (MM/DD/YYYY) | date |
-| closed_at | Closing date of startup (MM/DD/YYYY) | date |
-| first_funding_at | Date of first funding received of startup (MM/DD/YYYY) | date |
-| last_funding_at | Date of last funding received of startup (MM/DD/YYYY) | date |
-| age_first_milestone_year | Age of startup when achieving first milestone | double |
-| age_last_milestone_year | Age of startup when achieving last milestone | double |
-| relationships | Amount of relationships of startup with investors, mentors,... | double |
-| funding_rounds | Amount of funding rounds | double |
-| funding_total_usd | Total amount of funding received in USD | double |
-| milestones | Amount of milestones achieved | double |
-| is_CA | Startup's location is in CA (1 = true, 0 = false) | double |
-| is_NY | Startup's location is in NY (1 = true, 0 = false) | double |
-| is_MA | Startup's location is in MA (1 = true, 0 = false) | double |
-| is_TX | Startup's location is in TX (1 = true, 0 = false) | double |
-| is_otherstate | Startup's location is in another state than CA, NY, MA or TX (1 = true, 0 = false) | double |
-| category_code | Business category of startup | string |
-| is_software | Startup's category is software (1 = true, 0 = false) | double |
-| is_web | Startup's category is web (1 = true, 0 = false) | double |
-| is_mobile | Startup's category is mobile (1 = true, 0 = false) | double |
-| is_enterprise | Startup's category is enterprise (1 = true, 0 = false) | double |
-| is_advertising | Startup's category is advertising (1 = true, 0 = false) | double |
-| is_gamesvideo | Startup's category is gamesvideo (1 = true, 0 = false) | double |
-| is_biotech | Startup's category is biotech (1 = true, 0 = false) | double |
-| is_ecommerce | Startup's category is ecommerce (1 = true, 0 = false) | double |
-| is_consulting | Startup's category is consulting (1 = true, 0 = false) | double |
-| is_othercategory | Startup's category is another category than the previously mentioned (1 = true, 0 = false) | double |
-| has_VC | Startup is financed through Venture Capital (1 = true, 0 = false) | double |
-| has_angel | Startup is financed through an angel investor (1 = true, 0 = false) | double |
-| has_roundA | Startup has succeeded in first major funding round (1 = true, 0 = false) | double |
-| has_roundB | Startup has succeeded in second major funding round (1 = true, 0 = false) | double |
-| has_roundC | Startup has succeeded in third major funding round (1 = true, 0 = false) | double |
-| has_roundD | Startup has succeeded in fourth major funding round (1 = true, 0 = false) | double |
-| is_top500 | Startup is listed in the Top500 startups (1 = true, 0 = false) | double |
-| status | Success variable of startup (acquired = successful, closed = unsuccessful) | string |
 
-To understand the ratio of numerical to categorical variables and view the amount of null values in the dataframe, we visualize it.
+The column `Unnamed: 0` seems to be some kind of id, but has no further
+value and will be deleted. Labels and avg_participants cannot be
+understood without further context. `Unnamed: 6` is a combination of the
+zip code and city and thus redundant and will be deleted. The redundancy
+also accounts for state_code.1 and object_id. For categories and states
+there are each a categorical variable and several one hot encoded ones.
+All are kept at this point, because the categorical is better for
+visualizations and data understanding, but the one hot encoded ones are
+needed for the classification model. The variables are described in more
+detail: \| Variable \| Description \| Data Type \| :----- \| :----- \|
+:-----: \| state_code \| Abbreviation of US state of startup's location
+\| character \| \| latitude \| Geographic North-South location of
+startup's location \| double \| \| longitude \| Geographic East-West
+location of startup's location \| double \| \| zip_code \| Zip code of
+the city of startup's location \| double \| \| id \| Unique
+identification of startup \| string \| \| city \| Name of city of
+startup's location \| string \| \| name \| Name of startup \| string \|
+\| founded_at \| Founding date of startup (MM/DD/YYYY) \| date \| \|
+closed_at \| Closing date of startup (MM/DD/YYYY) \| date \| \|
+first_funding_at \| Date of first funding received of startup
+(MM/DD/YYYY) \| date \| \| last_funding_at \| Date of last funding
+received of startup (MM/DD/YYYY) \| date \| \| age_first_milestone_year
+\| Age of startup when achieving first milestone \| double \| \|
+age_last_milestone_year \| Age of startup when achieving last milestone
+\| double \| \| relationships \| Amount of relationships of startup with
+investors, mentors,... \| double \| \| funding_rounds \| Amount of
+funding rounds \| double \| \| funding_total_usd \| Total amount of
+funding received in USD \| double \| \| milestones \| Amount of
+milestones achieved \| double \| \| is_CA \| Startup's location is in CA
+(1 = true, 0 = false) \| double \| \| is_NY \| Startup's location is in
+NY (1 = true, 0 = false) \| double \| \| is_MA \| Startup's location is
+in MA (1 = true, 0 = false) \| double \| \| is_TX \| Startup's location
+is in TX (1 = true, 0 = false) \| double \| \| is_otherstate \|
+Startup's location is in another state than CA, NY, MA or TX (1 = true,
+0 = false) \| double \| \| category_code \| Business category of startup
+\| string \| \| is_software \| Startup's category is software (1 = true,
+0 = false) \| double \| \| is_web \| Startup's category is web (1 =
+true, 0 = false) \| double \| \| is_mobile \| Startup's category is
+mobile (1 = true, 0 = false) \| double \| \| is_enterprise \| Startup's
+category is enterprise (1 = true, 0 = false) \| double \| \|
+is_advertising \| Startup's category is advertising (1 = true, 0 =
+false) \| double \| \| is_gamesvideo \| Startup's category is gamesvideo
+(1 = true, 0 = false) \| double \| \| is_biotech \| Startup's category
+is biotech (1 = true, 0 = false) \| double \| \| is_ecommerce \|
+Startup's category is ecommerce (1 = true, 0 = false) \| double \| \|
+is_consulting \| Startup's category is consulting (1 = true, 0 = false)
+\| double \| \| is_othercategory \| Startup's category is another
+category than the previously mentioned (1 = true, 0 = false) \| double
+\| \| has_VC \| Startup is financed through Venture Capital (1 = true, 0
+= false) \| double \| \| has_angel \| Startup is financed through an
+angel investor (1 = true, 0 = false) \| double \| \| has_roundA \|
+Startup has succeeded in first major funding round (1 = true, 0 = false)
+\| double \| \| has_roundB \| Startup has succeeded in second major
+funding round (1 = true, 0 = false) \| double \| \| has_roundC \|
+Startup has succeeded in third major funding round (1 = true, 0 = false)
+\| double \| \| has_roundD \| Startup has succeeded in fourth major
+funding round (1 = true, 0 = false) \| double \| \| is_top500 \| Startup
+is listed in the Top500 startups (1 = true, 0 = false) \| double \| \|
+status \| Success variable of startup (acquired = successful, closed =
+unsuccessful) \| string \|
+
+To understand the ratio of numerical to categorical variables and view
+the amount of null values in the dataframe, we visualize it.
+
 ```{r}
 vis_dat(df)
 ```
-The majority of variables are numeric. There are many null values in the columns Unnamed:6, which will be deleted anyways, as well as closed_at, because this only applies, if the startup has failed, and age_first_milestone and age_last_milestone. We are keeping these two variables to get some insights about those startups that have them available.
+
+The majority of variables are numeric. There are many null values in the
+columns Unnamed:6, which will be deleted anyways, as well as closed_at,
+because this only applies, if the startup has failed, and
+age_first_milestone and age_last_milestone. We are keeping these two
+variables to get some insights about those startups that have them
+available.
 
 ### Data Corrections
 
-At first, all variables of the data type character are turned into factors. This has the advantages of memory efficiency, ordering, handling of missing values, visualization and improved functionality.
+At first, all variables of the data type character are turned into
+factors. This has the advantages of memory efficiency, ordering,
+handling of missing values, visualization and improved functionality.
+
 ```{r}
 # convert all character variables to factors 
 df <- 
@@ -181,7 +272,9 @@ df <-
   mutate(across(where(is.character), as.factor))
 ```
 
-Secondly, the variables taht represent dates are turned into the data type date.
+Secondly, the variables taht represent dates are turned into the data
+type date.
+
 ```{r}
 # convert all date variables to actual dates 
 df$founded_at <- 
@@ -195,6 +288,7 @@ df$last_funding_at <-
 ```
 
 In the end, unnecessary varibales are removed.
+
 ```{r}
 # remove unnecessary variables
 df <- 
@@ -204,6 +298,7 @@ df <-
 ### Variable List
 
 For easier usage in data splitting, several variable lists are created.
+
 ```{r}
 # define outcome variable as y_label
 y_label <- 'status'
@@ -241,7 +336,10 @@ y <-
 
 ### Train and Test Split
 
-The dataframe is split into a training and test set. The training set will be used to train the model and the the test set is used to verify how well the model performs with newly added data.
+The dataframe is split into a training and test set. The training set
+will be used to train the model and the the test set is used to verify
+how well the model performs with newly added data.
+
 ```{r}
 # Fix the random numbers by setting the seed 
 # This enables the analysis to be reproducible 
@@ -260,45 +358,78 @@ test_data <- testing(data_split)
 
 ### Data Exploration Set
 
-A copy of the training data is created for the data exploration to not alter the actual training data.
+A copy of the training data is created for the data exploration to not
+alter the actual training data.
+
 ```{r}
 df_train <- train_data 
 ```
 
 ## Analyze Data
 
-Data analysis is done through R and SQL. It gives insights in the distribution of each feature, as well as patterns and correlations. At first the scales of each feature are analyzed, including the quartiles, mean and median. Using skim, this also includes a rough histogram.
+Data analysis is done through R and SQL. It gives insights in the
+distribution of each feature, as well as patterns and correlations. At
+first the scales of each feature are analyzed, including the quartiles,
+mean and median. Using skim, this also includes a rough histogram.
 
 ```{r}
 skim(df_train)
 ```
+
 **Dates:**
 
-The founded_at ranges between 1984 and 2013. Its median is in 2006, that's why founding dates in the 20th might be outliers.
-Closed_at is very right skewed with the median in 2012 and maximum in 2013, but the earliest closing in 2001.
-The first_funding_at seems be be quite evenly distributed, the same applies to last_founding_at.
+The founded_at ranges between 1984 and 2013. Its median is in 2006,
+that's why founding dates in the 20th might be outliers. Closed_at is
+very right skewed with the median in 2012 and maximum in 2013, but the
+earliest closing in 2001. The first_funding_at seems be be quite evenly
+distributed, the same applies to last_founding_at.
 
 **Categorical features:**
 
-There are startups in 31 states, but CA is most common. Dividing the location up into zip codes, there are 319 different ones in 184 cities.
-The name and id are almost unique, having one duplicate, which needs to be removed.
-The startup are in 35 different categories and 2 statuses.
+There are startups in 31 states, but CA is most common. Dividing the
+location up into zip codes, there are 319 different ones in 184 cities.
+The name and id are almost unique, having one duplicate, which needs to
+be removed. The startup are in 35 different categories and 2 statuses.
 
 **Numerical features:**
 
-The latitude ranges between 25.75° and 59.33°, where most startups are located at around 37°, because the second and quartile as well as the mean are around that value. The longitude ranges from -122.72° to 18.05° and is left skewed, because the first and second quartile are at around -122°. The bigger values might include some outliers. The latitude and longitude will be visualized on a map, because it is hard to imagine their distribution by looking at values.
-The age_first_funding_year has a mean of 2.17 years and a median of 1.34 years, which indicated a right skewed distribution. The maximum of over 20 years seems to be an outlier. A similar distribution applies to age_last_funding_year, with a maximum of over 20 years. Both have negative minimums, which doesn't make sense as the funding would have taken place before the founding. These outliers need to be investigated.
-Age_first_milestone_year and age_last_milestone_year have a similar ditribution as the first and last funding ages. They also have negative minimums, which doesn't make sense as the milestone would have taken place before the founding. These outliers need to be investigated.
-Most startups have between 5 and 10 relationships, the minimum is 0 and the maximum 57.
-All startups in this dataframe have been through at least 1 funding round and in average through 2. The maximum of 10 funding rounds seems to be an outlier, as usually there are only the 4 funding rounds A to D. This needs to be investigated.
-Funding_total_usd is left skewed, as the mean is almost 3 times higher than the mean. Outliers on the upper end need to be investigated.
-Most startups have between 0 and 3 milestones, the maximum is 8.
-53% of the startups are located in CA, 11% in NY, 9% in MA and 4% in Texas. Also 17% of the startups are in software and 16% in web. It doesn't make sense to further consider these one hot encoded variables in the numeric feature analysis.
-This also applies to the funding variables, but 32% of the startups have Venture Capital and 25% a business angel. 51% succeed in Round A funding, only 40% in Round B, 24% in Round C and only 9% in Round D. 81% made it to the Top500 though.
+The latitude ranges between 25.75° and 59.33°, where most startups are
+located at around 37°, because the second and quartile as well as the
+mean are around that value. The longitude ranges from -122.72° to 18.05°
+and is left skewed, because the first and second quartile are at around
+-122°. The bigger values might include some outliers. The latitude and
+longitude will be visualized on a map, because it is hard to imagine
+their distribution by looking at values. The age_first_funding_year has
+a mean of 2.17 years and a median of 1.34 years, which indicated a right
+skewed distribution. The maximum of over 20 years seems to be an
+outlier. A similar distribution applies to age_last_funding_year, with a
+maximum of over 20 years. Both have negative minimums, which doesn't
+make sense as the funding would have taken place before the founding.
+These outliers need to be investigated. Age_first_milestone_year and
+age_last_milestone_year have a similar ditribution as the first and last
+funding ages. They also have negative minimums, which doesn't make sense
+as the milestone would have taken place before the founding. These
+outliers need to be investigated. Most startups have between 5 and 10
+relationships, the minimum is 0 and the maximum 57. All startups in this
+dataframe have been through at least 1 funding round and in average
+through 2. The maximum of 10 funding rounds seems to be an outlier, as
+usually there are only the 4 funding rounds A to D. This needs to be
+investigated. Funding_total_usd is left skewed, as the mean is almost 3
+times higher than the mean. Outliers on the upper end need to be
+investigated. Most startups have between 0 and 3 milestones, the maximum
+is 8. 53% of the startups are located in CA, 11% in NY, 9% in MA and 4%
+in Texas. Also 17% of the startups are in software and 16% in web. It
+doesn't make sense to further consider these one hot encoded variables
+in the numeric feature analysis. This also applies to the funding
+variables, but 32% of the startups have Venture Capital and 25% a
+business angel. 51% succeed in Round A funding, only 40% in Round B, 24%
+in Round C and only 9% in Round D. 81% made it to the Top500 though.
 
 ### SQL Analysis
 
-To use SQL in RStudio a connection is created and the following code cells start with {sql connection=...} instead of {r}.
+To use SQL in RStudio a connection is created and the following code
+cells start with {sql connection=...} instead of {r}.
+
 ```{r}
 # Connection to database SQlite
 con <- dbConnect(RSQLite::SQLite(), ":memory:")
@@ -310,7 +441,9 @@ dbWriteTable(con, "df_train", df_train)
 dbListTables(con)
 ```
 
-At first, we want to get an overview of the training data and have a look at the first 5 rows.
+At first, we want to get an overview of the training data and have a
+look at the first 5 rows.
+
 ```{sql connection=con}
 SELECT *
 FROM df_train
@@ -318,22 +451,30 @@ LIMIT 5;
 ```
 
 Count all distinct observations with the status "acquired".
+
 ```{sql connection=con}
 SELECT DISTINCT COUNT(*)
 FROM df_train
 WHERE status = 'acquired';
 ```
+
 There are 447 startups in the training data that are successful.
 
 Count all distinct observations with the status "closed".
+
 ```{sql connection=con}
 SELECT DISTINCT COUNT(*)
 FROM df_train
 WHERE status = 'closed';
 ```
-There are 244 startups in the training data that are not successful. Neither of these too small to worry about an uneven distribution for the model performance later on.
 
-Which successful startups receive the most funding? Also providing more information about these companies.
+There are 244 startups in the training data that are not successful.
+Neither of these too small to worry about an uneven distribution for the
+model performance later on.
+
+Which successful startups receive the most funding? Also providing more
+information about these companies.
+
 ```{sql connection=con}
 SELECT name, category_code, state_code, funding_total_usd, age_first_funding_year, funding_rounds
 FROM df_train
@@ -341,137 +482,187 @@ WHERE status = "acquired"
 ORDER BY funding_total_usd DESC
 LIMIT 5;
 ```
-The startups that received the most funding are Clearwire, Pearl Therapeutics and Luminus Devices.
+
+The startups that received the most funding are Clearwire, Pearl
+Therapeutics and Luminus Devices.
 
 In which state and category is the most funding raised?
+
 ```{sql connection=con}
 SELECT category_code, state_code, SUM(funding_total_usd)
 FROM df_train
 WHERE status = "acquired"
 ORDER BY SUM(funding_total_usd) DESC;
 ```
+
 Most funding is raised in the music business in California.
 
 In which categories are most successful startups founded?
+
 ```{sql connection=con}
 SELECT category_code, COUNT(status = "acquired") as count
 FROM df_train
 GROUP BY category_code
 ORDER BY count DESC;
 ```
-Most successful startups are in the software and web business. There are only very few successful startups in the categories sports, hospitality, health and automotive.
+
+Most successful startups are in the software and web business. There are
+only very few successful startups in the categories sports, hospitality,
+health and automotive.
 
 In which states are most successful startups founded?
+
 ```{sql connection=con}
 SELECT state_code, COUNT(status = "acquired") as count
 FROM df_train
 GROUP BY category_code
 ORDER BY count DESC;
 ```
+
 Most successful startups are founded in Colorado and California.
 
 How many successful vs. unsuccessful startups have Round A funding?
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundA = 1 AND status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundA = 1 AND status = "closed";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundA = 1 AND status = "acquired" and age_first_funding_year < 2;
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundA = 1 AND status = "closed" and age_first_funding_year < 2;
 ```
-256 startups that have a Round A funding are successful, 97 are not. Looking at young startups, who received their first funding before turning two years old, 202 received Round A funding, but 66 failed. This shows that most startups are younger than two years when receiving their Round A funding, but it's hard to predict whether they will succeed.
+
+256 startups that have a Round A funding are successful, 97 are not.
+Looking at young startups, who received their first funding before
+turning two years old, 202 received Round A funding, but 66 failed. This
+shows that most startups are younger than two years when receiving their
+Round A funding, but it's hard to predict whether they will succeed.
 
 Now looking at the same comparison for Round B funding.
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundB = 1 AND status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundB = 1 AND status = "closed";
 ```
-213 startups who receive Round B funding succeed and 62 fail. As these numbers are not tremendously lower than the round A funding, this indicates that many startups who received a Round A funding, also get Round B funding. The ratio of succeeding startups has risen a lot from Round A to Round B, so the investment is already more certain.
+
+213 startups who receive Round B funding succeed and 62 fail. As these
+numbers are not tremendously lower than the round A funding, this
+indicates that many startups who received a Round A funding, also get
+Round B funding. The ratio of succeeding startups has risen a lot from
+Round A to Round B, so the investment is already more certain.
 
 Having a closer look at the next funding round, Round C.
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundc = 1 AND status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundC = 1 AND status = "closed";
 ```
-These number got quite lower, as only 135 of startups in Round C funding succeed and 33 fail.
+
+These number got quite lower, as only 135 of startups in Round C funding
+succeed and 33 fail.
 
 And having a closer look at the last funding round, Round D.
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundD = 1 AND status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_roundD = 1 AND status = "closed";
 ```
+
 Comparably few startups make it to Round D, only 54 succeed and 9 fail.
 
-Other investment options are also considered. First having a look at the success of startups that have venture capital.
+Other investment options are also considered. First having a look at the
+success of startups that have venture capital.
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_vc = 1 AND status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_vc = 1 AND status = "closed";
 ```
-139 startups that have venture capital succeed and 85 fail. This ratio is worse than in funding rounds.
+
+139 startups that have venture capital succeed and 85 fail. This ratio
+is worse than in funding rounds.
 
 How about business angel investments?
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_angel = 1 AND status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE has_angel = 1 AND status = "closed";
 ```
-The ratio of failing to succeeding startups, who have a business angel investment, is the worst in comparison to other invetsment options, 77 fail and 93 succeed.
+
+The ratio of failing to succeeding startups, who have a business angel
+investment, is the worst in comparison to other invetsment options, 77
+fail and 93 succeed.
 
 How many funding rounds to successful vs. failed startups have?
+
 ```{sql connection=con}
 SELECT AVG(funding_rounds)
 FROM df_train
 WHERE status = "acquired";
 ```
+
 ```{sql connection=con}
 SELECT AVG(funding_rounds)
 FROM df_train
 WHERE status = "closed";
 ```
-Successful startups have more funding_rounds than failed ones, which makes total sense, because most startups go through all funding rounds before being acquired.
 
-How does the duration between achieving major milestones differ between successful vs. failed startups?
+Successful startups have more funding_rounds than failed ones, which
+makes total sense, because most startups go through all funding rounds
+before being acquired.
+
+How does the duration between achieving major milestones differ between
+successful vs. failed startups?
+
 ```{sql connection=con}
 SELECT AVG(age_last_milestone_year - age_first_milestone_year) as avg_milestoneduration
 FROM df_train
@@ -483,11 +674,15 @@ SELECT AVG(age_last_milestone_year - age_first_milestone_year) as avg_milestoned
 FROM df_train
 WHERE status = "closed";
 ```
-The average milestone duration is almost double, with roughly 2 years between milestones, for successful startups versus failed ones. 
+
+The average milestone duration is almost double, with roughly 2 years
+between milestones, for successful startups versus failed ones.
 
 ### Categorical Features
 
-For every categorical feature the count of each category is created and the 10 most frequent ones are presented.
+For every categorical feature the count of each category is created and
+the 10 most frequent ones are presented.
+
 ```{r}
 n <- 10  # Number of most frequent levels to show
 for (i in feat_cat){
@@ -500,16 +695,23 @@ for (i in feat_cat){
   plot(p)
 }
 ```
-The most common states are California by far, followed by New York and Massachusetts. This is also represented in the zip codes, as the most frequent ones start with 9 which indicates CA. And the most common cities are San Francisco and New York. It will be interesting to look at visualization of this geographcal data later.
-There are one duplicate id and name that have to be deleted.
-The founding dates are quite evenly spread out between 1999 and 2009. The closing dates of failed stratups are high in 2012 and 2013 and the first one closed already in 2009.
-The first funding rounds took place in 2005 to 2008 and the last funding rounds in 2006 until 2012.MostLast funding rounds were in 2008.
-The most common categories of startups are web and software.
 
+The most common states are California by far, followed by New York and
+Massachusetts. This is also represented in the zip codes, as the most
+frequent ones start with 9 which indicates CA. And the most common
+cities are San Francisco and New York. It will be interesting to look at
+visualization of this geographcal data later. There are one duplicate id
+and name that have to be deleted. The founding dates are quite evenly
+spread out between 1999 and 2009. The closing dates of failed stratups
+are high in 2012 and 2013 and the first one closed already in 2009. The
+first funding rounds took place in 2005 to 2008 and the last funding
+rounds in 2006 until 2012.MostLast funding rounds were in 2008. The most
+common categories of startups are web and software.
 
 ### Numerical Features
 
-After analyzing single categorical features, the same is done for numerical features. 
+After analyzing single categorical features, the same is done for
+numerical features.
 
 ```{r}
 # Removing one hot encoded features
@@ -531,33 +733,61 @@ hist_list[[1]] + hist_list[[2]] + hist_list[[3]] + plot_layout(ncol = 3)
 hist_list[[4]] + hist_list[[5]] + hist_list[[6]] + plot_layout(ncol = 3)
 hist_list[[7]] + hist_list[[8]] + hist_list[[9]] + plot_layout(ncol = 3)
 ```
-The histogram for longitude verifies that the maximum value is an outlier.There are two local maxima, one around -120° and another one at around -80°, these are the West and East Coast of the United States. The latitude of most startups is between 35° an 40°, the North and South of the United States.
-For age_first_funding_year, age_last_funding_year, age_first_milestone_year and age_last_milestone_year, the assumption of outlier below 0 and higher than 10 is confirmed as well.
-The distributions of relationships and funding_rounds look as I imagined them. 
-The maximum of funding_total_usd is an even more significant outlier than expected, as the hitsogram only has one visible bin on the very left. This needs to be removed.
+
+The histogram for longitude verifies that the maximum value is an
+outlier.There are two local maxima, one around -120° and another one at
+around -80°, these are the West and East Coast of the United States. The
+latitude of most startups is between 35° an 40°, the North and South of
+the United States. For age_first_funding_year, age_last_funding_year,
+age_first_milestone_year and age_last_milestone_year, the assumption of
+outlier below 0 and higher than 10 is confirmed as well. The
+distributions of relationships and funding_rounds look as I imagined
+them. The maximum of funding_total_usd is an even more significant
+outlier than expected, as the hitsogram only has one visible bin on the
+very left. This needs to be removed.
 
 ### Relationships
 
-The fist realtionship analyized is between the numerical features. Correlation is a positive or negative linear relationship between two variables. +1 and -1 indicate the highest possible linear correlation and 0 indicated no correlation. As our label is categorical, it is not posisbel to identify correlations to it with this method. But if the correlations between features in the model is too high, this might lead to overfitting. This method helps to identify those and evaluate which to include in the mdoel in the feature engineering chapter.
+The fist realtionship analyized is between the numerical features.
+Correlation is a positive or negative linear relationship between two
+variables. +1 and -1 indicate the highest possible linear correlation
+and 0 indicated no correlation. As our label is categorical, it is not
+posisbel to identify correlations to it with this method. But if the
+correlations between features in the model is too high, this might lead
+to overfitting. This method helps to identify those and evaluate which
+to include in the mdoel in the feature engineering chapter.
+
 ```{r}
 df_numeric %>% 
   vis_cor(cor_method = "spearman", na_action = "pairwise.complete.obs")
 ```
-There is a strong positive correlation (dark brown) between age_first_funding_year and age_last_funding_year as well as age_first_milestone_year and age_last_milestone_year.
-Another strong positive correlation exists between funding_total_usd and age_last_funding_year. Also milestones and relationships are positively correlated.
-There are no strong negative correlation, the strongest is between milestones and age_first_funding_year.
 
-To make these results more presice, now the numbers of correlation are displayed. In addition we have a look at the graphs of the relationships to identify any non-lineat relationships as well.
+There is a strong positive correlation (dark brown) between
+age_first_funding_year and age_last_funding_year as well as
+age_first_milestone_year and age_last_milestone_year. Another strong
+positive correlation exists between funding_total_usd and
+age_last_funding_year. Also milestones and relationships are positively
+correlated. There are no strong negative correlation, the strongest is
+between milestones and age_first_funding_year.
+
+To make these results more presice, now the numbers of correlation are
+displayed. In addition we have a look at the graphs of the relationships
+to identify any non-lineat relationships as well.
+
 ```{r}
 df_numeric %>% 
   ggscatmat() +
   theme(axis.text.x = element_text(angle = 90, vjust = -1))
 ```
-There are no non-linear relationshsips identified.
-The strong positive correlation between the funding and milestone age variables is visible in the scatterplots and verified through correlations > 0.5.
 
-At this, point further correlations between categorical and numerical features area visualized.
-Do successful startups have more or less relationships?
+There are no non-linear relationshsips identified. The strong positive
+correlation between the funding and milestone age variables is visible
+in the scatterplots and verified through correlations \> 0.5.
+
+At this, point further correlations between categorical and numerical
+features area visualized. Do successful startups have more or less
+relationships?
+
 ```{r}
 df_train %>%
   ggplot(aes(x = status, y = relationships, color = status)) +
@@ -566,9 +796,14 @@ df_train %>%
   theme_bw(base_size = 12) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
-Successful startups have more relationships than failes ones. Only 25% of the successful startups have less than 7 relations, whereas 75% of failes startups do have that amount.
 
-Expanding on this. How is the amount of funding_rounds related to the status and relationships?
+Successful startups have more relationships than failes ones. Only 25%
+of the successful startups have less than 7 relations, whereas 75% of
+failes startups do have that amount.
+
+Expanding on this. How is the amount of funding_rounds related to the
+status and relationships?
+
 ```{r}
 df_train %>%
   ggplot(aes(x = relationships, y = funding_rounds, group = status, color = status)) +
@@ -577,9 +812,14 @@ df_train %>%
   ggtitle("Correlation of status, relationships and funding_rounds") +
   theme(legend.title = element_blank())
 ```
-Acquired startups have more relationships and go through more funding rounds.
 
-As discusessed ealsier, it is easier to visualize longitude and latititude than talking about their values. On the map the locations of startups are visualized and by color their are distiguished by status.
+Acquired startups have more relationships and go through more funding
+rounds.
+
+As discusessed ealsier, it is easier to visualize longitude and
+latititude than talking about their values. On the map the locations of
+startups are visualized and by color their are distiguished by status.
+
 ```{r}
 world_map <- map_data("world")
 
@@ -588,10 +828,12 @@ ggplot(df_train, aes(x = longitude, y = latitude, color = status)) +
   geom_path(data = world_map, aes(x = long, y = lat, group = group), color = "gray50") +
   labs(x = "Longitude", y = "Latitude", title = "Startup Locations")
 ```
-There are a few startups located in Europe, but most are located in the US.
-Many acquired startups are rather on the East of the US.
+
+There are a few startups located in Europe, but most are located in the
+US. Many acquired startups are rather on the East of the US.
 
 Another map visualization.
+
 ```{r}
 library(ggmap)
 
@@ -605,6 +847,7 @@ qmplot(x = longitude,
 ```
 
 Do successful startups have their first funding round earlier or later?
+
 ```{r}
 df_train %>%
   ggplot(aes(x = status, y = age_first_funding_year, color = status)) +
@@ -613,139 +856,206 @@ df_train %>%
   theme_bw(base_size = 12) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
-The first funding round happen around the same time for most startups, whether successful or not.
+
+The first funding round happen around the same time for most startups,
+whether successful or not.
 
 ## Define Schema
 
-As a single dataframe is used for this data science lifecycle, the need for a schema is low. As the quality of the data seems quite high and the dataframe is well structures, no schema is defined for this project.
+As a single dataframe is used for this data science lifecycle, the need
+for a schema is low. As the quality of the data seems quite high and the
+dataframe is well structures, no schema is defined for this project.
 
 ## Anomaly Detection
 
-An anomaly that was identified in the data analysis is that there is one duplicate startup by name and id. This should be removed.
+An anomaly that was identified in the data analysis is that there is one
+duplicate startup by name and id. This should be removed.
 
 ```{r}
 # remove duplicate rows
 train_data <- distinct(train_data)
 ```
+
 Other anomalies are missing values and outliers, which are handled now.
 
 ### Missing Values
 
-At first, we need to find out how many missing values there are in which column. They will be fixed in the feature engineering recipe later on.
+At first, we need to find out how many missing values there are in which
+column. They will be fixed in the feature engineering recipe later on.
 
 ```{r}
 is.na(train_data) %>% 
     colSums()
 ```
-There are 442 missing values in closed_at, probably because all successful startups haven't closed, thus they don't have a closing date. This feature is too tightly related to the prediction and thus needs to be removed for the model.
-There are 112 missing values each for age_first_milestone_year and age_last_milestone year. As there are only a couple hundred startups in the dataframe, the ratio of missing values is to high to simply delete these rows. Instead, the missing values will be replaced by the median. Having this many values replaced, the feature importance for the model will decrease.
+
+There are 442 missing values in closed_at, probably because all
+successful startups haven't closed, thus they don't have a closing date.
+This feature is too tightly related to the prediction and thus needs to
+be removed for the model. There are 112 missing values each for
+age_first_milestone_year and age_last_milestone year. As there are only
+a couple hundred startups in the dataframe, the ratio of missing values
+is to high to simply delete these rows. Instead, the missing values will
+be replaced by the median. Having this many values replaced, the feature
+importance for the model will decrease.
 
 ### Outlier Detection
 
-In the data analysis, a few possible outliers have been called out and are investigated now.
+In the data analysis, a few possible outliers have been called out and
+are investigated now.
 
-A longitude of higher than 50 and thus being located in Europe was indentified as an outlier. How many startups are located there?
+A longitude of higher than 50 and thus being located in Europe was
+indentified as an outlier. How many startups are located there?
+
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE longitude > -50;
 ```
-There are 4 startups in Europe in the dataframe. This is very small amount, but as this dataframe will be expanded in the future through information of our customers, all locations are included from the beginning.
 
-Another outlier are the negative first and last funding age. How many of those are there in the dataframe?
+There are 4 startups in Europe in the dataframe. This is very small
+amount, but as this dataframe will be expanded in the future through
+information of our customers, all locations are included from the
+beginning.
+
+Another outlier are the negative first and last funding age. How many of
+those are there in the dataframe?
+
 ```{sql connection=con}
 SELECT name, age_first_funding_year, age_last_funding_year
 FROM df_train
 WHERE age_first_funding_year < 0 OR age_last_funding_year < 0;
 ```
-There are 35 startups with either a negative first or last funding age. These are too many to remove them. If this projected was extended, the root cause for a negative funding age should be identified. 
-Another realization from this analysis is that all startups that have a negative last funding age also have a negative first funding age.
 
-The first and last funding age were rather left skewed, thus teh higher values are evaluated to be outliers now.
+There are 35 startups with either a negative first or last funding age.
+These are too many to remove them. If this projected was extended, the
+root cause for a negative funding age should be identified. Another
+realization from this analysis is that all startups that have a negative
+last funding age also have a negative first funding age.
+
+The first and last funding age were rather left skewed, thus teh higher
+values are evaluated to be outliers now.
+
 ```{sql connection=con}
 SELECT name, age_first_funding_year, age_last_funding_year
 FROM df_train
 WHERE age_first_funding_year > 5 OR age_last_funding_year > 5;
 ```
-The higher first and last funding age is no outlier, one third of the startups have either their first or last funding after 5 years.
 
-Another outlier are the negative first and last milestone age. How many of those are there in the dataframe?
+The higher first and last funding age is no outlier, one third of the
+startups have either their first or last funding after 5 years.
+
+Another outlier are the negative first and last milestone age. How many
+of those are there in the dataframe?
+
 ```{sql connection=con}
 SELECT name, age_first_milestone_year, age_last_milestone_year
 FROM df_train
 WHERE age_first_milestone_year < 0 OR age_last_milestone_year < 0;
 ```
-Just as negative first and last funding age, there are 35 startups that either have a negative first or last milestone age.
-Are those the same startups?
+
+Just as negative first and last funding age, there are 35 startups that
+either have a negative first or last milestone age. Are those the same
+startups?
 
 ```{sql connection=con}
 SELECT COUNT(*)
 FROM df_train
 WHERE age_first_milestone_year < 0 OR age_last_milestone_year < 0 OR age_first_funding_year < 0 OR age_last_funding_year < 0;
 ```
-The startups having negative milestone and funding ages differ mostly. If it were the same, the count would be 35.
 
-The variable relationships is left skewed. How many relationships are considered as an outlier?
+The startups having negative milestone and funding ages differ mostly.
+If it were the same, the count would be 35.
+
+The variable relationships is left skewed. How many relationships are
+considered as an outlier?
+
 ```{r}
 # boxplot relationships
 df_train %>%
   ggplot(aes(y = relationships)) +
   geom_boxplot()
 ```
+
 Startups having more than 20 relationships are outliers.
 
-The maximum fundinng_total_usd is tremendously higher than all other funding amounts. Should this be removed?
+The maximum fundinng_total_usd is tremendously higher than all other
+funding amounts. Should this be removed?
+
 ```{r}
 # boxplot funding_total_usd
 df_train %>%
   ggplot(aes(y = funding_total_usd)) +
   geom_boxplot()
 ```
-The other outliers are way lower than the maximum funding_total_usd, that is why the startups with extremely high funding have to be removed from the dataframe.
+
+The other outliers are way lower than the maximum funding_total_usd,
+that is why the startups with extremely high funding have to be removed
+from the dataframe.
 
 Funding rounds above 4 seem unreasonable and are thus investigated.
+
 ```{r}
 # boxplot funding_rounds
 df_train %>%
   ggplot(aes(y = funding_rounds)) +
   geom_boxplot()
 ```
+
 There are only 3 startups with more than 6 funding rounds.
 
-The earliest founding date in the 1980s is very early in comparison to the rather right skewed values. Does it make sense to remove this?
+The earliest founding date in the 1980s is very early in comparison to
+the rather right skewed values. Does it make sense to remove this?
+
 ```{r}
 # histogram founded_at
 df_train %>%
   ggplot(aes(x = founded_at)) +
   geom_histogram()
 ```
-There is a huge gap between the earliest founded_at and the next in the lat 1990s. 
+
+There is a huge gap between the earliest founded_at and the next in the
+lat 1990s.
 
 ## Feature Engineering
 
-Feature engineering is the process of using domain knowledge to extract meaningful features from the data. The goal of this process is to keep those features that improve the predictions from our model.
-For this a pipeline is created that included the standardization of numeric features and one hot encoding of catgeorical features. As the categories and states are already one hot encoded, their categorical featured need to be removed.
-The anomalies, like outliers, missing values or wrong data types, will be fixed in the recipe in the next chapter.
+Feature engineering is the process of using domain knowledge to extract
+meaningful features from the data. The goal of this process is to keep
+those features that improve the predictions from our model. For this a
+pipeline is created that included the standardization of numeric
+features and one hot encoding of catgeorical features. As the categories
+and states are already one hot encoded, their categorical featured need
+to be removed. The anomalies, like outliers, missing values or wrong
+data types, will be fixed in the recipe in the next chapter.
 
 # Model
 
-This chapter describes the creation of a model to predict the success of a startup. Several classification algorithms are optimized and compared to select the best performing model.
+This chapter describes the creation of a model to predict the success of
+a startup. Several classification algorithms are optimized and compared
+to select the best performing model.
 
 ## Select Algorithm
 
-As the data is pre-categorized, having status as the to be predicted label, supervised learning in form of classification is used.
-As the data is not too complex, neural networks are not needed. Instead, two common classification algorithms are compared:
-- Logistic Regression: Predicts a dependent variable by analyzing the relationship between one or more existing independent variables.
-- Decision Trees: Uses tree-like model of decisions and their possible consequences. examples (K) closest to the query, then votes for the most frequent label.
+As the data is pre-categorized, having status as the to be predicted
+label, supervised learning in form of classification is used. As the
+data is not too complex, neural networks are not needed. Instead, two
+common classification algorithms are compared: - Logistic Regression:
+Predicts a dependent variable by analyzing the relationship between one
+or more existing independent variables. - Decision Trees: Uses tree-like
+model of decisions and their possible consequences. examples (K) closest
+to the query, then votes for the most frequent label.
 
 ## Model Training & Tuning
 
-Models for all three algorithms are created and optimized in this chapter.
+Models for all three algorithms are created and optimized in this
+chapter.
 
 ### Feature Selection
 
-At first, we need to decide which features we want to include in our model.
-As identified in the correlation matrix, there is a strong positive linear correlation between the first and last funding and milestone age of startups. These highly correlated features are removed and this is included in the recipe of Feature Engineering already.
+At first, we need to decide which features we want to include in our
+model. As identified in the correlation matrix, there is a strong
+positive linear correlation between the first and last funding and
+milestone age of startups. These highly correlated features are removed
+and this is included in the recipe of Feature Engineering already.
 
 ```{r}
 df_rec <-
@@ -772,7 +1082,11 @@ prepped_data <-
   juice() # extract only the preprocessed dataframe 
 ```
 
-From the training data another split is performed to create validation data. This is used to verify the model before adding new data to avoid overfitting of the model to the training data.
+Could not make outlier removel work, which could have a negative impact on the model performance.
+
+From the training data another split is performed to create validation
+data. This is used to verify the model before adding new data to avoid
+overfitting of the model to the training data.
 
 ```{r}
 # crossvalidation
@@ -786,7 +1100,12 @@ cv_folds <-
 
 ### Training & Hyperparameter Tuning
 
-In the first phase of the model process, the initial models are generated and their performance is compared during model evaluation. Besides the model specification, workflows need to be created to combine the data preparation recipe with the model. As a third step, our validation set (cv_folds) is fitted to estimate the performance of our models afterwards.
+In the first phase of the model process, the initial models are
+generated and their performance is compared during model evaluation.
+Besides the model specification, workflows need to be created to combine
+the data preparation recipe with the model. As a third step, our
+validation set (cv_folds) is fitted to estimate the performance of our
+models afterwards.
 
 ```{r}
 # Logistic Regression
@@ -838,38 +1157,54 @@ xgb_res <-
 
 ### Evaluation
 
-Now the results of the models are compared and their performance evaluated to decide which model is the best for our startup success prediction use case.
+Now the results of the models are compared and their performance
+evaluated to decide which model is the best for our startup success
+prediction use case.
 
 Average performance over all folds for logistic regression.
+
 ```{r}
 log_res %>% 
   collect_metrics(summarize = TRUE)
 ```
-We have a closer look at three metrics: Accuracy, precision and recall.
-The accuracy rates the overall correct classifications. Precision describes how much of the samples, which have been classified as positive are actual positive. And recall describes how much of the true positive samples has been classified as positive.
 
-The logistic regression model has an accuracy of 74%. 77% of the startups that it predicted to be successful, are actually successful and 89% of true positive samples habe been classified as positive.
+We have a closer look at three metrics: Accuracy, precision and recall.
+The accuracy rates the overall correct classifications. Precision
+describes how much of the samples, which have been classified as
+positive are actual positive. And recall describes how much of the true
+positive samples has been classified as positive.
+
+The logistic regression model has an accuracy of 73%. 76% of the
+startups that it predicted to be successful, are actually successful and
+85% of true positive samples habe been classified as positive.
 
 Performance for every single fold for logistic regression.
+
 ```{r}
 log_res %>% 
   collect_metrics(summarize = FALSE)
 ```
-The range for all metrics is not too big, bur rather similar for every model.
 
-Now, we obtain the actual model predictions to compare the amount of correct and false predictions.
+The range for all metrics is not too big, bur rather similar for every
+model.
+
+Now, we obtain the actual model predictions to compare the amount of
+correct and false predictions.
+
 ```{r}
 log_pred <- 
   log_res %>%
   collect_predictions()
 ```
 
-A confusion matrix is created to compare the amounts of predictions.
-How to read a classification matrix:
+A confusion matrix is created to compare the amounts of predictions. How
+to read a classification matrix:
 
-<img src="https://miro.medium.com/v2/resize:fit:1218/format:webp/1*jMs1RmSwnYgR9CsBw-z1dw.png"> 
+<img src="https://miro.medium.com/v2/resize:fit:1218/format:webp/1*jMs1RmSwnYgR9CsBw-z1dw.png"/>
 
-For the StandardScaler Pipeline this means that in 5 cases label 0 was predicted correctly, 22 times as label 1 and 59 times as label 2. Lables 3 and 4 were not predicted correctly at all.
+For the StandardScaler Pipeline this means that in 5 cases label 0 was
+predicted correctly, 22 times as label 1 and 59 times as label 2. Lables
+3 and 4 were not predicted correctly at all.
 
 From these numbers, various metrics can be calculated.
 
@@ -879,55 +1214,78 @@ $$
 ACC=\frac{TP+TN}{FP+FN+TP+TN}
 $$
 
-Precision: How much of the samples, which have been classified as positive are actual positive
+Precision: How much of the samples, which have been classified as
+positive are actual positive
 
 $$
 PRE=\frac{TP}{FP+TP}
-$$ 
+$$
 
-Recall: How much of the true positive samples has been classified as positive
+Recall: How much of the true positive samples has been classified as
+positive
 
 $$
 REC=\frac{TP}{FN+TP}
 $$
 
-
-For the prediction of startup success, we want the number of False Positives to be as little as possible, because these mean an investment gone wrong and lots of monex being lost for the investors and thus focus on precision.
+For the prediction of startup success, we want the number of False
+Positives to be as little as possible, because these mean an investment
+gone wrong and lots of monex being lost for the investors and thus focus
+on precision.
 
 ```{r}
 log_pred %>%
   conf_mat(status, .pred_class) 
 ```
+
 The confusion matrix can also be visualized to make reading it easier.
+
 ```{r}
 log_pred %>%
   conf_mat(status, .pred_class) %>% 
   autoplot(type = "heatmap")
 ```
-325 startups are True Positives, as they have been predicted to be acquired and have also been acquired in reality. On the other hand, 61 startups that closed have also been predicted to close, those are the True Negatives. There are 38 False Negatives, that have been acquired, but were predicted to close. The fourth kind are the False Positives, those have closed in reality, but were predicted to be acquired. There are 94 False Positives in this logistic regression and this is the number that should be as low as possible.
 
-Now, we will have a look at the metrics of the other algorithm - Gradient Bossted Trees.
+382 startups are True Positives, as they have been predicted to be
+acquired and have also been acquired in reality. On the other hand, 123
+startups that closed have also been predicted to close, those are the
+True Negatives. There are 65 False Negatives, that have been acquired,
+but were predicted to close. The fourth kind are the False Positives,
+those have closed in reality, but were predicted to be acquired. There
+are 121 False Positives in this logistic regression and this is the
+number that should be as low as possible.
+
+Now, we will have a look at the metrics of the other algorithm -
+Gradient Bossted Trees.
+
 ```{r}
 xgb_res %>% 
   collect_metrics(summarize = TRUE)
 ```
-The Gradient Boosted Tree has an accuracy of 73%, recall of 88% and most importantly a precision of 75%.
 
-Looking in more detail at the correct and false predictions of the Gradient Boosted Trees.
+The Gradient Boosted Tree has an accuracy of 76%, recall of 88% and most
+importantly a precision of 78%.
+
+Looking in more detail at the correct and false predictions of the
+Gradient Boosted Trees.
+
 ```{r}
-log_pred <- 
+xgb_pred <- 
   xgb_res %>%
   collect_predictions()
 ```
 
 ```{r}
-log_pred %>%
+xgb_pred %>%
   conf_mat(status, .pred_class) %>% 
   autoplot(type = "heatmap")
 ```
-There are 116 False Positives, so startups thatt have been predicted to be acquired, but actually closed.
+
+There are 112 False Positives, so startups that have been predicted to
+be acquired, but actually closed.
 
 Instead of looking at the metrics one by one, we compare them now.
+
 ```{r}
 # compare models
 log_metrics <- 
@@ -978,43 +1336,55 @@ model_comp %>%
      vjust = 1
   )
 ```
-The accuracy and precision of the Logistic Regression are a little higher and thus, this is the model with the best performance. The objective for a good model, is supposed to be 80% for accuracy and precision and those are not quite reached, but at it is close.
+
+The accuracy and precision of the Decision Tree are a little
+higher and thus, this is the model with the best performance. The
+objective for a good model, is supposed to be 80% for accuracy and
+precision and those are not quite reached, but at it is close.
 
 ## Evaluate Model
 
-The best performing model - Logistic Regression - is now evaluated on test data.
+The best performing model - Decision Tree - is now evaluated on
+test data.
 
 ```{r}
-last_fit_log <- last_fit(log_wflow, 
+last_fit_xgb <- last_fit(xgb_wflow, 
                         split = data_split,
                         metrics = metric_set(yardstick::recall, yardstick::precision, accuracy)
                         )
 ```
 
 ```{r}
-last_fit_log %>% 
+last_fit_xgb %>% 
   collect_metrics()
 ```
+The results on the test data are even a little better than on the train data. The Decision Tree reaches an accuracy of almost 80% and a precision of 80%. The recall, which is not as important for this use case, is even at 91%.
 
 ```{r}
-# feature importance
-last_fit_log %>% 
-  pluck(".workflow", 1) %>%   
-  pull_workflow_fit() %>% 
-  vip(num_features = 10)
-```
-
-```{r}
-last_fit_log %>%
+last_fit_xgb %>%
   collect_predictions() %>% 
   conf_mat(status, .pred_class) %>% 
   autoplot(type = "heatmap")
 ```
+Looking at the classification matrix, there are 137 True Positives compared to 34 startups that have been acquired, but were predicted to close.
+
+Which features are the most important for startup success prediction?
+```{r}
+# feature importance
+last_fit_xgb %>% 
+  pluck(".workflow", 1) %>%   
+  pull_workflow_fit() %>% 
+  vip(num_features = 10)
+```
+The most important features are the number of relationships, the total funding and the age at first funding.
 
 # Deployment
-RStudio's Model Management: https://solutions.posit.co/gallery/model-management/vetiver/
 
-WebAPI with Plumber: https://www.rplumber.io/articles/introduction.html
+RStudio's Model Management:
+<https://solutions.posit.co/gallery/model-management/vetiver/>
+
+WebAPI with Plumber:
+<https://www.rplumber.io/articles/introduction.html>
 
 ## Validate Model
 
