@@ -99,6 +99,7 @@ library(caret)
 library(xgboost)
 library(kknn)
 library(vip)
+library(tidy.outliers)
 ```
 
 ### Import Data 
@@ -618,7 +619,7 @@ The first funding round happen around the same time for most startups, whether s
 
 As a single dataframe is used for this data science lifecycle, the need for a schema is low. As the quality of the data seems quite high and the dataframe is well structures, no schema is defined for this project.
 
-## Anomaly Detection & Fixing
+## Anomaly Detection
 
 An anomaly that was identified in the data analysis is that there is one duplicate startup by name and id. This should be removed.
 
@@ -630,27 +631,14 @@ Other anomalies are missing values and outliers, which are handled now.
 
 ### Missing Values
 
-At first, we need to find out how many missing values there are in which column to decide how to handle them.
+At first, we need to find out how many missing values there are in which column. They will be fixed in the feature engineering recipe later on.
+
 ```{r}
 is.na(train_data) %>% 
     colSums()
 ```
 There are 442 missing values in closed_at, probably because all successful startups haven't closed, thus they don't have a closing date. This feature is too tightly related to the prediction and thus needs to be removed for the model.
 There are 112 missing values each for age_first_milestone_year and age_last_milestone year. As there are only a couple hundred startups in the dataframe, the ratio of missing values is to high to simply delete these rows. Instead, the missing values will be replaced by the median. Having this many values replaced, the feature importance for the model will decrease.
-
-```{r}
-# remove closed_at
-train_data <- 
-  dplyr::select(train_data, -closed_at)
-test_data <- 
-  dplyr::select(test_data, -closed_at)
-```
-
-```{r}
-# replace missing values by median
-train_data %>% 
-   mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .))
-```
 
 ### Outlier Detection
 
@@ -704,12 +692,7 @@ df_train %>%
   ggplot(aes(y = relationships)) +
   geom_boxplot()
 ```
-Startups having more than 20 relationships are outliers and are removed.
-
-```{r}
-# remove relationships > 20
-train_data <- subset(train_data, relationships < 20)
-```
+Startups having more than 20 relationships are outliers.
 
 The maximum fundinng_total_usd is tremendously higher than all other funding amounts. Should this be removed?
 ```{r}
@@ -718,12 +701,7 @@ df_train %>%
   ggplot(aes(y = funding_total_usd)) +
   geom_boxplot()
 ```
-The other outliers are way lower than the maximum funding_total_usd, that is why this startup has to be removed from the dataframe.
-
-```{r}
-# remove maximum fundinf_total_usd
-train_data <- subset(train_data, funding_total_usd < 100000000)
-```
+The other outliers are way lower than the maximum funding_total_usd, that is why the startups with extremely high funding have to be removed from the dataframe.
 
 Funding rounds above 4 seem unreasonable and are thus investigated.
 ```{r}
@@ -732,12 +710,7 @@ df_train %>%
   ggplot(aes(y = funding_rounds)) +
   geom_boxplot()
 ```
-There are only 3 startups with more than 6 funding rounds. These outliers are removed.
-
-```{r}
-# remove funding_rounds > 6
-train_data <- subset(train_data, funding_rounds < 6)
-```
+There are only 3 startups with more than 6 funding rounds.
 
 The earliest founding date in the 1980s is very early in comparison to the rather right skewed values. Does it make sense to remove this?
 ```{r}
@@ -746,62 +719,13 @@ df_train %>%
   ggplot(aes(x = founded_at)) +
   geom_histogram()
 ```
-There is a huge gap between the earliest founded_at and the next in the lat 1990s. Thus, the startups founded in the 1980s are removed.
-
-```{r}
-# remove earliest founded_at
-train_data <- subset(train_data, founded_at > "1995-01-01")
-```
+There is a huge gap between the earliest founded_at and the next in the lat 1990s. 
 
 ## Feature Engineering
 
 Feature engineering is the process of using domain knowledge to extract meaningful features from the data. The goal of this process is to keep those features that improve the predictions from our model.
 For this a pipeline is created that included the standardization of numeric features and one hot encoding of catgeorical features. As the categories and states are already one hot encoded, their categorical featured need to be removed.
-As the anomalies, like outliers, missing values or wrong data types, have already been fixed, no further feature transformations are needed in this step.
-
-```{r}
-# remove category and stat categorical feature
-train_data <- train_data %>%
-  select(-state_code, -category_code)
-
-test_data <- test_data %>%
-  select(-state_code, -category_code)
-```
-
-```{r}
-# remove highly correlated location information, only keeping one hot encoded state
-train_data <- train_data %>%
-  select(-longitude, -latitude, -zip_code, -city)
-
-test_data <- test_data %>%
-  select(-longitude, -latitude, -zip_code, -city)
-```
-
-```{r}
-# convert all date variables to numeric (could not make it work in the recipe)
-train_data$founded_at <- 
-  as.numeric(train_data$founded_at)
-train_data$first_funding_at <- 
-  as.numeric(train_data$first_funding_at)
-train_data$last_funding_at <- 
-  as.numeric(train_data$last_funding_at)
-
-test_data$founded_at <- 
-  as.numeric(test_data$founded_at)
-test_data$first_funding_at <- 
-  as.numeric(test_data$first_funding_at)
-test_data$last_funding_at <- 
-  as.numeric(test_data$last_funding_at)
-```
-
-```{r}
-# remove name and id, as they are unique and thus do not serve the model
-train_data <- train_data %>%
-  select(-name, -id)
-
-test_data <- test_data %>%
-  select(-name, -id)
-```
+The anomalies, like outliers, missing values or wrong data types, will be fixed in the recipe in the next chapter.
 
 # Model
 
@@ -824,13 +748,20 @@ At first, we need to decide which features we want to include in our model.
 As identified in the correlation matrix, there is a strong positive linear correlation between the first and last funding and milestone age of startups. These highly correlated features are removed and this is included in the recipe of Feature Engineering already.
 
 ```{r}
-# create recipe
 df_rec <-
   recipe(status ~ ., data = train_data) %>%
-  step_naomit(everything(), skip = TRUE) %>% #removes rows with NaN values
+  step_rm(closed_at, state_code, category_code, latitude, longitude, zip_code, city, name, id) %>% #remove unnecessary columns
+  step_impute_median(age_first_milestone_year, age_last_milestone_year) %>% #replace NaN with median
+  step_naomit(everything(), skip = TRUE) %>% #remove rows with NaN values (only as double check)
+  step_mutate(founded_at = as.numeric(founded_at)) %>% #date to numeric
+  step_mutate(first_funding_at = as.numeric(first_funding_at)) %>%
+  step_mutate(last_funding_at = as.numeric(last_funding_at)) %>%
+  step_corr(all_predictors(), threshold = 0.7, method = "spearman") %>% #remove highly correlated
+  #step_outliers_maha(all_numeric(), -all_outcomes()) %>%
+  #step_outliers_lookout(all_numeric(),-contains(r"(.outliers)"),-all_outcomes()) %>% 
+  #step_outliers_remove(contains(r"(.outliers)")) %>% # remove outliers
   step_zv(all_numeric(), -all_outcomes()) %>% #remove all numeric that have zero variance
-  step_normalize(all_numeric(), -all_outcomes()) %>% #standardize numeric features
-  step_corr(all_predictors(), threshold = 0.7, method = "spearman") #remove highly correlated
+  step_normalize(all_numeric(), -all_outcomes()) #standardize numeric features
 ```
 
 ```{r}
@@ -1058,10 +989,6 @@ last_fit_log <- last_fit(log_wflow,
                         split = data_split,
                         metrics = metric_set(yardstick::recall, yardstick::precision, accuracy)
                         )
-```
-
-```{r}
-str(data_split)
 ```
 
 ```{r}
