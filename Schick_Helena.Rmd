@@ -163,6 +163,9 @@ library(xgboost)
 library(kknn)
 library(vip)
 library(tidy.outliers)
+library(plumber)
+library(vetiver)
+library(glue)
 ```
 
 ### Import Data
@@ -1385,6 +1388,78 @@ RStudio's Model Management:
 
 WebAPI with Plumber:
 <https://www.rplumber.io/articles/introduction.html>
+
+```{r}
+model_name <- "xgb"
+pin_name <- glue("helena.schick/{model_name}")
+
+date_metadata <- list(
+  train_date = c(
+    as.character(min(train_data$founded_at)), 
+    as.character(max(train_data$founded_at))
+  ),
+  test_date = c(
+    as.character(min(test_data$founded_at)), 
+    as.character(max(test_data$founded_at))
+  )
+)
+
+# Create the vetiver model.
+v <- vetiver_model(
+  last_fit_xgb, 
+  model_name,
+  versioned = TRUE,
+  save_ptype = train_data %>%
+    head(1),
+  metadata = date_metadata
+)
+
+v
+```
+
+```{r}
+# Use RStudio Connect as a board.
+board <- pins::board_rsconnect(
+  server = Sys.getenv("CONNECT_SERVER"),
+  key = Sys.getenv("CONNECT_API_KEY"),
+  versioned = TRUE
+)
+# Write the model to the board.
+board %>%
+ vetiver_pin_write(vetiver_model = v)
+```
+
+```{r}
+# Add server
+rsconnect::addServer(
+  url = "https://colorado.rstudio.com/rsc/__api__",
+  name = "colorado"
+)
+
+# Add account
+rsconnect::connectApiUser(
+  account = "sam.edwardes",
+  server = "colorado",
+  apiKey = Sys.getenv("CONNECT_API_KEY"),
+)
+
+# Deploy to Connect
+vetiver_deploy_rsconnect(
+  board = board,
+  name = pin_name,
+  appId = "11314",
+  launch.browser = FALSE,
+  appTitle = "Bike Predict - Model - API",
+  predict_args = list(debug = FALSE),
+  account = "sam.edwardes",
+  server =  "colorado"
+)
+## Preparing to deploy api...DONE
+## Uploading bundle for api: 11314...DONE
+## Deploying bundle: 66299 for api: 11314 ...
+## Api successfully deployed to https://colorado.rstudio.com/rsc/bike-predict-r-api/
+```
+
 
 ## Validate Model
 
