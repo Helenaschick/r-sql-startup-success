@@ -1425,41 +1425,41 @@ v
 
 ```{r}
 # Use RStudio Connect as a board.
-if (FALSE) {
-board <- pins::board_connect()
+#if (FALSE) {
+#board <- pins::board_connect()
 # Write the model to the board.
-board %>%
- vetiver_pin_write(vetiver_model = v)
-}
+#board %>%
+# vetiver_pin_write(vetiver_model = v)
+#}
 ```
 
 ```{r}
 # Add server
-rsconnect::addServer(
-  url = "https://colorado.rstudio.com/rsc/__api__",
-  name = "colorado"
-)
+#rsconnect::addServer(
+#  url = "https://colorado.rstudio.com/rsc/__api__",
+#  name = "colorado"
+#)
 
 # Add account
-if (FALSE) {
-rsconnect::connectApiUser(
-  account = "helena.schick",
-  server = "colorado",
-  apiKey = Sys.getenv("CONNECT_API_KEY"),
-)
-}
+#if (FALSE) {
+#rsconnect::connectApiUser(
+#  account = "helena.schick",
+#  server = "colorado",
+#  apiKey = Sys.getenv("CONNECT_API_KEY"),
+#)
+#}
 
 # Deploy to Connect
-vetiver_deploy_rsconnect(
-  board = board,
-  name = pin_name,
-  appId = "11314",
-  launch.browser = FALSE,
-  appTitle = "Startup Predict - Model - API",
-  predict_args = list(debug = FALSE),
-  account = "helena.schick",
-  server =  "colorado"
-)
+#vetiver_deploy_rsconnect(
+#  board = board,
+#  name = pin_name,
+#  appId = "11314",
+#  launch.browser = FALSE,
+#  appTitle = "Startup Predict - Model - API",
+#  predict_args = list(debug = FALSE),
+#  account = "helena.schick",
+#  server =  "colorado"
+#)
 ```
 
 ## Validate Model
