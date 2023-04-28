@@ -1390,27 +1390,33 @@ WebAPI with Plumber:
 <https://www.rplumber.io/articles/introduction.html>
 
 ```{r}
-model_name <- "xgb"
+# Fit models
+xgb_fit <- fit(xgb_wflow, data = train_data)
+xgb_fit
+
+model_name <- "xgb_startup_success_prediction"
 pin_name <- glue("helena.schick/{model_name}")
 
 date_metadata <- list(
-  train_date = c(
+  train_dates = c(
     as.character(min(train_data$founded_at)), 
     as.character(max(train_data$founded_at))
   ),
-  test_date = c(
+  test_dates = c(
     as.character(min(test_data$founded_at)), 
     as.character(max(test_data$founded_at))
   )
 )
+print(date_metadata)
 
 # Create the vetiver model.
 v <- vetiver_model(
-  last_fit_xgb, 
+  xgb_fit, 
   model_name,
   versioned = TRUE,
   save_ptype = train_data %>%
-    head(1),
+    head(1)  %>%
+    select(-status),
   metadata = date_metadata
 )
 
@@ -1419,14 +1425,12 @@ v
 
 ```{r}
 # Use RStudio Connect as a board.
-board <- pins::board_rsconnect(
-  server = Sys.getenv("CONNECT_SERVER"),
-  key = Sys.getenv("CONNECT_API_KEY"),
-  versioned = TRUE
-)
+if (FALSE) {
+board <- pins::board_connect()
 # Write the model to the board.
 board %>%
  vetiver_pin_write(vetiver_model = v)
+}
 ```
 
 ```{r}
@@ -1437,11 +1441,13 @@ rsconnect::addServer(
 )
 
 # Add account
+if (FALSE) {
 rsconnect::connectApiUser(
-  account = "sam.edwardes",
+  account = "helena.schick",
   server = "colorado",
   apiKey = Sys.getenv("CONNECT_API_KEY"),
 )
+}
 
 # Deploy to Connect
 vetiver_deploy_rsconnect(
@@ -1449,17 +1455,12 @@ vetiver_deploy_rsconnect(
   name = pin_name,
   appId = "11314",
   launch.browser = FALSE,
-  appTitle = "Bike Predict - Model - API",
+  appTitle = "Startup Predict - Model - API",
   predict_args = list(debug = FALSE),
-  account = "sam.edwardes",
+  account = "helena.schick",
   server =  "colorado"
 )
-## Preparing to deploy api...DONE
-## Uploading bundle for api: 11314...DONE
-## Deploying bundle: 66299 for api: 11314 ...
-## Api successfully deployed to https://colorado.rstudio.com/rsc/bike-predict-r-api/
 ```
-
 
 ## Validate Model
 
