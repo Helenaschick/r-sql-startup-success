@@ -163,9 +163,6 @@ library(xgboost)
 library(kknn)
 library(vip)
 library(tidy.outliers)
-library(plumber)
-library(vetiver)
-library(glue)
 ```
 
 ### Import Data
@@ -196,7 +193,9 @@ there are each a categorical variable and several one hot encoded ones.
 All are kept at this point, because the categorical is better for
 visualizations and data understanding, but the one hot encoded ones are
 needed for the classification model. The variables are described in more
-detail: \| Variable \| Description \| Data Type \| :----- \| :----- \|
+detail: 
+
+\| Variable \| Description \| Data Type \| :----- \| :----- \|
 :-----: \| state_code \| Abbreviation of US state of startup's location
 \| character \| \| latitude \| Geographic North-South location of
 startup's location \| double \| \| longitude \| Geographic East-West
@@ -1347,6 +1346,33 @@ precision and those are not quite reached, but at it is close.
 
 ## Evaluate Model
 
+The best model is evaluated on its errors to understand why it makes them and how to fix them.
+
+```{r}
+# make predictions
+#assess_res <- collect_predictions(xgb_res)
+
+# obtain the 10 wrongest predictions
+#wrongest_predictions <- 
+#  assess_res %>% 
+#  mutate(residual = status - .pred) %>% 
+#  arrange(desc(abs(residual))) %>% 
+#  slice_head(n = 10)
+
+# take a look at the observations
+#errors <- 
+#  train_data %>% 
+#  dplyr::slice(wrongest_prediction$.row) 
+```
+
+Does not seem to work, cannot find a solution to the error.
+
+# Deployment
+
+The last chapter describes the deployment of the final model.
+
+## Validate Model
+
 The best performing model - Decision Tree - is now evaluated on
 test data.
 
@@ -1361,6 +1387,7 @@ last_fit_xgb <- last_fit(xgb_wflow,
 last_fit_xgb %>% 
   collect_metrics()
 ```
+
 The results on the test data are even a little better than on the train data. The Decision Tree reaches an accuracy of almost 80% and a precision of 80%. The recall, which is not as important for this use case, is even at 91%.
 
 ```{r}
@@ -1369,6 +1396,7 @@ last_fit_xgb %>%
   conf_mat(status, .pred_class) %>% 
   autoplot(type = "heatmap")
 ```
+
 Looking at the classification matrix, there are 137 True Positives compared to 34 startups that have been acquired, but were predicted to close.
 
 Which features are the most important for startup success prediction?
@@ -1379,24 +1407,30 @@ last_fit_xgb %>%
   pull_workflow_fit() %>% 
   vip(num_features = 10)
 ```
+
 The most important features are the number of relationships, the total funding and the age at first funding.
 
-# Deployment
+## Deploy Model
 
-RStudio's Model Management:
-<https://solutions.posit.co/gallery/model-management/vetiver/>
+There are three major options to deploy: Posit Connect, Tensorflow and Plumber.
 
-WebAPI with Plumber:
-<https://www.rplumber.io/articles/introduction.html>
+To deploy the model a connection to Posit Connect was tried to be established. This did not work, but instead received this error when trying to install through th terminal as described [here](https://docs.posit.co/rsc/installation/):
 
-```{r}
-# Fit models
+(base) helena.schick@NANZ204 ~ % curl -Lo rsc-installer.sh https://cdn.rstudio.com/connect/installer/installer-v6.4.0.sh
+sudo -E bash ./rsc-installer.sh 2023.03.0
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 23.7M  100 23.7M    0     0  7742k      0  0:00:03  0:00:03 --:--:-- 7753k
+Password:
+helena.schick is not in the sudoers file.  This incident will be reported.
+
+I tried this code though before realizing that I cannot make it work:
+> # Fit models
 xgb_fit <- fit(xgb_wflow, data = train_data)
 xgb_fit
-
 model_name <- "xgb_startup_success_prediction"
 pin_name <- glue("helena.schick/{model_name}")
-
 date_metadata <- list(
   train_dates = c(
     as.character(min(train_data$founded_at)), 
@@ -1408,7 +1442,6 @@ date_metadata <- list(
   )
 )
 print(date_metadata)
-
 # Create the vetiver model.
 v <- vetiver_model(
   xgb_fit, 
@@ -1419,52 +1452,53 @@ v <- vetiver_model(
     select(-status),
   metadata = date_metadata
 )
-
 v
-```
 
-```{r}
-# Use RStudio Connect as a board.
-#if (FALSE) {
-#board <- pins::board_connect()
+># Use RStudio Connect as a board.
+board <- pins::board_connect()
 # Write the model to the board.
-#board %>%
-# vetiver_pin_write(vetiver_model = v)
-#}
-```
+board %>%
+ vetiver_pin_write(vetiver_model = v)
+
+># Add server
+rsconnect::addServer(
+  url = "https://colorado.rstudio.com/rsc/__api__",
+  name = "colorado"
+)
+# Add account
+if (FALSE) {
+rsconnect::connectApiUser(
+  account = "helena.schick",
+  server = "colorado",
+  apiKey = Sys.getenv("CONNECT_API_KEY"),
+)
+}
+# Deploy to Connect
+vetiver_deploy_rsconnect(
+  board = board,
+  name = pin_name,
+  appId = "11314",
+  launch.browser = FALSE,
+  appTitle = "Startup Predict - Model - API",
+  predict_args = list(debug = FALSE),
+  account = "helena.schick",
+  server =  "colorado"
+)
+
+Thus, RStudio's Model Management could not be used.
+
+As I have a MacBook with M1, tensorflow does not properly run there. This is why, I did not try TFX pipelines.
+
+The last option is plumber.
 
 ```{r}
-# Add server
-#rsconnect::addServer(
-#  url = "https://colorado.rstudio.com/rsc/__api__",
-#  name = "colorado"
-#)
-
-# Add account
-#if (FALSE) {
-#rsconnect::connectApiUser(
-#  account = "helena.schick",
-#  server = "colorado",
-#  apiKey = Sys.getenv("CONNECT_API_KEY"),
-#)
-#}
-
-# Deploy to Connect
-#vetiver_deploy_rsconnect(
-#  board = board,
-#  name = pin_name,
-#  appId = "11314",
-#  launch.browser = FALSE,
-#  appTitle = "Startup Predict - Model - API",
-#  predict_args = list(debug = FALSE),
-#  account = "helena.schick",
-#  server =  "colorado"
-#)
+#* Echo the parameter that was sent in
+#* @param msg The message to echo back.
+#* @get /echo
+function(msg=""){
+  list(msg = paste0("The message is: '", msg, "'"))
+}
 ```
-
-## Validate Model
-
-## Deploy Model
 
 ## Serve Model
 
