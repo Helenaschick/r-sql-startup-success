@@ -1426,6 +1426,7 @@ Password:
 helena.schick is not in the sudoers file.  This incident will be reported.
 
 I tried this code though before realizing that I cannot make it work:
+
 > # Fit models
 xgb_fit <- fit(xgb_wflow, data = train_data)
 xgb_fit
@@ -1489,15 +1490,11 @@ Thus, RStudio's Model Management could not be used.
 
 As I have a MacBook with M1, tensorflow does not properly run there. This is why, I did not try TFX pipelines.
 
-The last option is plumber.
+The last option is plumber. This has to be run in a R Script, see plumber.R.
+The model has to be saved, so it can be inserted in the R Script.
 
 ```{r}
-#* Echo the parameter that was sent in
-#* @param msg The message to echo back.
-#* @get /echo
-function(msg=""){
-  list(msg = paste0("The message is: '", msg, "'"))
-}
+saveRDS(last_fit_xgb, "model.rds")
 ```
 
 ## Serve Model

@@ -3114,8 +3114,6 @@ log_res &lt;-
 <pre><code>## 
 There were issues with some computations   A: x1
 
-There were issues with some computations   A: x2
-
 There were issues with some computations   A: x3
 
 There were issues with some computations   A: x4
@@ -3399,16 +3397,21 @@ sudo -E bash ./rsc-installer.sh 2023.03.0</p>
 Upload Total Spent Left Speed 100 23.7M 100 23.7M 0 0 7742k 0 0:00:03
 0:00:03 –:–:– 7753k Password: helena.schick is not in the sudoers file.
 This incident will be reported.</p>
-<p>I tried this code though before realizing that I cannot make it work:
-&gt; # Fit models xgb_fit &lt;- fit(xgb_wflow, data = train_data)
-xgb_fit model_name &lt;- “xgb_startup_success_prediction” pin_name &lt;-
+<p>I tried this code though before realizing that I cannot make it
+work:</p>
+<blockquote>
+<h1 id="fit-models">Fit models</h1>
+<p>xgb_fit &lt;- fit(xgb_wflow, data = train_data) xgb_fit model_name
+&lt;- “xgb_startup_success_prediction” pin_name &lt;-
 glue(“helena.schick/{model_name}”) date_metadata &lt;- list( train_dates
-= c( as.character(min(train_data<span class="math inline">\(founded_at)),  as.character(max(train_data\)</span>founded_at))
-), test_dates = c( as.character(min(test_data<span class="math inline">\(founded_at)),  as.character(max(test_data\)</span>founded_at))
-) ) print(date_metadata) # Create the vetiver model. v &lt;-
-vetiver_model( xgb_fit, model_name, versioned = TRUE, save_ptype =
-train_data %&gt;% head(1) %&gt;% select(-status), metadata =
-date_metadata ) v</p>
+= c( as.character(min(train_data<span class="math inline">\(founded_at)),
+as.character(max(train_data\)</span>founded_at)) ), test_dates = c(
+as.character(min(test_data<span class="math inline">\(founded_at)),
+as.character(max(test_data\)</span>founded_at)) ) ) print(date_metadata)
+# Create the vetiver model. v &lt;- vetiver_model( xgb_fit, model_name,
+versioned = TRUE, save_ptype = train_data %&gt;% head(1) %&gt;%
+select(-status), metadata = date_metadata ) v</p>
+</blockquote>
 <blockquote>
 <h1 id="use-rstudio-connect-as-a-board.">Use RStudio Connect as a
 board.</h1>
@@ -3429,16 +3432,10 @@ server = “colorado” )</p>
 <p>Thus, RStudio’s Model Management could not be used.</p>
 <p>As I have a MacBook with M1, tensorflow does not properly run there.
 This is why, I did not try TFX pipelines.</p>
-<p>The last option is plumber.</p>
-<pre class="r"><code>#* Echo the parameter that was sent in
-#* @param msg The message to echo back.
-#* @get /echo
-function(msg=&quot;&quot;){
-  list(msg = paste0(&quot;The message is: &#39;&quot;, msg, &quot;&#39;&quot;))
-}</code></pre>
-<pre><code>## function(msg=&quot;&quot;){
-##   list(msg = paste0(&quot;The message is: &#39;&quot;, msg, &quot;&#39;&quot;))
-## }</code></pre>
+<p>The last option is plumber. This has to be run in a R Script, see
+plumber.R. The model has to be saved, so it can be inserted in the R
+Script.</p>
+<pre class="r"><code>saveRDS(last_fit_xgb, &quot;model.rds&quot;)</code></pre>
 </div>
 <div id="serve-model" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Serve Model</h2>
