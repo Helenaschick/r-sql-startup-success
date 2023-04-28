@@ -1492,4 +1492,9 @@ saveRDS(last_fit_xgb, "model.rds")
 
 ## Serve Model
 
+For this project, serving the model cannot be conducted. If this became a real business case though, serving the model would be implemented through information of new startups. The model can learn from adding this new information.
+
 ## Monitor Model
+
+The inability to conduct this step of monitoring the model applies as to serving the model. Over the course of time and when ingesting new information, the performance of the model would be monitored. Ideally, the model performance increases through additional data. If this weren't the case, the hyperparameters might need to be adjusted or even a better performing model needs to be evaluated.
+
