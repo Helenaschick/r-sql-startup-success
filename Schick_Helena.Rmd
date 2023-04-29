@@ -293,6 +293,13 @@ df <-
   dplyr::select(df, -`Unnamed: 0`, -`Unnamed: 6`, -state_code.1, -object_id, -labels, -avg_participants)
 ```
 
+We create a separate detaframe that excludes all variables that have insights on the funding rounds and progress. With this information another classification model is created for early success prediction of very new startups that are in or before their first funding round.
+
+```{r}
+df_new <- 
+  dplyr::select(df, -closed_at, -last_funding_at, -age_last_milestone_year, -funding_rounds, -funding_total_usd, -milestones, -has_VC, -has_angel, -has_roundA, -has_roundB, -has_roundC, -has_roundD, -is_top500)
+```
+
 ### Variable List
 
 For easier usage in data splitting, several variable lists are created.
@@ -354,10 +361,25 @@ train_data <- training(data_split)
 test_data <- testing(data_split)
 ```
 
+```{r}
+# Same for df_new
+set.seed(42)
+
+# Put 3/4 of the data into the training set 
+data_split_new <- initial_split(df_new, 
+                           prop = 3/4, 
+                           strata = status, 
+                           breaks = 4)
+
+# Create dataframes for the two sets:
+train_data_new <- training(data_split_new) 
+test_data_new <- testing(data_split_new)
+```
+
 ### Data Exploration Set
 
 A copy of the training data is created for the data exploration to not
-alter the actual training data.
+alter the actual training data. This step and the following data analysis is done on the big dataframe only.
 
 ```{r}
 df_train <- train_data 
@@ -874,6 +896,11 @@ duplicate startup by name and id. This should be removed.
 train_data <- distinct(train_data)
 ```
 
+```{r}
+# remove duplicate rows
+train_data_new <- distinct(train_data_new)
+```
+
 Other anomalies are missing values and outliers, which are handled now.
 
 ### Missing Values
@@ -1036,10 +1063,10 @@ to select the best performing model.
 As the data is pre-categorized, having status as the to be predicted
 label, supervised learning in form of classification is used. As the
 data is not too complex, neural networks are not needed. Instead, two
-common classification algorithms are compared: - Logistic Regression:
-Predicts a dependent variable by analyzing the relationship between one
-or more existing independent variables. - Decision Trees: Uses tree-like
-model of decisions and their possible consequences. examples (K) closest
+common classification algorithms are compared: 
+- Logistic Regression:Predicts a dependent variable by analyzing the relationship between one
+or more existing independent variables. 
+- Decision Trees: Uses tree-like model of decisions and their possible consequences. examples (K) closest
 to the query, then votes for the most frequent label.
 
 ## Model Training & Tuning
@@ -1080,6 +1107,31 @@ prepped_data <-
   juice() # extract only the preprocessed dataframe 
 ```
 
+```{r}
+# Again for df_new
+df_rec_new <-
+  recipe(status ~ ., data = train_data_new) %>%
+  step_rm(state_code, category_code, latitude, longitude, zip_code, city, name, id) %>% #remove unnecessary columns
+  step_impute_median(age_first_milestone_year) %>% #replace NaN with median
+  step_naomit(everything(), skip = TRUE) %>% #remove rows with NaN values (only as double check)
+  step_mutate(founded_at = as.numeric(founded_at)) %>% #date to numeric
+  step_mutate(first_funding_at = as.numeric(first_funding_at)) %>%
+  step_corr(all_predictors(), threshold = 0.7, method = "spearman") %>% #remove highly correlated
+  #step_outliers_maha(all_numeric(), -all_outcomes()) %>%
+  #step_outliers_lookout(all_numeric(),-contains(r"(.outliers)"),-all_outcomes()) %>% 
+  #step_outliers_remove(contains(r"(.outliers)")) %>% # remove outliers
+  step_zv(all_numeric(), -all_outcomes()) %>% #remove all numeric that have zero variance
+  step_normalize(all_numeric(), -all_outcomes()) #standardize numeric features
+```
+
+```{r}
+# bake recipe
+prepped_data_new <- 
+  df_rec_new %>% # use the recipe object
+  prep() %>% # perform the recipe on training data
+  juice() # extract only the preprocessed dataframe 
+```
+
 Could not make outlier removel work, which could have a negative impact on the model performance.
 
 From the training data another split is performed to create validation
@@ -1092,6 +1144,16 @@ set.seed(100)
 
 cv_folds <-
  vfold_cv(train_data, 
+          v = 5, 
+          strata = status) 
+```
+
+```{r}
+# crossvalidation also for df_new
+set.seed(100)
+
+cv_folds_new <-
+ vfold_cv(train_data_new, 
           v = 5, 
           strata = status) 
 ```
@@ -1148,6 +1210,56 @@ xgb_res <-
   xgb_wflow %>% 
   fit_resamples(
     resamples = cv_folds, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
+    control = control_resamples(save_pred = TRUE)
+    ) 
+```
+
+The same models are also created for a classification of new startups.
+
+```{r}
+# Logistic Regression
+# model
+log_spec_new <- # your model specification
+  logistic_reg() %>%  # model type
+  set_engine(engine = "glm") %>%  # model engine
+  set_mode("classification") # model mode
+
+# workflow pipeline
+log_wflow_new <- # new workflow object
+ workflow() %>% # use workflow function
+ add_recipe(df_rec_new) %>%   # use the new recipe
+ add_model(log_spec_new)   # add your model spec
+
+# fit model with crossvalidation
+log_res_new <- 
+  log_wflow_new %>% 
+  fit_resamples(
+    resamples = cv_folds_new, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
+    control = control_resamples(save_pred = TRUE)
+    ) 
+```
+
+```{r}
+# Decision Tree
+# model
+xgb_spec_new <- 
+  boost_tree() %>% 
+  set_engine("xgboost") %>% 
+  set_mode("classification") 
+
+# workflow pipeline
+xgb_wflow_new <-
+ workflow() %>%
+ add_recipe(df_rec_new) %>% 
+ add_model(xgb_spec_new)
+
+# fit model with crossvalidation
+xgb_res_new <- 
+  xgb_wflow_new %>% 
+  fit_resamples(
+    resamples = cv_folds_new, 
     metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
     control = control_resamples(save_pred = TRUE)
     ) 
@@ -1340,6 +1452,60 @@ higher and thus, this is the model with the best performance. The
 objective for a good model, is supposed to be 80% for accuracy and
 precision and those are not quite reached, but at it is close.
 
+The comparison is also done for new startups.
+```{r}
+# compare models
+log_metrics_new <- 
+  log_res_new %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "Logistic Regression") # add the name of the model to every row
+
+xgb_metrics_new <- 
+  xgb_res_new %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "XGBoost")
+
+# create dataframe with all models
+model_compare_new <- bind_rows(log_metrics_new,
+                           xgb_metrics_new) 
+
+# change data structure
+model_comp_new <- 
+  model_compare_new %>% 
+  select(model, .metric, mean, std_err) %>% 
+  pivot_wider(names_from = .metric, values_from = c(mean, std_err)) 
+
+# show mean accuracy for every model
+model_comp_new %>% 
+  arrange(mean_accuracy) %>% 
+  mutate(model = fct_reorder(model, mean_accuracy)) %>% # order results
+  ggplot(aes(model, mean_accuracy, fill=model)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "Blues") +
+   geom_text(
+     size = 3,
+     aes(label = round(mean_accuracy, 2)),
+     vjust = 1
+  )
+
+# show mean precision per model
+model_comp_new %>% 
+  arrange(mean_precision) %>% 
+  mutate(model = fct_reorder(model, mean_precision)) %>%
+  ggplot(aes(model, mean_precision, fill=model)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "Blues") + 
+     geom_text(
+     size = 3,
+     aes(label = round(mean_precision, 2)),
+     vjust = 1
+  )
+```
+
+XGBoost is a little better and will thus be validated.
+
 ## Evaluate Model
 
 The best model is evaluated on its errors to understand why it makes them and how to fix them.
@@ -1402,6 +1568,34 @@ last_fit_xgb %>%
 ```
 
 The most important features are the number of relationships, the total funding and the age at first funding.
+
+The sam evalidatio is done for the new startups.
+```{r}
+last_fit_xgb_new <- last_fit(xgb_wflow_new, 
+                        split = data_split_new,
+                        metrics = metric_set(yardstick::recall, yardstick::precision, accuracy)
+                        )
+```
+
+```{r}
+last_fit_xgb_new %>% 
+  collect_metrics()
+```
+
+```{r}
+last_fit_xgb_new %>%
+  collect_predictions() %>% 
+  conf_mat(status, .pred_class) %>% 
+  autoplot(type = "heatmap")
+```
+
+```{r}
+# feature importance
+last_fit_xgb_new %>% 
+  pluck(".workflow", 1) %>%   
+  pull_workflow_fit() %>% 
+  vip(num_features = 10)
+```
 
 ## Deploy Model
 
