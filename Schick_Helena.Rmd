@@ -12,7 +12,7 @@ editor_options:
     wrap: 72
 ---
 
-This project to predict the sucess of startups is conducted according to the Data Science Lifecycle
+This project to predict the success of startups is conducted according to the Data Science Lifecycle.
 
 <img src ="https://kirenz.github.io/data-science-r/_images/lifecycle.png"/>
 
@@ -37,7 +37,7 @@ business model canvas is used to describe the use case in more detail.
     uncertainty of the investment in a startup. Even with a
     well-developed business plan and promising market research, there is
     no guarantee that the startup will be successful. Furthermore,
-    startups are inherently risky ventures. They often have limited
+    startups are risky ventures, as they often have limited
     operating history and may face significant challenges in scaling up
     their operations, acquiring customers, and generating revenue.
     Moreover, investing in a startup requires a significant time
@@ -63,8 +63,8 @@ business model canvas is used to describe the use case in more detail.
     whether a startup which is currently operating turns into a success
     or a failure. The success of a company is defined as the event that
     gives the company's founders a large sum of money through the
-    process of M&A (Merger and Acquisition) or an IPO (Initial Public
-    Offering). A company would be considered as failed if it had to be
+    process of Merger and Acquisition or an Initial Public
+    Offering. A company would be considered as failed if it had to be
     shut down. This minimizes the uncertainty and risk of the
     investment. As this is provided in one platform, the time commitment
     and intense research is reduced tremendously. The data can always be
@@ -101,29 +101,27 @@ business model canvas is used to describe the use case in more detail.
     well, as they provide data to improve the model.
 
 9.  Cost Structure: There are currently no costs, as this is done
-    volunatarily on behalf of the module "Programming Languages for Data
+    voluntarily on behalf of the module "Programming Languages for Data
     Science".
 
 ## Frame Problem
 
-We are investigating the characteristics of startups Because we want to
-find out, if a startup will be successful In order to decide to invest
+We are investigating the characteristics of startups, because we want to
+find out, if a startup will be successful in order to decide to invest
 in it or not.
 
-We want the model to classify the status of a startup Our ideal outcome
-is "acquired", which means that the startup was successful In order to
+We want the model to classify the status of a startup. Our ideal outcome
+is "acquired", which means that the startup was successful in order to
 reduce the uncertainty in startup investments.
 
 ## Identify Variables
 
-For structured data problems, we need to identify potentially relevant
-variables. The response variable is the categorical status (acquired or
+The response variable is the categorical status (acquired or
 closed - if a startup is 'acquired' by some other organization, means
 the startup succeeded) and there are many explanatory variables, which
 include the category, location, funding rounds and amount. The [data
 set](https://www.kaggle.com/datasets/manishkc06/startup-success-prediction?resource=download&select=startup+data.csv)
-is from kaggle and contains data about startups since the late 1990s in
-the United States of America.
+is from kaggle and contains data about several hundred startups.
 
 ## Define Metrics
 
@@ -171,7 +169,7 @@ library(tidy.outliers)
 
 ### Import Data
 
-Currently csv upload, could chnage this to upload from a database.
+First, the .csv file on startups is uploaded.
 
 ```{r}
 path <- "/Users/helena.schick/Documents/GitHub/r-sql-startup-success/startup data.csv"
@@ -244,7 +242,7 @@ detail:
 | status | Success variable of startup (acquired = successful, closed = unsuccessful) | string |
 
 To understand the ratio of numerical to categorical variables and view
-the amount of null values in the dataframe, we visualize it.
+the amount of null values in the data frame, we visualize it.
 
 ```{r}
 vis_dat(df)
@@ -270,7 +268,7 @@ df <-
   mutate(across(where(is.character), as.factor))
 ```
 
-Secondly, the variables taht represent dates are turned into the data
+Secondly, the variables that represent dates are turned into the data
 type date.
 
 ```{r}
@@ -285,7 +283,7 @@ df$last_funding_at <-
   as.Date(df$last_funding_at, format = "%m/%d/%Y")
 ```
 
-In the end, unnecessary varibales are removed.
+In the end, unnecessary variables are removed.
 
 ```{r}
 # remove unnecessary variables
@@ -293,7 +291,11 @@ df <-
   dplyr::select(df, -`Unnamed: 0`, -`Unnamed: 6`, -state_code.1, -object_id, -labels, -avg_participants)
 ```
 
-We create a separate detaframe that excludes all variables that have insights on the funding rounds and progress. With this information another classification model is created for early success prediction of very new startups that are in or before their first funding round.
+```{r}
+write.csv(df, "/Users/helena.schick/Documents/GitHub/r-sql-startup-success/df.csv", row.names=FALSE)
+```
+
+We create a separate data frame that excludes all variables that have insights on the funding rounds and progress. With this information another classification model is created for early success prediction of very new startups that are in or before their first funding round.
 
 ```{r}
 df_new <- 
@@ -341,7 +343,7 @@ y <-
 
 ### Train and Test Split
 
-The dataframe is split into a training and test set. The training set
+The data frame is split into a training and test set. The training set
 will be used to train the model and the the test set is used to verify
 how well the model performs with newly added data.
 
@@ -379,7 +381,7 @@ test_data_new <- testing(data_split_new)
 ### Data Exploration Set
 
 A copy of the training data is created for the data exploration to not
-alter the actual training data. This step and the following data analysis is done on the big dataframe only.
+alter the actual training data. This step and the following data analysis is done on the big data frame only.
 
 ```{r}
 df_train <- train_data 
@@ -423,11 +425,11 @@ their distribution by looking at values. The age_first_funding_year has
 a mean of 2.17 years and a median of 1.34 years, which indicated a right
 skewed distribution. The maximum of over 20 years seems to be an
 outlier. A similar distribution applies to age_last_funding_year, with a
-maximum of over 20 years. Both have negative minimums, which doesn't
+maximum of over 20 years. Both have negative minima, which doesn't
 make sense as the funding would have taken place before the founding.
 These outliers need to be investigated. Age_first_milestone_year and
 age_last_milestone_year have a similar ditribution as the first and last
-funding ages. They also have negative minimums, which doesn't make sense
+funding ages. They also have negative minima, which doesn't make sense
 as the milestone would have taken place before the founding. These
 outliers need to be investigated. Most startups have between 5 and 10
 relationships, the minimum is 0 and the maximum 57. All startups in this
@@ -535,11 +537,11 @@ In which states are most successful startups founded?
 ```{sql connection=con}
 SELECT state_code, COUNT(status = "acquired") as count
 FROM df_train
-GROUP BY category_code
+GROUP BY state_code
 ORDER BY count DESC;
 ```
 
-Most successful startups are founded in Colorado and California.
+Most successful startups are founded in California.
 
 How many successful vs. unsuccessful startups have Round A funding?
 
@@ -720,12 +722,12 @@ The most common states are California by far, followed by New York and
 Massachusetts. This is also represented in the zip codes, as the most
 frequent ones start with 9 which indicates CA. And the most common
 cities are San Francisco and New York. It will be interesting to look at
-visualization of this geographcal data later. There are one duplicate id
+visualization of this geographical data later. There are one duplicate id
 and name that have to be deleted. The founding dates are quite evenly
-spread out between 1999 and 2009. The closing dates of failed stratups
+spread out between 1999 and 2009. The closing dates of failed startups
 are high in 2012 and 2013 and the first one closed already in 2009. The
 first funding rounds took place in 2005 to 2008 and the last funding
-rounds in 2006 until 2012.MostLast funding rounds were in 2008. The most
+rounds in 2006 until 2012. Most last funding rounds were in 2008. The most
 common categories of startups are web and software.
 
 ### Numerical Features
@@ -763,19 +765,19 @@ age_first_milestone_year and age_last_milestone_year, the assumption of
 outlier below 0 and higher than 10 is confirmed as well. The
 distributions of relationships and funding_rounds look as I imagined
 them. The maximum of funding_total_usd is an even more significant
-outlier than expected, as the hitsogram only has one visible bin on the
+outlier than expected, as the histogram only has one visible bin on the
 very left. This needs to be removed.
 
 ### Relationships
 
-The fist realtionship analyized is between the numerical features.
+The fist relationship analyzed is between the numerical features.
 Correlation is a positive or negative linear relationship between two
 variables. +1 and -1 indicate the highest possible linear correlation
 and 0 indicated no correlation. As our label is categorical, it is not
-posisbel to identify correlations to it with this method. But if the
+possible to identify correlations to it with this method. But if the
 correlations between features in the model is too high, this might lead
 to overfitting. This method helps to identify those and evaluate which
-to include in the mdoel in the feature engineering chapter.
+to include in the model in the feature engineering chapter.
 
 ```{r}
 df_numeric %>% 
@@ -790,9 +792,9 @@ age_last_funding_year. Also milestones and relationships are positively
 correlated. There are no strong negative correlation, the strongest is
 between milestones and age_first_funding_year.
 
-To make these results more presice, now the numbers of correlation are
+To make these results more precise, now the numbers of correlation are
 displayed. In addition we have a look at the graphs of the relationships
-to identify any non-lineat relationships as well.
+to identify any non-linear relationships as well.
 
 ```{r}
 df_numeric %>% 
@@ -800,9 +802,9 @@ df_numeric %>%
   theme(axis.text.x = element_text(angle = 90, vjust = -1))
 ```
 
-There are no non-linear relationshsips identified. The strong positive
+There are no non-linear relationships identified. The strong positive
 correlation between the funding and milestone age variables is visible
-in the scatterplots and verified through correlations \> 0.5.
+in the scatter plots and verified through correlations \> 0.5.
 
 At this, point further correlations between categorical and numerical
 features area visualized. Do successful startups have more or less
@@ -819,7 +821,7 @@ df_train %>%
 
 Successful startups have more relationships than failes ones. Only 25%
 of the successful startups have less than 7 relations, whereas 75% of
-failes startups do have that amount.
+failed startups do have that amount.
 
 Expanding on this. How is the amount of funding_rounds related to the
 status and relationships?
@@ -836,9 +838,9 @@ df_train %>%
 Acquired startups have more relationships and go through more funding
 rounds.
 
-As discusessed ealsier, it is easier to visualize longitude and
-latititude than talking about their values. On the map the locations of
-startups are visualized and by color their are distiguished by status.
+As discussed earlier, it is easier to visualize longitude and
+latitude than talking about their values. On the map the locations of
+startups are visualized and by color their are distinguished by status.
 
 ```{r}
 world_map <- map_data("world")
@@ -918,7 +920,7 @@ successful startups haven't closed, thus they don't have a closing date.
 This feature is too tightly related to the prediction and thus needs to
 be removed for the model. There are 112 missing values each for
 age_first_milestone_year and age_last_milestone year. As there are only
-a couple hundred startups in the dataframe, the ratio of missing values
+a couple hundred startups in the data frame, the ratio of missing values
 is to high to simply delete these rows. Instead, the missing values will
 be replaced by the median. Having this many values replaced, the feature
 importance for the model will decrease.
@@ -929,7 +931,7 @@ In the data analysis, a few possible outliers have been called out and
 are investigated now.
 
 A longitude of higher than 50 and thus being located in Europe was
-indentified as an outlier. How many startups are located there?
+identified as an outlier. How many startups are located there?
 
 ```{sql connection=con}
 SELECT COUNT(*)
@@ -938,12 +940,11 @@ WHERE longitude > -50;
 ```
 
 There are 4 startups in Europe in the dataframe. This is very small
-amount, but as this dataframe will be expanded in the future through
-information of our customers, all locations are included from the
-beginning.
+amount, but this data frame will be expanded in the future through
+information of our customers.
 
 Another outlier are the negative first and last funding age. How many of
-those are there in the dataframe?
+those are there in the data frame?
 
 ```{sql connection=con}
 SELECT name, age_first_funding_year, age_last_funding_year
@@ -957,7 +958,7 @@ root cause for a negative funding age should be identified. Another
 realization from this analysis is that all startups that have a negative
 last funding age also have a negative first funding age.
 
-The first and last funding age were rather left skewed, thus teh higher
+The first and last funding age were rather left skewed, thus the higher
 values are evaluated to be outliers now.
 
 ```{sql connection=con}
@@ -970,7 +971,7 @@ The higher first and last funding age is no outlier, one third of the
 startups have either their first or last funding after 5 years.
 
 Another outlier are the negative first and last milestone age. How many
-of those are there in the dataframe?
+of those are there in the data frame?
 
 ```{sql connection=con}
 SELECT name, age_first_milestone_year, age_last_milestone_year
@@ -1003,7 +1004,7 @@ df_train %>%
 
 Startups having more than 20 relationships are outliers.
 
-The maximum fundinng_total_usd is tremendously higher than all other
+The maximum funding_total_usd is tremendously higher than all other
 funding amounts. Should this be removed?
 
 ```{r}
@@ -1047,7 +1048,7 @@ Feature engineering is the process of using domain knowledge to extract
 meaningful features from the data. The goal of this process is to keep
 those features that improve the predictions from our model. For this a
 pipeline is created that included the standardization of numeric
-features and one hot encoding of catgeorical features. As the categories
+features and one hot encoding of categorical features. As the categories
 and states are already one hot encoded, their categorical featured need
 to be removed. The anomalies, like outliers, missing values or wrong
 data types, will be fixed in the recipe in the next chapter.
@@ -1066,8 +1067,7 @@ data is not too complex, neural networks are not needed. Instead, two
 common classification algorithms are compared: 
 - Logistic Regression:Predicts a dependent variable by analyzing the relationship between one
 or more existing independent variables. 
-- Decision Trees: Uses tree-like model of decisions and their possible consequences. examples (K) closest
-to the query, then votes for the most frequent label.
+- Decision Trees: Uses tree-like model of decisions and their possible consequences.
 
 ## Model Training & Tuning
 
@@ -1083,6 +1083,7 @@ milestone age of startups. These highly correlated features are removed
 and this is included in the recipe of Feature Engineering already.
 
 ```{r}
+# For all startup information
 df_rec <-
   recipe(status ~ ., data = train_data) %>%
   step_rm(closed_at, state_code, category_code, latitude, longitude, zip_code, city, name, id) %>% #remove unnecessary columns
@@ -1108,7 +1109,7 @@ prepped_data <-
 ```
 
 ```{r}
-# Again for df_new
+# Again for new startups
 df_rec_new <-
   recipe(status ~ ., data = train_data_new) %>%
   step_rm(state_code, category_code, latitude, longitude, zip_code, city, name, id) %>% #remove unnecessary columns
@@ -1149,7 +1150,7 @@ cv_folds <-
 ```
 
 ```{r}
-# crossvalidation also for df_new
+# crossvalidation also for new startups
 set.seed(100)
 
 cv_folds_new <-
@@ -1168,6 +1169,7 @@ validation set (cv_folds) is fitted to estimate the performance of our
 models afterwards.
 
 ```{r}
+# For all startup information
 # Logistic Regression
 # model
 log_spec <- # your model specification
@@ -1192,6 +1194,7 @@ log_res <-
 ```
 
 ```{r}
+# For all startup information
 # Decision Tree
 # model
 xgb_spec <- 
@@ -1215,9 +1218,88 @@ xgb_res <-
     ) 
 ```
 
+The decision tree's parameters are tuned and a new model with those parameters is created.
+The tuning takes very long to run, why it is removed from running after receiving the results once.
+
+```{r}
+# Hyperparameter tuning decision tree
+# added #, because this takes almost an hour to run
+#xgb_tune_spec <- 
+# boost_tree(
+#    trees = tune(),
+#    min_n = tune(),
+#    tree_depth = tune(),
+#    learn_rate = tune(),
+#    loss_reduction = tune(),
+#    stop_iter = tune()
+#  ) %>% 
+#  set_engine("xgboost") %>% 
+#  set_mode("classification")
+
+#xgb_grid <- grid_regular(trees(),
+#                         min_n(),
+#                         tree_depth(),
+#                         learn_rate(),
+#                         loss_reduction(),
+#                         stop_iter(),
+#                         levels = 3)
+
+#xgb_wflow_tune <- workflow() %>% 
+# add_recipe(df_rec) %>%   
+# add_model(xgb_tune_spec)
+
+#xgb_res_tune <- xgb_wflow_tune %>% 
+#  tune_grid(
+#    resamples = cv_folds,
+#    grid = xgb_grid
+#  )
+
+#best_tree <- xgb_res_tune %>%
+#  select_best("accuracy")
+
+#best_tree
+```
+
+The best configuration according to the accuracy for the boosted tree is 
+- trees: 1000
+- min_n: 2
+- tree_depth: 1
+- learn_rate: 0.1
+- loss_reduction: 1e-10
+- stop_iter: 3
+
+Selecting the best tree by precision ended in an error, that is why accuracy was chosen.
+This model configuration is now created to be compared to the non-tuned boosted trees and the linear regression model.
+
+```{r}
+# For all startup information
+# Tuned Decision Tree
+# model
+xgb_spec_tuned <- 
+  boost_tree(trees = 1, min_n = 2, tree_depth = 1, learn_rate = 0.1, loss_reduction = 1e-10, stop_iter = 3) %>% 
+  set_engine("xgboost") %>% 
+  set_mode("classification") 
+
+# workflow pipeline
+xgb_wflow_tuned <-
+ workflow() %>%
+ add_recipe(df_rec) %>% 
+ add_model(xgb_spec_tuned)
+
+# fit model with crossvalidation
+xgb_res_tuned <- 
+  xgb_wflow_tuned %>% 
+  fit_resamples(
+    resamples = cv_folds, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
+    control = control_resamples(save_pred = TRUE)
+    ) 
+```
+
 The same models are also created for a classification of new startups.
 
 ```{r}
+# For new startups
 # Logistic Regression
 # model
 log_spec_new <- # your model specification
@@ -1242,6 +1324,7 @@ log_res_new <-
 ```
 
 ```{r}
+# For new startups
 # Decision Tree
 # model
 xgb_spec_new <- 
@@ -1265,11 +1348,87 @@ xgb_res_new <-
     ) 
 ```
 
+```{r}
+# For new startups
+# Hyperparameter tuning decision tree
+# added #, because this takes almost an hour to run
+#xgb_tune_spec_new <- 
+#  boost_tree(
+#    trees = tune(),
+#    min_n = tune(),
+#    tree_depth = tune(),
+#    learn_rate = tune(),
+#    loss_reduction = tune(),
+#    stop_iter = tune()
+#  ) %>% 
+#  set_engine("xgboost") %>% 
+#  set_mode("classification")
+
+#xgb_grid_new <- grid_regular(trees(),
+#                         min_n(),
+#                         tree_depth(),
+#                         learn_rate(),
+#                         loss_reduction(),
+#                         stop_iter(),
+#                         levels = 3)
+
+#xgb_wflow_tune_new <- workflow() %>% 
+# add_recipe(df_rec_new) %>%   
+# add_model(xgb_tune_spec_new)
+
+#xgb_res_tune_new <- xgb_wflow_tune_new %>% 
+#  tune_grid(
+#    resamples = cv_folds_new,
+#    grid = xgb_grid_new
+#  )
+
+#best_tree_new <- xgb_res_tune_new %>%
+#  select_best("accuracy")
+
+#best_tree_new
+```
+
+The best configuration according to the accuracy for the boosted tree for new startups is 
+- trees: 1000
+- min_n: 21
+- tree_depth: 1
+- learn_rate: 0.1
+- loss_reduction: 1e-10
+- stop_iter: 3
+
+This model configuration is now created to be compared to the non-tuned boosted trees and the linear regression model.
+
+```{r}
+# For all startup information
+# Tuned Decision Tree
+# model
+xgb_spec_new_tuned <- 
+  boost_tree(trees = 1, min_n = 21, tree_depth = 1, learn_rate = 0.1, loss_reduction = 1e-10, stop_iter = 3) %>% 
+  set_engine("xgboost") %>% 
+  set_mode("classification") 
+
+# workflow pipeline
+xgb_wflow_new_tuned <-
+ workflow() %>%
+ add_recipe(df_rec) %>% 
+ add_model(xgb_spec_new_tuned)
+
+# fit model with crossvalidation
+xgb_res_new_tuned <- 
+  xgb_wflow_new_tuned %>% 
+  fit_resamples(
+    resamples = cv_folds, 
+    metrics = metric_set(yardstick::recall, yardstick::precision, accuracy),
+    control = control_resamples(save_pred = TRUE)
+    ) 
+```
+
+
 ### Evaluation
 
 Now the results of the models are compared and their performance
 evaluated to decide which model is the best for our startup success
-prediction use case.
+prediction use case. An in-detail walk through of the metrics is done with the logistic regression for all startup information. The other models are then compared to each other through their accuracy and precision.
 
 Average performance over all folds for logistic regression.
 
@@ -1284,7 +1443,7 @@ describes how much of the samples, which have been classified as
 positive are actual positive. And recall describes how much of the true
 positive samples has been classified as positive.
 
-The logistic regression model has an accuracy of 73%. 76% of the
+The logistic regression model has an accuracy of 73%. 77% of the
 startups that it predicted to be successful, are actually successful and
 85% of true positive samples habe been classified as positive.
 
@@ -1295,8 +1454,8 @@ log_res %>%
   collect_metrics(summarize = FALSE)
 ```
 
-The range for all metrics is not too big, bur rather similar for every
-model.
+The range for all metrics is not too big, but rather similar for every
+fold.
 
 Now, we obtain the actual model predictions to compare the amount of
 correct and false predictions.
@@ -1310,7 +1469,7 @@ log_pred <-
 A confusion matrix is created to compare the amounts of predictions. How
 to read a classification matrix:
 
-<img src="https://miro.medium.com/v2/resize:fit:1218/format:webp/1*jMs1RmSwnYgR9CsBw-z1dw.png"/>
+<img src="https://www.researchgate.net/publication/336402347/figure/fig3/AS:812472659349505@1570719985505/Calculation-of-Precision-Recall-and-Accuracy-in-the-confusion-matrix.ppm"/>
 
 For the StandardScaler Pipeline this means that in 5 cases label 0 was
 predicted correctly, 22 times as label 1 and 59 times as label 2. Lables
@@ -1340,7 +1499,7 @@ $$
 
 For the prediction of startup success, we want the number of False
 Positives to be as little as possible, because these mean an investment
-gone wrong and lots of monex being lost for the investors and thus focus
+gone wrong and lots of money being lost for the investors and thus focus
 on precision.
 
 ```{r}
@@ -1365,38 +1524,10 @@ those have closed in reality, but were predicted to be acquired. There
 are 121 False Positives in this logistic regression and this is the
 number that should be as low as possible.
 
-Now, we will have a look at the metrics of the other algorithm -
-Gradient Bossted Trees.
+Instead of looking at the metrics one by one, we compare them now. The first comparison is for all stratup startup information, afterwards the same is done for new startups.
 
 ```{r}
-xgb_res %>% 
-  collect_metrics(summarize = TRUE)
-```
-
-The Gradient Boosted Tree has an accuracy of 76%, recall of 88% and most
-importantly a precision of 78%.
-
-Looking in more detail at the correct and false predictions of the
-Gradient Boosted Trees.
-
-```{r}
-xgb_pred <- 
-  xgb_res %>%
-  collect_predictions()
-```
-
-```{r}
-xgb_pred %>%
-  conf_mat(status, .pred_class) %>% 
-  autoplot(type = "heatmap")
-```
-
-There are 112 False Positives, so startups that have been predicted to
-be acquired, but actually closed.
-
-Instead of looking at the metrics one by one, we compare them now.
-
-```{r}
+# all startup information
 # compare models
 log_metrics <- 
   log_res %>% 
@@ -1408,9 +1539,15 @@ xgb_metrics <-
   collect_metrics(summarise = TRUE) %>%
   mutate(model = "XGBoost")
 
+xgb_tuned_metrics <- 
+  xgb_res_tuned %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "XGBoost Tuned")
+
 # create dataframe with all models
 model_compare <- bind_rows(log_metrics,
-                           xgb_metrics) 
+                           xgb_metrics,
+                           xgb_tuned_metrics) 
 
 # change data structure
 model_comp <- 
@@ -1447,13 +1584,16 @@ model_comp %>%
   )
 ```
 
-The accuracy and precision of the Decision Tree are a little
-higher and thus, this is the model with the best performance. The
+The mean accuracy over 5 folds is lowest using logistic regression with 73%. The tuned decision trees perform a little better with an accuracy of 74% and the best accuracy of 76% has the non-tuned decision tree.
+The mean precision over 5 folds is lowest using logistic regression or tuned decision trees with 76%. The non-tuned decision trees perform a little better with a precision of 78%.
+The non-tuned gradient boosted decision tree is the model with the best performance. The
 objective for a good model, is supposed to be 80% for accuracy and
-precision and those are not quite reached, but at it is close.
+precision and those are not quite reached, but at least it is close.
+It is odd that the non-tuned decision tree performs better than the tuned one. An explanation could not be found.
 
-The comparison is also done for new startups.
+The comparison is also done for new startups. As less features are inserted to the model, a worse performance is expected for all models.
 ```{r}
+# new startups
 # compare models
 log_metrics_new <- 
   log_res_new %>% 
@@ -1465,9 +1605,15 @@ xgb_metrics_new <-
   collect_metrics(summarise = TRUE) %>%
   mutate(model = "XGBoost")
 
+xgb_metrics_new_tuned <- 
+  xgb_res_new_tuned %>% 
+  collect_metrics(summarise = TRUE) %>%
+  mutate(model = "XGBoost Tuned")
+
 # create dataframe with all models
 model_compare_new <- bind_rows(log_metrics_new,
-                           xgb_metrics_new) 
+                               xgb_metrics_new,
+                               xgb_metrics_new_tuned) 
 
 # change data structure
 model_comp_new <- 
@@ -1504,27 +1650,42 @@ model_comp_new %>%
   )
 ```
 
-XGBoost is a little better and will thus be validated.
+The mean accuracy over 5 folds is lowest using logistic regression and non-tuned decision trees with 72%. The best accuracy has been achieved by the tuned decision tree with 74%.
+The mean precision over 5 folds is the same of  76% for all three models.
+The tuned gradient boosted decision tree is the model with the best performance and the overall performance of the algorithms is not significantly worse for new startups than for those where all information is included. 
+The objective for a good model, is supposed to be 80% for accuracy and
+precision and those are not quite reached, but at least it is close.
 
 ## Evaluate Model
 
 The best model is evaluated on its errors to understand why it makes them and how to fix them.
 
 ```{r}
-# obtain the 10 wrongest predictions
-wrongest_predictions <- 
-  xgb_pred %>% 
-  mutate(residual = status - .pred_class) %>% 
-  arrange(desc(abs(residual))) %>% 
-  slice_head(n = 10)
+# create prediction variable
+xgb_pred <- 
+  xgb_res %>%
+  collect_predictions()
 
-# take a look at the observations
-errors <- 
-  train_data %>% 
-  dplyr::slice(wrongest_predictions$.row) 
+xgb_pred_new <- 
+  xgb_res_new_tuned %>%
+  collect_predictions()
 ```
 
-Does not seem to work, cannot find a solution to the error.
+```{r}
+# obtain the 10 wrongest predictions
+#wrongest_predictions <- 
+#  xgb_pred %>% 
+#  mutate(residual = status - .pred_class) %>% 
+#  arrange(desc(abs(residual))) %>% 
+#  slice_head(n = 10)
+
+# take a look at the observations
+#errors <- 
+#  train_data %>% 
+#  dplyr::slice(wrongest_predictions$.row) 
+```
+
+Does not seem to work, because status and .pre_class are factors and not numeric. 
 
 # Deployment
 
@@ -1532,8 +1693,8 @@ The last chapter describes the deployment of the final model.
 
 ## Validate Model
 
-The best performing model - Decision Tree - is now evaluated on
-test data.
+The best performing models are now evaluated on
+test data. At first the best performing model for all startup information - Decision Trees - is validated.
 
 ```{r}
 last_fit_xgb <- last_fit(xgb_wflow, 
@@ -1547,18 +1708,11 @@ last_fit_xgb %>%
   collect_metrics()
 ```
 
-The results on the test data are even a little better than on the train data. The Decision Tree reaches an accuracy of almost 80% and a precision of 80%. The recall, which is not as important for this use case, is even at 91%.
-
-```{r}
-last_fit_xgb %>%
-  collect_predictions() %>% 
-  conf_mat(status, .pred_class) %>% 
-  autoplot(type = "heatmap")
-```
-
-Looking at the classification matrix, there are 137 True Positives compared to 34 startups that have been acquired, but were predicted to close.
+The results on the test data are even a little better than on the train data. The Decision Tree reaches an accuracy of 79% and a precision of 80%. The recall, which is not as important for this use case, is even at 91%.
+The performance on test data is very similar to train data, which means that the model performs well on new data and is not overfitted to the training data.
 
 Which features are the most important for startup success prediction?
+
 ```{r}
 # feature importance
 last_fit_xgb %>% 
@@ -1569,33 +1723,30 @@ last_fit_xgb %>%
 
 The most important features are the number of relationships, the total funding and the age at first funding.
 
-The sam evalidatio is done for the new startups.
+The same validation is done for the new startups with the best performing model being Tuned Decision Trees.
+
 ```{r}
-last_fit_xgb_new <- last_fit(xgb_wflow_new, 
-                        split = data_split_new,
-                        metrics = metric_set(yardstick::recall, yardstick::precision, accuracy)
-                        )
+#last_fit_xgb_new <- last_fit(xgb_wflow_new_tuned, 
+#                             split = data_split_new,
+#                             metrics = metric_set(yardstick::recall, yardstick::precision, accuracy)
+#                             )
 ```
 
 ```{r}
-last_fit_xgb_new %>% 
-  collect_metrics()
+#last_fit_xgb_new %>% 
+#  collect_metrics()
 ```
 
-```{r}
-last_fit_xgb_new %>%
-  collect_predictions() %>% 
-  conf_mat(status, .pred_class) %>% 
-  autoplot(type = "heatmap")
-```
 
 ```{r}
 # feature importance
-last_fit_xgb_new %>% 
-  pluck(".workflow", 1) %>%   
-  pull_workflow_fit() %>% 
-  vip(num_features = 10)
+#last_fit_xgb_new %>% 
+#  pluck(".workflow", 1) %>%   
+#  pull_workflow_fit() %>% 
+#  vip(num_features = 10)
 ```
+
+Unfortunately, there is an error in the first step about missing columns that could not be removed.
 
 ## Deploy Model
 
@@ -1684,6 +1835,8 @@ The model has to be saved, so it can be inserted in the R Script.
 saveRDS(last_fit_xgb, "model.rds")
 ```
 
+Also deploy as a dashboard in shiny from separate .Rmd file.
+
 ## Serve Model
 
 For this project, serving the model cannot be conducted. If this became a real business case though, serving the model would be implemented through information of new startups. The model can learn from adding this new information.
@@ -1692,3 +1845,26 @@ For this project, serving the model cannot be conducted. If this became a real b
 
 The inability to conduct this step of monitoring the model applies as to serving the model. Over the course of time and when ingesting new information, the performance of the model would be monitored. Ideally, the model performance increases through additional data. If this weren't the case, the hyperparameters might need to be adjusted or even a better performing model needs to be evaluated.
 
+# Conclusion
+
+This project's objective was the prediction of the success of startups to support investors making more reliable investment decision and reducing their risk. To ensure all steps of data analysis and model creation are done for the best results, the data science lifecycle was used for reference and coding is done in R and SQL.
+
+The first step, was to introduce the business case for startups success prediction in more detail and set model performance objectives. A good classification model for this use case is defined as an accuracy and precision of at least 80%.
+
+Before creating the model, the given data is split into train and test data and being analyzed. The key findings from the data analysis are:
+
+- Most successful startups are in the categories software and web.
+- Most successful startups are from California.
+- Successful startups have more relationships on average.
+- The age of the startups at first funding does not differ between acquired and closed startups.
+
+After the feature engineering, the models can be created. Two classification models, linear regression and decision trees, are optimized and their performance based on the defined metrics compared.
+On one hand, this is done with data containing all relevant given information about the startups and on the other hand, only using the features that are given for new startups that are upto their first funding round.
+
+The best performing model with all information is Decision Trees with an accuracy of 76% and precision of 78%. The best performing model for new startups is Tuned Decision Trees with an accuracy of 74% and precision of 76%. Both are not considered good models as they do not perform to the given success metrics for training and test data. Their performance on test and training data is very similar, which means that the model performs well on new data and is not overfitted to the training data.
+
+In the end, the model is deployed to a Web API that anyone can access it through the link instead of opening this entire file. If more data on startups was inserted, the deployed model could be served and monitored over time.
+
+During the implementation of this project, some challenges have been faced: The first challenge was that the removal of outliers in the recipe does not work, through this the model performance could increase though. Afterwards, the hyperparameter optimization for the decision tree takes very long to run (more than an hour) and the tuned decision tree for new startups could not be validated. Another challenge was the deployment of the model, as RStudio's Model Management and tensorflow did not work, but the third option plumber works, but does not have pretty user interface.
+
+All in all, this project achieved its learning objectives to become confident in the programming languages R and SQL. In addition, its content created transparency over the success factors of startups and the set metrics of the classification model were almost achieved. 

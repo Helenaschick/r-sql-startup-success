@@ -1,0 +1,51 @@
+---
+title: "Startup Success Prediction Dashboard"
+author: "Helena Schick"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(plotly)
+library(plyr)
+library(readr)
+
+path <- "/Users/helena.schick/Documents/GitHub/r-sql-startup-success/df.csv"
+
+df <- read_csv(path)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+p <- ggplot(df, aes(x = status, y = age_first_funding_year, color = status)) +
+  geom_boxplot() +
+  labs(title = "Age first funding, if successful or not") +
+  theme_bw(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+ggplotly(p)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+#
+```
+
+### Chart C
+
+```{r}
+#
+```
+
