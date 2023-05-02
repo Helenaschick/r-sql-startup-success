@@ -14,6 +14,16 @@ library(ggplot2)
 library(plotly)
 library(plyr)
 library(readr)
+library(leaflet)
+library(visdat)
+library(recipes)
+library(rsample)
+library(parsnip)
+library(workflows)
+library(tune)
+library(yardstick)
+library(vip)
+library(purrr)
 
 path <- "/Users/helena.schick/Documents/GitHub/r-sql-startup-success/df.csv"
 
@@ -23,29 +33,56 @@ df <- read_csv(path)
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Relationships by Status
 
 ```{r}
-p <- ggplot(df, aes(x = status, y = age_first_funding_year, color = status)) +
+p <- ggplot(df, aes(x = status, y = relationships, color = status)) +
   geom_boxplot() +
-  labs(title = "Age first funding, if successful or not") +
   theme_bw(base_size = 12) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ggplotly(p)
 ```
 
+-----------------------------------------------------------------------
+
+### Locations by Status
+
+```{r}
+df$statuscol <- ifelse(df$status == "acquired", "red", "blue")
+
+leaflet() %>% 
+  addTiles() %>%
+  addCircleMarkers(df$longitude, 
+                   df$latitude, 
+                   radius = 6, 
+                   color = df$statuscol,
+                   fill = df$statuscol,
+                   popup = paste(df$state_code,
+                                 df$name,
+                                 df$status,
+                                 sep = "")) %>%
+  addLegend("bottomleft", 
+            colors = c("red","blue"),
+            labels = c("acquired",
+                       "closed"), 
+            opacity = 0.8)
+```
+
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Classification
 
 ```{r}
-#
+# Error with recipe
 ```
 
-### Chart C
+-----------------------------------------------------------------------
+
+### Most important features
 
 ```{r}
-#
+# Also an error
 ```
 
+-----------------------------------------------------------------------
